@@ -1,0 +1,13 @@
+weapon1h=Axe_|ceremonialDagger_|Dagger_|fistWeapon_|handXbow_|mightyWeapon_1H_|Mace_|spear_|Sword_|Wand_
+head=voodooMask_|spiritStone_|WizardHat_|Helm_
+unid=(lvlreq:0)
+
+GoldCoin|GoldSmall|GoldMedium|GoldLarge
+
+Amulet_[q:6](unid)
+Ring_[q:6](unid)
+
+Head[q:6](sockets:1)
+weapon1h[q:6](sockets:1) 
+
+HealthPotionLarge|healthPotion_Greater|healthPotion_Heroic|healthPotion_Lesser|healthPotion_Minor|healthPotion_Mythic|healthPotion_Normal|healthPotion_Resplendent|healthPotion_Runic|healthPotion_Super
