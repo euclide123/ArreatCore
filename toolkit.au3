@@ -115,9 +115,9 @@ Func FindActor($name, $maxRange = 400)
 		WEnd
 	Else
 		offsetlist()
-	EndIF
+	EndIf
 
-mesurestart()
+	mesureStart()
 	Local $index, $offset, $count, $item[10], $find = 0
 	startIterateObjectsList($index, $offset, $count)
 	_log("FinActor -> number -> " & $count)
@@ -195,24 +195,24 @@ EndFunc   ;==>listuiitemvisible
 
 
 Func fastcheckuiitemvisible($valuetocheckfor, $visibility, $bucket)
- $ptr1 = _memoryread($ofs_objectmanager, $d3, "ptr")
- $ptr2 = _memoryread($ptr1 + 2420, $d3, "ptr")
- $ptr3 = _memoryread($ptr2 + 0, $d3, "ptr")
- $ofs_uielements = _memoryread($ptr3 + 8, $d3, "ptr")
- $uielementpointer = _memoryread($ofs_uielements + 4 * $bucket, $d3, "ptr")
- While $uielementpointer <> 0
-  $npnt = _memoryread($uielementpointer + 528, $d3, "ptr")
-  $name = BinaryToString(_memoryread($npnt + 56, $d3, "byte[256]"), 4)
-  If StringInStr($name, $valuetocheckfor) Then
-   If _memoryread($npnt + 40, $d3, "int") = $visibility Then
-    Return True
-   Else
-    Return False
-   EndIf
-  EndIf
-  $uielementpointer = _memoryread($uielementpointer, $d3, "ptr")
- WEnd
- Return False
+	$ptr1 = _memoryread($ofs_objectmanager, $d3, "ptr")
+	$ptr2 = _memoryread($ptr1 + 2420, $d3, "ptr")
+	$ptr3 = _memoryread($ptr2 + 0, $d3, "ptr")
+	$ofs_uielements = _memoryread($ptr3 + 8, $d3, "ptr")
+	$uielementpointer = _memoryread($ofs_uielements + 4 * $bucket, $d3, "ptr")
+	While $uielementpointer <> 0
+		$npnt = _memoryread($uielementpointer + 528, $d3, "ptr")
+		$name = BinaryToString(_memoryread($npnt + 56, $d3, "byte[256]"), 4)
+		If StringInStr($name, $valuetocheckfor) Then
+			If _memoryread($npnt + 40, $d3, "int") = $visibility Then
+				Return True
+			Else
+				Return False
+			EndIf
+		EndIf
+		$uielementpointer = _memoryread($uielementpointer, $d3, "ptr")
+	WEnd
+	Return False
 EndFunc   ;==>fastcheckuiitemvisible
 
 
@@ -315,7 +315,7 @@ Func IsInArea($area)
 EndFunc   ;==>IsInArea
 
 Func GetLevelAreaId()
-        Return _MemoryRead(_MemoryRead(0x183E9E4 , $d3, "int") + 0x44, $d3, "int")
+	Return _MemoryRead(_MemoryRead(0x183E9E4, $d3, "int") + 0x44, $d3, "int")
 EndFunc   ;==>GetLevelAreaId
 
 Func LevelAreaConstants()
@@ -727,7 +727,7 @@ EndFunc   ;==>GetDifficulty
 ;;--------------------------------------------------------------------------------
 Func _intown()
 	If $_debug Then _log("-----Checking if In Town------")
-	$town = findActor('Player_Shared_Stash', 448)
+	$town = FindActor('Player_Shared_Stash', 448)
 	If $town = 1 Then
 		_log("We are in town ")
 		Return True
@@ -772,11 +772,11 @@ Func IterateBackpack($bag = 0, $rlvl = 0)
 	Next
 
 
-		For $i = $_Count To 0 Step -1
-			If $__ACDACTOR[$i][2] <> $bag Then
-				_ArrayDelete($__ACDACTOR, $i)
-			EndIf
-		Next
+	For $i = $_Count To 0 Step -1
+		If $__ACDACTOR[$i][2] <> $bag Then
+			_ArrayDelete($__ACDACTOR, $i)
+		EndIf
+	Next
 
 	;_Arraydisplay($__ACDACTOR)
 	Return $__ACDACTOR
@@ -796,8 +796,8 @@ Func Iteratestuff()
 		Local $iterateItemListStruct = DllStructCreate("ptr;char[64];byte[112];int;byte[92];int;int;int;ptr")
 		DllCall($d3[0], 'int', 'ReadProcessMemory', 'int', $d3[1], 'int', $CurrentOffset, 'ptr', DllStructGetPtr($iterateItemListStruct), 'int', DllStructGetSize($iterateItemListStruct), 'int', '')
 
-		if DllStructGetData($iterateItemListStruct, 6) >= 1 AND DllStructGetData($iterateItemListStruct, 6) <= 13 Then
-			Redim $__ACDACTOR[$count+1][9]
+		If DllStructGetData($iterateItemListStruct, 6) >= 1 And DllStructGetData($iterateItemListStruct, 6) <= 13 Then
+			ReDim $__ACDACTOR[$count + 1][9]
 			$__ACDACTOR[$count][0] = DllStructGetData($iterateItemListStruct, 1)
 			$__ACDACTOR[$count][1] = DllStructGetData($iterateItemListStruct, 2)
 			$__ACDACTOR[$count][8] = DllStructGetData($iterateItemListStruct, 4)
@@ -816,44 +816,44 @@ Func Iteratestuff()
 	Next
 
 	Return $__ACDACTOR
-EndFunc
+EndFunc   ;==>Iteratestuff
 
 Func Load_Attrib_GlobalStuff()
 
-Global $Check_HandLeft_Seed = 0
-Global $Check_HandRight_Seed = 0
-Global $Check_RingLeft_Seed = 0
-Global $Check_RingRight_Seed = 0
-Global $Check_Amulet_Seed = 0
-Global $Check_ArmorTotal = 0
+	Global $Check_HandLeft_Seed = 0
+	Global $Check_HandRight_Seed = 0
+	Global $Check_RingLeft_Seed = 0
+	Global $Check_RingRight_Seed = 0
+	Global $Check_Amulet_Seed = 0
+	Global $Check_ArmorTotal = 0
 
 	$table = Iteratestuff()
-		for $i=0 to ubound($table) - 1
-			if ($table[$i][2] >= 3 AND $table[$i][2] <= 4) OR $table[$i][2] >= 11 Then
-				If $table[$i][2] = 3 Then ;Weapon1
-					$Check_HandLeft_Seed = GetAttribute(_memoryread(GetACDOffsetByACDGUID($table[$i][0]) + 0x120, $d3, "ptr"), $Atrib_Seed)
-				ElseIf $table[$i][2] = 4 Then ;Weapon2
-					$Check_HandRight_Seed = GetAttribute(_memoryread(GetACDOffsetByACDGUID($table[$i][0]) + 0x120, $d3, "ptr"), $Atrib_Seed)
-				ElseIf $table[$i][2] = 11 Then ;Ring1
-					$Check_RingLeft_Seed = GetAttribute(_memoryread(GetACDOffsetByACDGUID($table[$i][0]) + 0x120, $d3, "ptr"), $Atrib_Seed)
-				ElseIf $table[$i][2] = 12 Then ;Ring
-					$Check_RingRight_Seed = GetAttribute(_memoryread(GetACDOffsetByACDGUID($table[$i][0]) + 0x120, $d3, "ptr"), $Atrib_Seed)
-				ElseIf $table[$i][2] = 13 Then ;Amulette
-					$Check_Amulet_Seed = GetAttribute(_memoryread(GetACDOffsetByACDGUID($table[$i][0]) + 0x120, $d3, "ptr"), $Atrib_Seed)
-				EndIf
+	For $i = 0 To UBound($table) - 1
+		If ($table[$i][2] >= 3 And $table[$i][2] <= 4) Or $table[$i][2] >= 11 Then
+			If $table[$i][2] = 3 Then ;Weapon1
+				$Check_HandLeft_Seed = GetAttribute(_memoryread(GetACDOffsetByACDGUID($table[$i][0]) + 0x120, $d3, "ptr"), $Atrib_Seed)
+			ElseIf $table[$i][2] = 4 Then ;Weapon2
+				$Check_HandRight_Seed = GetAttribute(_memoryread(GetACDOffsetByACDGUID($table[$i][0]) + 0x120, $d3, "ptr"), $Atrib_Seed)
+			ElseIf $table[$i][2] = 11 Then ;Ring1
+				$Check_RingLeft_Seed = GetAttribute(_memoryread(GetACDOffsetByACDGUID($table[$i][0]) + 0x120, $d3, "ptr"), $Atrib_Seed)
+			ElseIf $table[$i][2] = 12 Then ;Ring
+				$Check_RingRight_Seed = GetAttribute(_memoryread(GetACDOffsetByACDGUID($table[$i][0]) + 0x120, $d3, "ptr"), $Atrib_Seed)
+			ElseIf $table[$i][2] = 13 Then ;Amulette
+				$Check_Amulet_Seed = GetAttribute(_memoryread(GetACDOffsetByACDGUID($table[$i][0]) + 0x120, $d3, "ptr"), $Atrib_Seed)
 			EndIf
-		Next
-		$Check_ArmorTotal = GetAttribute($_myguid, $Atrib_Armor_Item_Total)
+		EndIf
+	Next
+	$Check_ArmorTotal = GetAttribute($_myguid, $Atrib_Armor_Item_Total)
 
-		_log("Load_Attrib_GlobalStuff() Result :")
-		_log("$Check_HandLeft_Seed -> " & $Check_HandLeft_Seed)
-		_log("$Check_HandRight_Seed -> " & $Check_HandRight_Seed)
-		_log("$Check_RingLeft_Seed -> " & $Check_RingLeft_Seed)
-		_log("$Check_RingRight_Seed -> " & $Check_RingRight_Seed)
-		_log("$Check_Amulet_Seed -> " & $Check_Amulet_Seed)
-		_log("$Check_ArmorTotal -> " & $Check_ArmorTotal)
+	_log("Load_Attrib_GlobalStuff() Result :")
+	_log("$Check_HandLeft_Seed -> " & $Check_HandLeft_Seed)
+	_log("$Check_HandRight_Seed -> " & $Check_HandRight_Seed)
+	_log("$Check_RingLeft_Seed -> " & $Check_RingLeft_Seed)
+	_log("$Check_RingRight_Seed -> " & $Check_RingRight_Seed)
+	_log("$Check_Amulet_Seed -> " & $Check_Amulet_Seed)
+	_log("$Check_ArmorTotal -> " & $Check_ArmorTotal)
 
-EndFunc
+EndFunc   ;==>Load_Attrib_GlobalStuff
 
 Func Verif_Attrib_GlobalStuff()
 
@@ -867,103 +867,103 @@ Func Verif_Attrib_GlobalStuff()
 		Local $ArmorTotal = 0
 
 		$table = Iteratestuff()
-			for $i=0 to ubound($table) - 1
-				if ($table[$i][2] >= 3 AND $table[$i][2] <= 4) OR $table[$i][2] >= 11 Then
-					If $table[$i][2] = 3 Then ;Weapon1
-						$HandLeft_Seed = GetAttribute(_memoryread(GetACDOffsetByACDGUID($table[$i][0]) + 0x120, $d3, "ptr"), $Atrib_Seed)
-					ElseIf $table[$i][2] = 4 Then ;Weapon2
-						$HandRight_Seed = GetAttribute(_memoryread(GetACDOffsetByACDGUID($table[$i][0]) + 0x120, $d3, "ptr"), $Atrib_Seed)
-					ElseIf $table[$i][2] = 11 Then ;Ring1
-						$RingLeft_Seed = GetAttribute(_memoryread(GetACDOffsetByACDGUID($table[$i][0]) + 0x120, $d3, "ptr"), $Atrib_Seed)
-					ElseIf $table[$i][2] = 12 Then ;Ring
-						$RingRight_Seed = GetAttribute(_memoryread(GetACDOffsetByACDGUID($table[$i][0]) + 0x120, $d3, "ptr"), $Atrib_Seed)
-					ElseIf $table[$i][2] = 13 Then ;Amulette
-						$Amulet_Seed = GetAttribute(_memoryread(GetACDOffsetByACDGUID($table[$i][0]) + 0x120, $d3, "ptr"), $Atrib_Seed)
-					EndIf
+		For $i = 0 To UBound($table) - 1
+			If ($table[$i][2] >= 3 And $table[$i][2] <= 4) Or $table[$i][2] >= 11 Then
+				If $table[$i][2] = 3 Then ;Weapon1
+					$HandLeft_Seed = GetAttribute(_memoryread(GetACDOffsetByACDGUID($table[$i][0]) + 0x120, $d3, "ptr"), $Atrib_Seed)
+				ElseIf $table[$i][2] = 4 Then ;Weapon2
+					$HandRight_Seed = GetAttribute(_memoryread(GetACDOffsetByACDGUID($table[$i][0]) + 0x120, $d3, "ptr"), $Atrib_Seed)
+				ElseIf $table[$i][2] = 11 Then ;Ring1
+					$RingLeft_Seed = GetAttribute(_memoryread(GetACDOffsetByACDGUID($table[$i][0]) + 0x120, $d3, "ptr"), $Atrib_Seed)
+				ElseIf $table[$i][2] = 12 Then ;Ring
+					$RingRight_Seed = GetAttribute(_memoryread(GetACDOffsetByACDGUID($table[$i][0]) + 0x120, $d3, "ptr"), $Atrib_Seed)
+				ElseIf $table[$i][2] = 13 Then ;Amulette
+					$Amulet_Seed = GetAttribute(_memoryread(GetACDOffsetByACDGUID($table[$i][0]) + 0x120, $d3, "ptr"), $Atrib_Seed)
 				EndIf
-			Next
-			$ArmorTotal = GetAttribute($_myguid, $Atrib_Armor_Item_Total)
-
-			if $HandLeft_Seed <> $Check_HandLeft_Seed Then
-				If $HandLeft_Seed = 0 AND $Check_HandLeft_Seed <> 0 Then
-					_log("-> Weapon Left Dropped")
-				Else
-					_log("-> Weapon Left switched")
-				EndIf
-				return False
-			ElseIf $HandRight_Seed <> $Check_HandRight_Seed Then
-				If $HandRight_Seed = 0 AND $Check_HandRight_Seed <> 0 Then
-					_log("-> Weapon Right Dropped")
-				Else
-					_log("-> Weapon Right switched")
-				EndIf
-				return False
-			ElseIf $RingLeft_Seed <> $Check_RingLeft_Seed Then
-				If $RingLeft_Seed = 0 AND $Check_RingLeft_Seed <> 0 Then
-					_log("-> Ring Left Dropped")
-				Else
-					_log("-> Ring Left switched")
-				EndIf
-				return False
-			ElseIf $RingRight_Seed <> $Check_RingRight_Seed Then
-				If $RingRight_Seed = 0 AND $Check_RingRight_Seed <> 0 Then
-					_log("-> Ring Right Dropped")
-				Else
-					_log("-> Ring Right switched")
-				EndIf
-				return False
-			ElseIF $ArmorTotal <> $Check_ArmorTotal Then
-					_log("-> Armor Total changed")
-				return False
 			EndIf
+		Next
+		$ArmorTotal = GetAttribute($_myguid, $Atrib_Armor_Item_Total)
 
-			_log("Checking stuff successful")
-			return true
+		If $HandLeft_Seed <> $Check_HandLeft_Seed Then
+			If $HandLeft_Seed = 0 And $Check_HandLeft_Seed <> 0 Then
+				_log("-> Weapon Left Dropped")
+			Else
+				_log("-> Weapon Left switched")
+			EndIf
+			Return False
+		ElseIf $HandRight_Seed <> $Check_HandRight_Seed Then
+			If $HandRight_Seed = 0 And $Check_HandRight_Seed <> 0 Then
+				_log("-> Weapon Right Dropped")
+			Else
+				_log("-> Weapon Right switched")
+			EndIf
+			Return False
+		ElseIf $RingLeft_Seed <> $Check_RingLeft_Seed Then
+			If $RingLeft_Seed = 0 And $Check_RingLeft_Seed <> 0 Then
+				_log("-> Ring Left Dropped")
+			Else
+				_log("-> Ring Left switched")
+			EndIf
+			Return False
+		ElseIf $RingRight_Seed <> $Check_RingRight_Seed Then
+			If $RingRight_Seed = 0 And $Check_RingRight_Seed <> 0 Then
+				_log("-> Ring Right Dropped")
+			Else
+				_log("-> Ring Right switched")
+			EndIf
+			Return False
+		ElseIf $ArmorTotal <> $Check_ArmorTotal Then
+			_log("-> Armor Total changed")
+			Return False
+		EndIf
+
+		_log("Checking stuff successful")
+		Return True
 
 	Else
 		_log("Checking stuff Disable")
-		return true
-	EndIF
-EndFunc
+		Return True
+	EndIf
+EndFunc   ;==>Verif_Attrib_GlobalStuff
 
 Func antiidle()
-global $shrinebanlist = 0
-$warnloc = GetCurrentPos()
-$warnarea = GetLevelAreaId()
-_log("Lost detected at : " & $warnloc[0] & ", " & $warnloc[1] & ", " & $warnloc[2],1);
-_log("Lost area : " & $warnarea,1);
+	Global $shrinebanlist = 0
+	$warnloc = GetCurrentPos()
+	$warnarea = GetLevelAreaId()
+	_log("Lost detected at : " & $warnloc[0] & ", " & $warnloc[1] & ", " & $warnloc[2], 1);
+	_log("Lost area : " & $warnarea, 1);
 
 
-If _checkInventoryopen() = False Then
-        Send("i")
-        Sleep(150)
-Endif
+	If _checkInventoryopen() = False Then
+		Send("i")
+		Sleep(150)
+	EndIf
 
-Send("{PRINTSCREEN}")
-sleep(150)
-Send("{SPACE}")
+	Send("{PRINTSCREEN}")
+	Sleep(150)
+	Send("{SPACE}")
 
-ToolTip("Detection de stuff modifié !" & @CRLF & "Zone : " & $warnarea & @CRLF &  "Position : "  & $warnloc[0] & ", " & $warnloc[1] & ", " & $warnloc[2] & @CRLF & "Un screenshot a été pris, il se situe dans document/diablo 3" , 15, 15)
+	ToolTip("Detection de stuff modifié !" & @CRLF & "Zone : " & $warnarea & @CRLF & "Position : " & $warnloc[0] & ", " & $warnloc[1] & ", " & $warnloc[2] & @CRLF & "Un screenshot a été pris, il se situe dans document/diablo 3", 15, 15)
 
 
-While Not _intown()
-    _TownPortalnew()
-	sleep(100)
-WEnd
+	While Not _intown()
+		_TownPortalnew()
+		Sleep(100)
+	WEnd
 
-;idleing
-While 1
-MouseClick("middle", Random(100, 200), Random(100, 200), 1, 6)
-Sleep(Random(40000, 180000))
-MouseClick("middle", Random(600, 700), Random(100, 200), 1, 6)
-Sleep(Random(40000, 180000))
-MouseClick("middle", Random(600, 700), Random(400, 500), 1, 6)
-Sleep(Random(40000, 180000))
-MouseClick("middle", Random(100, 200), Random(400, 500), 1, 6)
-Sleep(Random(40000, 180000))
-Wend
+	;idleing
+	While 1
+		MouseClick("middle", Random(100, 200), Random(100, 200), 1, 6)
+		Sleep(Random(40000, 180000))
+		MouseClick("middle", Random(600, 700), Random(100, 200), 1, 6)
+		Sleep(Random(40000, 180000))
+		MouseClick("middle", Random(600, 700), Random(400, 500), 1, 6)
+		Sleep(Random(40000, 180000))
+		MouseClick("middle", Random(100, 200), Random(400, 500), 1, 6)
+		Sleep(Random(40000, 180000))
+	WEnd
 
-Endfunc
+EndFunc   ;==>antiidle
 ;;--------------------------------------------------------------------------------
 ; Function:			GetPackItemLevel($ACD, $_REQ)
 ;;--------------------------------------------------------------------------------
@@ -1143,49 +1143,49 @@ Func triBackPack($avArray)
 
 	Dim $tab_final[1][8]
 
-	local $compt5=0, $compt4=0, $compt3=0, $compt2=0, $compt1=0, $compt0=0, $compt_total=0
+	Local $compt5 = 0, $compt4 = 0, $compt3 = 0, $compt2 = 0, $compt1 = 0, $compt0 = 0, $compt_total = 0
 
 	_ArraySort($avArray, 0, 0, 0, 4)
 
 
-	for $i=0 to Ubound($avArray) - 1
+	For $i = 0 To UBound($avArray) - 1
 
 		If $avArray[$i][4] = 0 Then
 			$compt0 += 1
-			Redim $tab0[$compt0][8]
-				for $y=0 to 7
-					$tab0[$compt0-1][$y] = $avArray[$i][$y]
-				Next
+			ReDim $tab0[$compt0][8]
+			For $y = 0 To 7
+				$tab0[$compt0 - 1][$y] = $avArray[$i][$y]
+			Next
 		ElseIf $avArray[$i][4] = 1 Then
 			$compt1 += 1
-			Redim $tab1[$compt1][8]
-				for $y=0 to 7
-					$tab1[$compt1-1][$y] = $avArray[$i][$y]
-				Next
+			ReDim $tab1[$compt1][8]
+			For $y = 0 To 7
+				$tab1[$compt1 - 1][$y] = $avArray[$i][$y]
+			Next
 		ElseIf $avArray[$i][4] = 2 Then
 			$compt2 += 1
-			Redim $tab2[$compt2][8]
-				for $y=0 to 7
-					$tab2[$compt2-1][$y] = $avArray[$i][$y]
-				Next
+			ReDim $tab2[$compt2][8]
+			For $y = 0 To 7
+				$tab2[$compt2 - 1][$y] = $avArray[$i][$y]
+			Next
 		ElseIf $avArray[$i][4] = 3 Then
 			$compt3 += 1
-			Redim $tab3[$compt3][8]
-				for $y=0 to 7
-					$tab3[$compt3-1][$y] = $avArray[$i][$y]
-				Next
+			ReDim $tab3[$compt3][8]
+			For $y = 0 To 7
+				$tab3[$compt3 - 1][$y] = $avArray[$i][$y]
+			Next
 		ElseIf $avArray[$i][4] = 4 Then
 			$compt4 += 1
-			Redim $tab4[$compt4][8]
-				for $y=0 to 7
-					$tab4[$compt4-1][$y] = $avArray[$i][$y]
-				Next
+			ReDim $tab4[$compt4][8]
+			For $y = 0 To 7
+				$tab4[$compt4 - 1][$y] = $avArray[$i][$y]
+			Next
 		ElseIf $avArray[$i][4] = 5 Then
 			$compt5 += 1
-			Redim $tab5[$compt5][8]
-				for $y=0 to 7
-					$tab5[$compt5-1][$y] = $avArray[$i][$y]
-				Next
+			ReDim $tab5[$compt5][8]
+			For $y = 0 To 7
+				$tab5[$compt5 - 1][$y] = $avArray[$i][$y]
+			Next
 		EndIf
 	Next
 
@@ -1196,78 +1196,78 @@ Func triBackPack($avArray)
 	_ArraySort($tab4, 0, 0, 0, 3)
 	_ArraySort($tab5, 0, 0, 0, 3)
 
-	for $i=0 To Ubound($tab0) - 1
+	For $i = 0 To UBound($tab0) - 1
 
-		if $tab0[$i][0] <> "" Then
-			$compt_total +=1
-			Redim $tab_final[$compt_total][8]
-			for $y=0 To 7
-				 $tab_final[$compt_total-1][$y] = $tab0[$i][$y]
+		If $tab0[$i][0] <> "" Then
+			$compt_total += 1
+			ReDim $tab_final[$compt_total][8]
+			For $y = 0 To 7
+				$tab_final[$compt_total - 1][$y] = $tab0[$i][$y]
 			Next
 		EndIf
 	Next
 
-	for $i=0 To Ubound($tab1) - 1
+	For $i = 0 To UBound($tab1) - 1
 
-		if $tab1[$i][0] <> "" Then
-			$compt_total +=1
-			Redim $tab_final[$compt_total][8]
-			for $y=0 To 7
-				 $tab_final[$compt_total-1][$y] = $tab1[$i][$y]
+		If $tab1[$i][0] <> "" Then
+			$compt_total += 1
+			ReDim $tab_final[$compt_total][8]
+			For $y = 0 To 7
+				$tab_final[$compt_total - 1][$y] = $tab1[$i][$y]
 			Next
 		EndIf
 	Next
 
-	for $i=0 To Ubound($tab2) - 1
+	For $i = 0 To UBound($tab2) - 1
 
-		if $tab2[$i][0] <> "" Then
-			$compt_total +=1
-			Redim $tab_final[$compt_total][8]
-			for $y=0 To 7
-				 $tab_final[$compt_total-1][$y] = $tab2[$i][$y]
+		If $tab2[$i][0] <> "" Then
+			$compt_total += 1
+			ReDim $tab_final[$compt_total][8]
+			For $y = 0 To 7
+				$tab_final[$compt_total - 1][$y] = $tab2[$i][$y]
 			Next
 		EndIf
 	Next
 
-	for $i=0 To Ubound($tab3) - 1
+	For $i = 0 To UBound($tab3) - 1
 
-		if $tab3[$i][0] <> "" Then
-			$compt_total +=1
-			Redim $tab_final[$compt_total][8]
-			for $y=0 To 7
-				 $tab_final[$compt_total-1][$y] = $tab3[$i][$y]
+		If $tab3[$i][0] <> "" Then
+			$compt_total += 1
+			ReDim $tab_final[$compt_total][8]
+			For $y = 0 To 7
+				$tab_final[$compt_total - 1][$y] = $tab3[$i][$y]
 			Next
 		EndIf
 	Next
 
-	for $i=0 To Ubound($tab4) - 1
+	For $i = 0 To UBound($tab4) - 1
 
-		if $tab4[$i][0] <> "" Then
-			$compt_total +=1
-			Redim $tab_final[$compt_total][8]
-			for $y=0 To 7
-				 $tab_final[$compt_total-1][$y] = $tab4[$i][$y]
+		If $tab4[$i][0] <> "" Then
+			$compt_total += 1
+			ReDim $tab_final[$compt_total][8]
+			For $y = 0 To 7
+				$tab_final[$compt_total - 1][$y] = $tab4[$i][$y]
 			Next
 		EndIf
 	Next
 
-	for $i=0 To Ubound($tab5) - 1
+	For $i = 0 To UBound($tab5) - 1
 
-		if $tab5[$i][0] <> "" Then
-			$compt_total +=1
-			Redim $tab_final[$compt_total][8]
-			for $y=0 To 7
-				 $tab_final[$compt_total-1][$y] = $tab5[$i][$y]
+		If $tab5[$i][0] <> "" Then
+			$compt_total += 1
+			ReDim $tab_final[$compt_total][8]
+			For $y = 0 To 7
+				$tab_final[$compt_total - 1][$y] = $tab5[$i][$y]
 			Next
 		EndIf
 	Next
 
-	return $tab_final
-EndFunc
+	Return $tab_final
+EndFunc   ;==>triBackPack
 
 Func FilterBackpack()
 
-	$Uni_manuel = false
+	$Uni_manuel = False
 	Local $__ACDACTOR = triBackPack(IterateBackpack(0))
 	Local $iMax = UBound($__ACDACTOR)
 
@@ -1280,68 +1280,68 @@ Func FilterBackpack()
 		Sleep(100)
 
 		CheckWindowD3Size()
-        _checkbackpacksize()
+		_checkbackpacksize()
 
-	;;;	if trim(StringLower($Unidentified)) = "false" Then
-			Take_BookOfCain()
-	;;;	Else
-	;;;		$Uni_manuel = true
-	;;;	EndIF
+		;;;	if trim(StringLower($Unidentified)) = "false" Then
+		Take_BookOfCain()
+		;;;	Else
+		;;;		$Uni_manuel = true
+		;;;	EndIF
 
 		For $i = 0 To $iMax - 1 ;c'est ici que l'on parcour (tours a tours) l'ensemble des items contenut dans notres bag
 
 			$ACD = GetACDOffsetByACDGUID($__ACDACTOR[$i][0])
 			$CurrentIdAttrib = _memoryread($ACD + 0x120, $d3, "ptr")
 			$quality = GetAttribute($CurrentIdAttrib, $Atrib_Item_Quality_Level) ;on definit la quality de l'item traiter ici
-			if ($quality=9) Then
+			If ($quality = 9) Then
 				;Tchat
-				if($PartieSolo='false')Then
-					Switch Random(1,2,1)
-					Case 1
-						dialTchat("Et encore un souffre dans le coffre")
-					Case 2
-						dialTchat("YES j'ai trouvé un legendaire")
+				If ($PartieSolo = 'false') Then
+					Switch Random(1, 2, 1)
+						Case 1
+							dialTchat("Et encore un souffre dans le coffre")
+						Case 2
+							dialTchat("YES j'ai trouvé un legendaire")
 					EndSwitch
 				EndIf
-			$nbLegs+=1 ; on definit les legendaire et on compte les legs id au coffre
-			Elseif ($quality=6) Then
-			$nbRares+=0 ; on definit les rares
+				$nbLegs += 1 ; on definit les legendaire et on compte les legs id au coffre
+			ElseIf ($quality = 6) Then
+				$nbRares += 0 ; on definit les rares
 			EndIf
 
 			$itemDestination = CheckItem($__ACDACTOR[$i][0], $__ACDACTOR[$i][1], 1) ;on recupere ici ce que l'on doit faire de l'objet (stash/inventaire/trash)
 
-	;;;		If $Uni_manuel = true Then
-	;;;			If $quality >= 6 And _MemoryRead($__ACDACTOR[$i][7] + 0x164, $d3, 'int') > 0 And ($itemDestination <> "Stash" Or trim(StringLower($Unidentified)) = "false") Then
-				;Ici on verifie que la qualité est bien superieur a 6 et que l'item as besoin d'etre identifier, si l'item doit aller dans le stash ou si on definit Unidentified a false
-				;Il faudra modifier/ajouter quelque chose ici pour gerer les uni sur les oranges et modifier le nom de la variable Unidentified !
+			;;;		If $Uni_manuel = true Then
+			;;;			If $quality >= 6 And _MemoryRead($__ACDACTOR[$i][7] + 0x164, $d3, 'int') > 0 And ($itemDestination <> "Stash" Or trim(StringLower($Unidentified)) = "false") Then
+			;Ici on verifie que la qualité est bien superieur a 6 et que l'item as besoin d'etre identifier, si l'item doit aller dans le stash ou si on definit Unidentified a false
+			;Il faudra modifier/ajouter quelque chose ici pour gerer les uni sur les oranges et modifier le nom de la variable Unidentified !
 
 
-	;				InventoryMove($__ACDACTOR[$i][3], $__ACDACTOR[$i][4]) ;met la souris sur l'item
+			;				InventoryMove($__ACDACTOR[$i][3], $__ACDACTOR[$i][4]) ;met la souris sur l'item
 
-	;				If IterateActorAtribs($__ACDACTOR[$i][0], $Atrib_Item_Quality_Level) > 8 Then ;verifie la quality de l'item pour connaitre le temps necessaire a l'identification de ce dernier
-	;					Sleep(Random(250, 400))
-	;					MouseClick("Right")
-	;					Sleep(Random(4000, 4500))
-	;				Else
-	;					Sleep(Random(250, 400))
-	;					MouseClick("Right")
-	;					Sleep(Random(1000, 1500))
-	;				EndIf
+			;				If IterateActorAtribs($__ACDACTOR[$i][0], $Atrib_Item_Quality_Level) > 8 Then ;verifie la quality de l'item pour connaitre le temps necessaire a l'identification de ce dernier
+			;					Sleep(Random(250, 400))
+			;					MouseClick("Right")
+			;					Sleep(Random(4000, 4500))
+			;				Else
+			;					Sleep(Random(250, 400))
+			;					MouseClick("Right")
+			;					Sleep(Random(1000, 1500))
+			;				EndIf
 
-	;;;			EndIf
-	;;;		EndIf
+			;;;			EndIf
+			;;;		EndIf
 
 			$return[$i][0] = $__ACDACTOR[$i][3] ;definit la collone de l'item
 			$return[$i][1] = $__ACDACTOR[$i][4] ;definit la ligne de l'item
 			$return[$i][3] = $quality
 
-    ;;;       If $itemDestination = "Stash_Filtre" And trim(StringLower($Unidentified)) = "false" Then ;Si c'est un item à filtrer et que l'on a definit Unidentified sur false (il faudra juste changer le nom de la variable Unidentifier)
+			;;;       If $itemDestination = "Stash_Filtre" And trim(StringLower($Unidentified)) = "false" Then ;Si c'est un item à filtrer et que l'on a definit Unidentified sur false (il faudra juste changer le nom de la variable Unidentifier)
 			If $itemDestination = "Stash_Filtre" Then ;Si c'est un item à filtrer
 				If checkFiltreFromtable($GrabListTab, $__ACDACTOR[$i][1], $CurrentIdAttrib) Then ;on lance le filtre sur l'item
 					_log('valide', 1)
 					_log(' - ', 1)
 					$return[$i][2] = "Stash"
-					$nbRares+=1 ; on conte les rares id qu'on met au coffre
+					$nbRares += 1 ; on conte les rares id qu'on met au coffre
 				Else
 					$return[$i][2] = "Trash"
 					_log('invalide', 1)
@@ -1353,28 +1353,28 @@ Func FilterBackpack()
 			EndIf
 
 		Next
-      ;debut Recyclage Item
-		 if $Recycle="true" Then
-			For $i=0 To UBound($return) -1
-			 if $return[$i][2]="Trash" and $return[$i][3]>2 and $return[$i][3]<$QualityRecycle Then ; si trash + qualité >2, soit les bleus et jaunes, mettre 5 pour ne recycler que les jaunes.
-			  ;Recyle les bleus et vend les jaunes >2 <6
-			   $return[$i][2]="Recycle"
-			 Endif
-		    Next
-		 EndIf
-     ; Fin Recyclage Item
+		;debut Recyclage Item
+		If $Recycle = "true" Then
+			For $i = 0 To UBound($return) - 1
+				If $return[$i][2] = "Trash" And $return[$i][3] > 2 And $return[$i][3] < $QualityRecycle Then ; si trash + qualité >2, soit les bleus et jaunes, mettre 5 pour ne recycler que les jaunes.
+					;Recyle les bleus et vend les jaunes >2 <6
+					$return[$i][2] = "Recycle"
+				EndIf
+			Next
+		EndIf
+		; Fin Recyclage Item
 
 		Send("{SPACE}") ; make sure we close everything
 
 		Return $return
 	EndIf
 	Return False
- EndFunc   ;==>FilterBackpack
+EndFunc   ;==>FilterBackpack
 
 
 Func FilterBackpack2()
 
-	$Uni_manuel = false
+	$Uni_manuel = False
 	Local $__ACDACTOR = triBackPack(IterateBackpack(0))
 	Local $iMax = UBound($__ACDACTOR)
 
@@ -1387,100 +1387,100 @@ Func FilterBackpack2()
 		Sleep(100)
 
 		CheckWindowD3Size()
-        _checkbackpacksize()
+		_checkbackpacksize()
 
-		 Zero_Point()
-			
-	  If $Unidentified="false" and $Identified="false" Then
-		 Take_BookOfCain()
-		 Sleep(Random(100, 200))
-		 Send("{SPACE}")
-		 Sleep(Random(100, 200))
-	  Endif			
+		Zero_Point()
+		
+		If $Unidentified = "false" And $Identified = "false" Then
+			Take_BookOfCain()
+			Sleep(Random(100, 200))
+			Send("{SPACE}")
+			Sleep(Random(100, 200))
+		EndIf
 
 		For $i = 0 To $iMax - 1 ;c'est ici que l'on parcour (tours a tours) l'ensemble des items contenut dans notres bag
 
 			$ACD = GetACDOffsetByACDGUID($__ACDACTOR[$i][0])
 			$CurrentIdAttrib = _memoryread($ACD + 0x120, $d3, "ptr")
 			$quality = GetAttribute($CurrentIdAttrib, $Atrib_Item_Quality_Level) ;on definit la quality de l'item traiter ici
-			if ($quality=9) Then
-			$nbLegs+=1 ; on definit les legendaire et on compte les legs unid au coffre
-			Elseif ($quality=6) Then
-			$nbRaresUnid+=0 ; on definit les rares
+			If ($quality = 9) Then
+				$nbLegs += 1 ; on definit les legendaire et on compte les legs unid au coffre
+			ElseIf ($quality = 6) Then
+				$nbRaresUnid += 0 ; on definit les rares
 			EndIf
 
 			$itemDestination = CheckItem($__ACDACTOR[$i][0], $__ACDACTOR[$i][1], 1) ;on recupere ici ce que l'on doit faire de l'objet (stash/inventaire/trash)
 
-	;;;		If $Uni_manuel = true Then
-	;;;			If $quality >= 6 And _MemoryRead($__ACDACTOR[$i][7] + 0x164, $d3, 'int') > 0 And ($itemDestination <> "Stash" Or trim(StringLower($Unidentified)) = "false") Then
-				;Ici on verifie que la qualité est bien superieur a 6 et que l'item as besoin d'etre identifier, si l'item doit aller dans le stash ou si on definit Unidentified a false
-				;Il faudra modifier/ajouter quelque chose ici pour gerer les uni sur les oranges et modifier le nom de la variable Unidentified !
+			;;;		If $Uni_manuel = true Then
+			;;;			If $quality >= 6 And _MemoryRead($__ACDACTOR[$i][7] + 0x164, $d3, 'int') > 0 And ($itemDestination <> "Stash" Or trim(StringLower($Unidentified)) = "false") Then
+			;Ici on verifie que la qualité est bien superieur a 6 et que l'item as besoin d'etre identifier, si l'item doit aller dans le stash ou si on definit Unidentified a false
+			;Il faudra modifier/ajouter quelque chose ici pour gerer les uni sur les oranges et modifier le nom de la variable Unidentified !
 
 
-	;				InventoryMove($__ACDACTOR[$i][3], $__ACDACTOR[$i][4]) ;met la souris sur l'item
+			;				InventoryMove($__ACDACTOR[$i][3], $__ACDACTOR[$i][4]) ;met la souris sur l'item
 
-	;				If IterateActorAtribs($__ACDACTOR[$i][0], $Atrib_Item_Quality_Level) > 8 Then ;verifie la quality de l'item pour connaitre le temps necessaire a l'identification de ce dernier
-	;					Sleep(Random(250, 400))
-	;					MouseClick("Right")
-	;					Sleep(Random(4000, 4500))
-	;				Else
-	;					Sleep(Random(250, 400))
-	;					MouseClick("Right")
-	;					Sleep(Random(1000, 1500))
-	;				EndIf
+			;				If IterateActorAtribs($__ACDACTOR[$i][0], $Atrib_Item_Quality_Level) > 8 Then ;verifie la quality de l'item pour connaitre le temps necessaire a l'identification de ce dernier
+			;					Sleep(Random(250, 400))
+			;					MouseClick("Right")
+			;					Sleep(Random(4000, 4500))
+			;				Else
+			;					Sleep(Random(250, 400))
+			;					MouseClick("Right")
+			;					Sleep(Random(1000, 1500))
+			;				EndIf
 
-	;;;			EndIf
-	;;;		EndIf
+			;;;			EndIf
+			;;;		EndIf
 
 			$return[$i][0] = $__ACDACTOR[$i][3] ;definit la collone de l'item
 			$return[$i][1] = $__ACDACTOR[$i][4] ;definit la ligne de l'item
 			$return[$i][3] = $quality
 			
-			If $Unidentified="false" and $Identified="false" Then ;ajouter pour ne rien filtrer
-			   If $itemDestination = "Stash_Filtre" Then ;on traite la qualité
-				  If ($quality<9) Then;si la qualité est plus petite que 9 on jette
-				      $return[$i][2] = "Trash"
-					  _log('invalide', 1)
-					  _log(' - ', 1)
-				   EndIf
-				   
-			   Else
-				  $return[$i][2] = $itemDestination ;row
-			   EndIf
-		 
-			Endif
+			If $Unidentified = "false" And $Identified = "false" Then ;ajouter pour ne rien filtrer
+				If $itemDestination = "Stash_Filtre" Then ;on traite la qualité
+					If ($quality < 9) Then;si la qualité est plus petite que 9 on jette
+						$return[$i][2] = "Trash"
+						_log('invalide', 1)
+						_log(' - ', 1)
+					EndIf
+					
+				Else
+					$return[$i][2] = $itemDestination ;row
+				EndIf
+				
+			EndIf
 			
-			 
-            If $Unidentified="true" then
-			   If $itemDestination = "Stash_Filtre" Then ;Si c'est un item à filtrer
-				 If checkFiltreFromtable($GrabListTab, $__ACDACTOR[$i][1], $CurrentIdAttrib) Then ;on lance le filtre sur l'item
-					 _log('valide', 1)
-					 _log(' - ', 1)
-					 $return[$i][2] = "Stash"
-					 $nbRaresUnid+=1 ; on conte les rare unid quon met au coffre
-				 Else
-					 $return[$i][2] = "Trash"
-					 _log('invalide', 1)
-					 _log(' - ', 1)
-				 EndIf
+			
+			If $Unidentified = "true" Then
+				If $itemDestination = "Stash_Filtre" Then ;Si c'est un item à filtrer
+					If checkFiltreFromtable($GrabListTab, $__ACDACTOR[$i][1], $CurrentIdAttrib) Then ;on lance le filtre sur l'item
+						_log('valide', 1)
+						_log(' - ', 1)
+						$return[$i][2] = "Stash"
+						$nbRaresUnid += 1 ; on conte les rare unid quon met au coffre
+					Else
+						$return[$i][2] = "Trash"
+						_log('invalide', 1)
+						_log(' - ', 1)
+					EndIf
 
-			   Else
-				  $return[$i][2] = $itemDestination ;row
-			   EndIf
-			 
-	        Endif
-		
+				Else
+					$return[$i][2] = $itemDestination ;row
+				EndIf
+				
+			EndIf
+			
 		Next
-		 
-     ; Recyclage Item
-		 if $Recycle="true"and $Identified= "false" Then
-			For $i=0 To UBound($return) -1
-			 if $return[$i][2]="Trash" and $return[$i][3]>2 and $return[$i][3]<$QualityRecycle Then ; si trash + qualité >2, soit les bleus et jaunes, mettre 5 pour ne recycler que les jaunes.
-			   $return[$i][2]="Recycle"
-			 Endif
-		    Next
-		 EndIf
-   ; Fin Recyclage Item
+		
+		; Recyclage Item
+		If $Recycle = "true" And $Identified = "false" Then
+			For $i = 0 To UBound($return) - 1
+				If $return[$i][2] = "Trash" And $return[$i][3] > 2 And $return[$i][3] < $QualityRecycle Then ; si trash + qualité >2, soit les bleus et jaunes, mettre 5 pour ne recycler que les jaunes.
+					$return[$i][2] = "Recycle"
+				EndIf
+			Next
+		EndIf
+		; Fin Recyclage Item
 
 		Send("{SPACE}") ; make sure we close everything
 
@@ -1527,57 +1527,57 @@ Func LocateMyToon()
 	$idarea = 0
 	If _ingame() Then
 
-			While  $count_locatemytoon <= 1000
+		While $count_locatemytoon <= 1000
 
-				$idarea = GetLevelAreaId()
+			$idarea = GetLevelAreaId()
 
-				if $idarea <> -1 Then
-					If $_debug Then _log("Looking for local player")
-					Global $_Myoffset = "0x" & Hex(GetPlayerOffset(), 8) ; pour convertir valeur
-					Global $_MyGuid = _MemoryRead($_Myoffset + 0x4, $d3, 'ptr')
-					$_NAME = _MemoryRead($_Myoffset + 0x8, $d3, 'char[64]')
-					$_SNO = _MemoryRead($_Myoffset + 0x88, $d3, 'ptr')
-					setChararacter($_NAME)
+			If $idarea <> -1 Then
+				If $_debug Then _log("Looking for local player")
+				Global $_Myoffset = "0x" & Hex(GetPlayerOffset(), 8) ; pour convertir valeur
+				Global $_MyGuid = _MemoryRead($_Myoffset + 0x4, $d3, 'ptr')
+				$_NAME = _MemoryRead($_Myoffset + 0x8, $d3, 'char[64]')
+				$_SNO = _MemoryRead($_Myoffset + 0x88, $d3, 'ptr')
+				setChararacter($_NAME)
 
 
-					$ACD = GetACDOffsetByACDGUID($_MyGuid)
-					$name_by_acd = _MemoryRead($ACD + 0x4, $d3, 'char[64]')
+				$ACD = GetACDOffsetByACDGUID($_MyGuid)
+				$name_by_acd = _MemoryRead($ACD + 0x4, $d3, 'char[64]')
 
-					$_MyGuid = _memoryread($ACD + 0x120, $d3, "ptr")
-					Global $_MyACDWorld = _memoryread($ACD + 0x108, $d3, "ptr")
+				$_MyGuid = _memoryread($ACD + 0x120, $d3, "ptr")
+				Global $_MyACDWorld = _memoryread($ACD + 0x108, $d3, "ptr")
 
-					If NOT trim($_NAME) = ""  Then
-						If trim($_NAME) = trim($name_by_acd) Then
-					Global $_MyCharType = $_NAME
+				If Not trim($_NAME) = "" Then
+					If trim($_NAME) = trim($name_by_acd) Then
+						Global $_MyCharType = $_NAME
 
-							If $hotkeycheck = 1 Then
-								If Verif_Attrib_GlobalStuff() Then
-									return true
-								Else
-									_log("CHANGEMENT DE STUFF ON TOURNE EN ROND (locatemytoon)!!!!!")
-									antiidle()
-								EndIf
+						If $hotkeycheck = 1 Then
+							If Verif_Attrib_GlobalStuff() Then
+								Return True
 							Else
-								return true
+								_log("CHANGEMENT DE STUFF ON TOURNE EN ROND (locatemytoon)!!!!!")
+								antiidle()
 							EndIf
-						else
-							;_log("Fail LocateMyToon, $_NAME <> $name_by_acd -> " & $count_locatemytoon)
-							$count_locatemytoon += 1
+						Else
+							Return True
 						EndIf
-					else
-						;_log("Fail LocateMyToon, Empty $_NAME  -> " & $count_locatemytoon)
+					Else
+						;_log("Fail LocateMyToon, $_NAME <> $name_by_acd -> " & $count_locatemytoon)
 						$count_locatemytoon += 1
 					EndIf
-
 				Else
-					;_log("Fail LocateMyToon, Fail AreaId -> " & $idarea)
+					;_log("Fail LocateMyToon, Empty $_NAME  -> " & $count_locatemytoon)
 					$count_locatemytoon += 1
 				EndIf
+
+			Else
+				;_log("Fail LocateMyToon, Fail AreaId -> " & $idarea)
+				$count_locatemytoon += 1
+			EndIf
 
 			Sleep(50)
 
 
-			WEnd
+		WEnd
 
 
 
@@ -1874,7 +1874,7 @@ Func offsetlist()
 	Global $Ofs_CameraFOV = $ViewOffset + 0x30
 	Global $Ofs_CameraFOVB = $ViewOffset + 0x30
 	Global $ofs_InteractBase = 0x18CD364 ;0x1543B84 ;0x15A0BD4 ;0x015A1BD4;0x15A0BD4
-	Global $ofs__InteractOffsetA =  0xC4 ;0xA8
+	Global $ofs__InteractOffsetA = 0xC4 ;0xA8
 	Global $ofs__InteractOffsetB = 0x58
 	Global $ofs__InteractOffsetUNK1 = 0x7F20 ;Set to 777c
 	Global $ofs__InteractOffsetUNK2 = 0x7F44 ;Set to 1 for NPC interaction
@@ -2069,20 +2069,20 @@ Func FromD3toScreenCoords($_x, $_y, $_z)
 	$xd = $_x - $CurrentLoc[0]
 	$yd = $_y - $CurrentLoc[1]
 	$zd = $_z - $CurrentLoc[2]
-	$w = -0.515 * $xd + - 0.514 * $yd + - 0.686 * $zd + 97.985
+	$w = -0.515 * $xd + -0.514 * $yd + -0.686 * $zd + 97.985
 	$x = (-1.682 * $xd + 1.683 * $yd + 0 * $zd + 7.045E-3) / $w
-	$y = (-1.54 * $xd + - 1.539 * $yd + 2.307 * $zd + 6.161) / $w
-	$Z = (-0.515 * $xd + - 0.514 * $yd + - 0.686 * $zd + 97.002) / $w
+	$y = (-1.54 * $xd + -1.539 * $yd + 2.307 * $zd + 6.161) / $w
+	$Z = (-0.515 * $xd + -0.514 * $yd + -0.686 * $zd + 97.002) / $w
 	$x /= $aspectChange
 	While Abs($x) >= 1 Or Abs($y) >= 0.7 Or $Z <= 0
 		; specified point is not on screen
 		$xd = $xd / 2
 		$yd = $yd / 2
 		$zd = $zd / 2
-		$w = -0.515 * $xd + - 0.514 * $yd + - 0.686 * $zd + 97.985
+		$w = -0.515 * $xd + -0.514 * $yd + -0.686 * $zd + 97.985
 		$x = (-1.682 * $xd + 1.683 * $yd + 0 * $zd + 7.045E-3) / $w
-		$y = (-1.54 * $xd + - 1.539 * $yd + 2.307 * $zd + 6.161) / $w
-		$Z = (-0.515 * $xd + - 0.514 * $yd + - 0.686 * $zd + 97.002) / $w
+		$y = (-1.54 * $xd + -1.539 * $yd + 2.307 * $zd + 6.161) / $w
+		$Z = (-0.515 * $xd + -0.514 * $yd + -0.686 * $zd + 97.002) / $w
 		$x /= $aspectChange
 	WEnd
 	$return[0] = ($x + 1) / 2 * $resolutionX
@@ -2227,8 +2227,8 @@ Func MoveToPos($_x, $_y, $_z, $_a, $m_range)
 			;ConsoleWrite("Last check: " & $Distance & @CRLF)
 			;MouseMove($Coords[0], $Coords[1], 3)
 
-			$Coords_RndX = $Coords[0] + Random(-17,17)
-			$Coords_RndY = $Coords[1] + Random(-17,17)
+			$Coords_RndX = $Coords[0] + Random(-17, 17)
+			$Coords_RndY = $Coords[1] + Random(-17, 17)
 
 			If $Coords_RndX < 40 Then
 				$Coords_RndX = 40
@@ -2294,7 +2294,7 @@ Func InteractByActorName($a_name, $dist = 300)
 		While iterateObjectsList($index, $offset, $count, $item)
 			If StringInStr($item[1], $a_name) And $item[9] < $dist Then
 				_log($item[1] & " distance : " & $item[9])
-				While getDistance($item[2], $item[3], $item[4]) > 40 And $maxtry <= 15
+				While GetDistance($item[2], $item[3], $item[4]) > 40 And $maxtry <= 15
 					$Coords = FromD3toScreenCoords($item[2], $item[3], $item[4])
 					MouseClick("middle", $Coords[0], $Coords[1], 1, 10)
 					$maxtry += 1
@@ -2430,7 +2430,7 @@ Func iterateObjectsList(ByRef $index, ByRef $offset, ByRef $count, ByRef $item)
 	$item[6] = DllStructGetData($iterateObjectsListStruct, 11) ; data 2
 	$item[7] = DllStructGetData($iterateObjectsListStruct, 9) ; data 3
 	$item[8] = $offset
-	$item[9] = getDistance($item[2], $item[3], $item[4]) ; Distance
+	$item[9] = GetDistance($item[2], $item[3], $item[4]) ; Distance
 	$iterateObjectsListStruct = ""
 
 	$offset = $offset + $_ObjmanagerStrucSize
@@ -2453,7 +2453,7 @@ Func IterateFilterAttack($IgnoreList)
 	While iterateObjectsList($index, $offset, $count, $item)
 		$compt += 1
 		If Is_Interact($item, $IgnoreList) Then
-			If Is_Shrine($item) Or Is_Mob($item) Or Is_Loot($item) or Is_Decor_Breakable($item) Then
+			If Is_Shrine($item) Or Is_Mob($item) Or Is_Loot($item) Or Is_Decor_Breakable($item) Then
 				ReDim $item_buff_2D[$i + 1][10]
 				For $x = 0 To 9
 					$item_buff_2D[$i][$x] = $item[$x]
@@ -2477,22 +2477,22 @@ Func IterateFilterAttack($IgnoreList)
 			Dim $item_buff_2D = $item_buff_2D_buff
 		EndIf
 		Return $item_buff_2D
-	 EndIf
+	EndIf
 
 EndFunc   ;==>IterateFilterAttack
 
-Func IterateFilterZone($dist,$n=2)
+Func IterateFilterZone($dist, $n = 2)
 	Local $index, $offset, $count, $item[10]
 	startIterateObjectsList($index, $offset, $count)
 ;~ 	Dim $item_buff_2D[1][10]
 	Local $i = 0
-$my_pos_zone=getcurrentpos()
+	$my_pos_zone = GetCurrentPos()
 	$compt = 0
 
 	While iterateObjectsList($index, $offset, $count, $item)
 		$compt += 1
 		If Is_Interact($item, "") Then
-			If Is_Mob($item) and sqrt(($item[2]-$my_pos_zone[0])^2 + ($item[3]-$my_pos_zone[1])^2 ) < $dist and $item[4]<10 Then
+			If Is_Mob($item) And Sqrt(($item[2] - $my_pos_zone[0]) ^ 2 + ($item[3] - $my_pos_zone[1]) ^ 2) < $dist And $item[4] < 10 Then
 ;~ 				ReDim $item_buff_2D[$i + 1][10]
 ;~ 				For $x = 0 To 9
 ;~ 					$item_buff_2D[$i][$x] = $item[$x]
@@ -2502,16 +2502,16 @@ $my_pos_zone=getcurrentpos()
 
 		EndIf
 	WEnd
-;= 0 or ubound($item_buff_2D)
-	If $i <2 Then
+	;= 0 or ubound($item_buff_2D)
+	If $i < 2 Then
 ;~ 	   _log("pas assez de mob proche")
 		Return False
 	Else
 ;~ 		 _log("nombre : " & $i)
-		return True
+		Return True
 
 	EndIf
-EndFunc   ;==>IterateFilterAttack
+EndFunc   ;==>IterateFilterZone
 
 Func UpdateArrayAttack($array_obj, $IgnoreList, $update_attrib = 0)
 
@@ -2552,8 +2552,8 @@ Func TriObjectMonster($item)
 
 	For $i = 0 To UBound($item) - 1
 
-		For $z = 0 to 9
-			$item_temp[$z] = $item[$i][$z]
+		For $Z = 0 To 9
+			$item_temp[$Z] = $item[$i][$Z]
 		Next
 
 
@@ -2569,7 +2569,7 @@ Func TriObjectMonster($item)
 ;~ 			$compt_elite += 1
 
 ;~ 		Else
-		   if Is_Mob($item_temp) Then
+		If Is_Mob($item_temp) Then
 
 			If UBound($tab_monster) > 1 Or $compt_monster <> 0 Then
 				ReDim $tab_monster[UBound($tab_monster) + 1][10]
@@ -2638,7 +2638,7 @@ Func UpdateObjectsList($item)
 		$item[$i][2] = DllStructGetData($pos, 2)
 		$item[$i][3] = DllStructGetData($pos, 3)
 		$item[$i][4] = DllStructGetData($pos, 4)
-		$item[$i][9] = getDistance($item[$i][2], $item[$i][3], $item[$i][4]) ; Distance
+		$item[$i][9] = GetDistance($item[$i][2], $item[$i][3], $item[$i][4]) ; Distance
 		$pos = ""
 	Next
 	Return $item
@@ -2651,13 +2651,13 @@ Func UpdateObjectsPos($offset)
 	$obj_pos[0] = DllStructGetData($pos, 2)
 	$obj_pos[1] = DllStructGetData($pos, 3)
 	$obj_pos[2] = DllStructGetData($pos, 4)
-	$obj_pos[3] = getDistance($obj_pos[0], $obj_pos[1], $obj_pos[2]) ; Distance
+	$obj_pos[3] = GetDistance($obj_pos[0], $obj_pos[1], $obj_pos[2]) ; Distance
 	$pos = ""
 	Return $obj_pos
 EndFunc   ;==>UpdateObjectsPos
 
 Func Is_Shrine($item)
-	If StringInStr($item[1], "shrine") and $item[9]<35 Then
+	If StringInStr($item[1], "shrine") And $item[9] < 35 Then
 		Return True
 	Else
 		Return False
@@ -2665,22 +2665,22 @@ Func Is_Shrine($item)
 EndFunc   ;==>Is_Shrine
 
 Func Is_Mob($item)
-	If checkfromlist($BanmonsterList, $item[1]) = 0 And checkFromList($monsterList, $item[1]) And $item[6] <> -1 And $item[9] < $a_range Or checkFromList($SpecialmonsterList, $item[1]) And $item[9] < $a_range Then
+	If checkFromList($BanmonsterList, $item[1]) = 0 And checkFromList($monsterList, $item[1]) And $item[6] <> -1 And $item[9] < $a_range Or checkFromList($SpecialmonsterList, $item[1]) And $item[9] < $a_range Then
 		Return True
 	Else
 		Return False
 	EndIf
 EndFunc   ;==>Is_Mob
 
-global $decorlist=""
-global $bandecorlist=""
+Global $decorlist = ""
+Global $bandecorlist = ""
 Func Is_Decor_Breakable($item)
-	If checkfromlist($BandecorList, $item[1]) = 0 And checkFromList($decorList, $item[1]) And $item[6] <> -1 And $item[9] < 18  Then
+	If checkFromList($bandecorlist, $item[1]) = 0 And checkFromList($decorlist, $item[1]) And $item[6] <> -1 And $item[9] < 18 Then
 		Return True
 	Else
 		Return False
 	EndIf
-EndFunc   ;==>Is_Mob
+EndFunc   ;==>Is_Decor_Breakable
 
 Func Is_Loot($item)
 
@@ -2693,7 +2693,7 @@ Func Is_Loot($item)
 EndFunc   ;==>Is_Loot
 
 Func Is_Interact($item, $IgnoreList)
-	If $item[0] <> "" And $item[0] <> 0xFFFFFFFF And ($item[9] < $g_range Or $item[9] < $a_range) And StringInStr($IgnoreList, $item[8]) == 0 And StringInStr($handle_banlistdef, $item[2]&"-"&$item[3]&"-"&$item[4]) == 0 And StringInStr($IgnoreItemList, $item[1]) = 0 And checkfromlist($shrinebanlist, $item[8]) = 0 And Abs($Current_Hero_Z - $item[4]) <= $Hero_Axe_Z Then
+	If $item[0] <> "" And $item[0] <> 0xFFFFFFFF And ($item[9] < $g_range Or $item[9] < $a_range) And StringInStr($IgnoreList, $item[8]) == 0 And StringInStr($handle_banlistdef, $item[2] & "-" & $item[3] & "-" & $item[4]) == 0 And StringInStr($IgnoreItemList, $item[1]) = 0 And checkFromList($shrinebanlist, $item[8]) = 0 And Abs($Current_Hero_Z - $item[4]) <= $Hero_Axe_Z Then
 		If Not Checkstartlist_regex($Ban_startstrItemList, $item[1]) And Not Checkendlist_regex("_projectile", $item[1]) Then
 			Return True
 		Else
@@ -2723,7 +2723,7 @@ Func handle_Mob(ByRef $item, ByRef $IgnoreList, ByRef $test_iterateallobjectslis
 	If GetAttribute($CurrentIdAttrib, $Atrib_Hitpoints_Cur) > 0 And GetAttribute($CurrentIdAttrib, $Atrib_Invulnerable) = 0 Then
 
 		$foundobject = 1
-		If KillMob($item[1], $item[8], $item[0],$test_iterateallobjectslist) = False Then
+		If KillMob($item[1], $item[8], $item[0], $test_iterateallobjectslist) = False Then
 			_log('ignoring ' & $item[1])
 			$IgnoreList = $IgnoreList & $item[8]
 
@@ -2750,106 +2750,106 @@ Func handle_Mob(ByRef $item, ByRef $IgnoreList, ByRef $test_iterateallobjectslis
 	EndIf
 EndFunc   ;==>handle_Mob
 
- Func Checkqual($_GUID)
-        ; _log("guid: "&$_GUID &" name: "& $_NAME & " qual: "&IterateActorAtribs($_GUID, $Atrib_Item_Quality_Level))
-                $ACD = GetACDOffsetByACDGUID($_GUID)
-                $CurrentIdAttrib = _memoryread($ACD + 0x120, $d3, "ptr");
-                $quality = GetAttribute($CurrentIdAttrib, $Atrib_Item_Quality_Level)
+Func Checkqual($_GUID)
+	; _log("guid: "&$_GUID &" name: "& $_NAME & " qual: "&IterateActorAtribs($_GUID, $Atrib_Item_Quality_Level))
+	$ACD = GetACDOffsetByACDGUID($_GUID)
+	$CurrentIdAttrib = _memoryread($ACD + 0x120, $d3, "ptr");
+	$quality = GetAttribute($CurrentIdAttrib, $Atrib_Item_Quality_Level)
 
 
-        Return $quality
-EndFunc   ;==>CheckItem
+	Return $quality
+EndFunc   ;==>Checkqual
 Func handle_Loot(ByRef $item, ByRef $IgnoreList, ByRef $test_iterateallobjectslist)
-        $grabit = False
-    If _MemoryRead($item[8] + 0x4, $d3, 'ptr') <> 0xFFFFFFFF Then
-                ConsoleWrite("Checking " & $item[1] & @CRLF)
+	$grabit = False
+	If _MemoryRead($item[8] + 0x4, $d3, 'ptr') <> 0xFFFFFFFF Then
+		ConsoleWrite("Checking " & $item[1] & @CRLF)
 
-				If $gestion_affixe_loot="true" Then
-					Dim $item_aff_verif = IterateFilterAffix()
+		If $gestion_affixe_loot = "true" Then
+			Dim $item_aff_verif = IterateFilterAffix()
+		Else
+			$item_aff_verif = ""
+		EndIf
+
+		If IsArray($item_aff_verif) And $gestion_affixe_loot = "true" Then
+			If is_zone_safe($item[2], $item[3], $item[4], $item_aff_verif) Or Checkqual($item[0]) = 9 Then
+				$itemDestination = CheckItem($item[0], $item[1])
+				If $itemDestination == "Stash" Or $itemDestination == "Salvage" Or ($itemDestination == "Inventory" And $takepot = True) Then
+					; this loot is interesting
+					$foundobject = 1
+					If Grabit($item[1], $item[8]) = False Then
+						_log('ignoring ' & $item[1])
+						$IgnoreList = $IgnoreList & $item[8]
+						handle_banlist($item[2] & "-" & $item[3] & "-" & $item[4])
+						;_log("Grabtimeout : " & $grabtimeout & " killtimeout: "& $killtimeout)
+						If $killtimeout > 2 Or $grabtimeout > 2 Then
+							If _checkdisconnect() Or _playerdead() Then
+								_log('_checkdisconnect A or player D')
+								$GameFailed = 1
+							EndIf
+						EndIf
+
+					EndIf
+
+					If Trim(StringLower($ItemRefresh)) = "true" Then
+						Dim $buff_array = UpdateArrayAttack($test_iterateallobjectslist, $IgnoreList, 1)
+						$test_iterateallobjectslist = $buff_array
+					EndIf
 				Else
-					$item_aff_verif = ""
+					If checkFromList($monsterList, $item[1]) = False Then
+						$IgnoreItemList = $IgnoreItemList & $item[1] & "-"
+						;_log('ignoring ' & $item[8] & " : " & $item[1] & " :::::" &$IgnoreItemList)
+					EndIf
+				EndIf
+			EndIf
+		Else
+			$itemDestination = CheckItem($item[0], $item[1])
+			If $itemDestination == "Stash" Or $itemDestination == "Salvage" Or ($itemDestination == "Inventory" And $takepot = True) Then
+				; this loot is interesting
+				$foundobject = 1
+				If Grabit($item[1], $item[8]) = False Then
+					_log('ignoring ' & $item[1])
+					$IgnoreList = $IgnoreList & $item[8]
+					handle_banlist($item[2] & "-" & $item[3] & "-" & $item[4])
+					;_log("Grabtimeout : " & $grabtimeout & " killtimeout: "& $killtimeout)
+					If $killtimeout > 2 Or $grabtimeout > 2 Then
+						If _checkdisconnect() Or _playerdead() Then
+							_log('_checkdisconnect A or player D')
+							$GameFailed = 1
+						EndIf
+					EndIf
+
 				EndIf
 
-			If IsArray($item_aff_verif) and $gestion_affixe_loot="true" Then
-			   if is_zone_safe($item[2],$item[3],$item[4],$item_aff_verif) or Checkqual($item[0])=9 then
-							$itemDestination = CheckItem($item[0], $item[1])
-							If $itemDestination == "Stash" Or $itemDestination == "Salvage" Or ($itemDestination == "Inventory" And $takepot = True) Then
-									; this loot is interesting
-									$foundobject = 1
-									If Grabit($item[1], $item[8]) = False Then
-											_log('ignoring ' & $item[1])
-											$IgnoreList = $IgnoreList & $item[8]
-											handle_banlist($item[2]&"-"&$item[3]&"-"&$item[4])
-											;_log("Grabtimeout : " & $grabtimeout & " killtimeout: "& $killtimeout)
-											If $killtimeout > 2 Or $grabtimeout > 2 Then
-													If _checkdisconnect() Or _playerdead() Then
-															_log('_checkdisconnect A or player D')
-															$GameFailed = 1
-													EndIf
-											EndIf
-
-									EndIf
-
-									If Trim(StringLower($ItemRefresh)) = "true" Then
-											Dim $buff_array = UpdateArrayAttack($test_iterateallobjectslist, $IgnoreList, 1)
-											$test_iterateallobjectslist = $buff_array
-									EndIf
-							Else
-									If checkFromList($monsterList, $item[1]) = False Then
-											$IgnoreItemList = $IgnoreItemList & $item[1] & "-"
-											;_log('ignoring ' & $item[8] & " : " & $item[1] & " :::::" &$IgnoreItemList)
-									EndIf
-							 EndIf
-			   EndIf
+				If Trim(StringLower($ItemRefresh)) = "true" Then
+					Dim $buff_array = UpdateArrayAttack($test_iterateallobjectslist, $IgnoreList, 1)
+					$test_iterateallobjectslist = $buff_array
+				EndIf
 			Else
-          $itemDestination = CheckItem($item[0], $item[1])
-                If $itemDestination == "Stash" Or $itemDestination == "Salvage" Or ($itemDestination == "Inventory" And $takepot = True) Then
-                        ; this loot is interesting
-                        $foundobject = 1
-                        If Grabit($item[1], $item[8]) = False Then
-                                _log('ignoring ' & $item[1])
-                                $IgnoreList = $IgnoreList & $item[8]
-                                handle_banlist($item[2]&"-"&$item[3]&"-"&$item[4])
-                                ;_log("Grabtimeout : " & $grabtimeout & " killtimeout: "& $killtimeout)
-                                If $killtimeout > 2 Or $grabtimeout > 2 Then
-                                        If _checkdisconnect() Or _playerdead() Then
-                                                _log('_checkdisconnect A or player D')
-                                                $GameFailed = 1
-                                        EndIf
-                                EndIf
-
-                        EndIf
-
-                        If Trim(StringLower($ItemRefresh)) = "true" Then
-                                Dim $buff_array = UpdateArrayAttack($test_iterateallobjectslist, $IgnoreList, 1)
-                                $test_iterateallobjectslist = $buff_array
-                        EndIf
-                Else
-                        If checkFromList($monsterList, $item[1]) = False Then
-                                $IgnoreItemList = $IgnoreItemList & $item[1] & "-"
-                                ;_log('ignoring ' & $item[8] & " : " & $item[1] & " :::::" &$IgnoreItemList)
-                        EndIf
-                EndIf
-          EndIf
-    EndIf
- EndFunc   ;==>handle_Loot
+				If checkFromList($monsterList, $item[1]) = False Then
+					$IgnoreItemList = $IgnoreItemList & $item[1] & "-"
+					;_log('ignoring ' & $item[8] & " : " & $item[1] & " :::::" &$IgnoreItemList)
+				EndIf
+			EndIf
+		EndIf
+	EndIf
+EndFunc   ;==>handle_Loot
 
 Func handle_banlist($coords_ban)
-	If StringInStr($handle_banlist1, $coords_ban) = false Then
+	If StringInStr($handle_banlist1, $coords_ban) = False Then
 		_log("banlist 1 -> " & $coords_ban)
 		$handle_banlist1 = $handle_banlist1 & "|" & $coords_ban
-	ElseIf StringInStr($handle_banlist1, $coords_ban)  And StringInStr($handle_banlist2, $coords_ban) = false Then
+	ElseIf StringInStr($handle_banlist1, $coords_ban) And StringInStr($handle_banlist2, $coords_ban) = False Then
 		_log("banlist 2 -> " & $coords_ban)
 		$handle_banlist2 = $handle_banlist2 & "|" & $coords_ban
-	ElseIf StringInStr($handle_banlist2, $coords_ban)  Then
+	ElseIf StringInStr($handle_banlist2, $coords_ban) Then
 		_log("banlist def -> " & $coords_ban)
 		$handle_banlistdef = $handle_banlistdef & "|" & $coords_ban
-	 EndIf
-	 				_log("banlist 1 -> " & $handle_banlist1)
+	EndIf
+	_log("banlist 1 -> " & $handle_banlist1)
 
-				_log("banlist 2 -> " & $handle_banlist2)
+	_log("banlist 2 -> " & $handle_banlist2)
 
-			_log("banlist def -> " & $handle_banlistdef)
+	_log("banlist def -> " & $handle_banlistdef)
 
 EndFunc   ;==>handle_banlist
 
@@ -2885,14 +2885,14 @@ Func Attack()
 
 			Select
 				Case Is_Loot($item)
-                    handle_Loot($item, $IgnoreList, $test_iterateallobjectslist)
-                Case Is_Mob($item)
-                    handle_Mob($item, $IgnoreList, $test_iterateallobjectslist)
-                Case Is_Shrine($item)
-                    handle_Shrine($item)
-                Case Is_Decor_Breakable($item)
-                    handle_Mob($item, $IgnoreList, $test_iterateallobjectslist)
-            EndSelect
+					handle_Loot($item, $IgnoreList, $test_iterateallobjectslist)
+				Case Is_Mob($item)
+					handle_Mob($item, $IgnoreList, $test_iterateallobjectslist)
+				Case Is_Shrine($item)
+					handle_Shrine($item)
+				Case Is_Decor_Breakable($item)
+					handle_Mob($item, $IgnoreList, $test_iterateallobjectslist)
+			EndSelect
 
 			Dim $buff_array = UpdateArrayAttack($test_iterateallobjectslist, $IgnoreList)
 			Dim $test_iterateallobjectslist = $buff_array
@@ -2909,63 +2909,63 @@ EndFunc   ;==>DetectElite
 ;;--------------------------------------------------------------------------------
 ;;      KillMob()
 ;;--------------------------------------------------------------------------------
-Func KillMob($name, $offset, $Guid,$test_iterateallobjectslist2)
-        $return = True
-        $begin = TimerInit()
+Func KillMob($name, $offset, $Guid, $test_iterateallobjectslist2)
+	$return = True
+	$begin = TimerInit()
 
 
-        Dim $pos = UpdateObjectsPos($offset)
+	Dim $pos = UpdateObjectsPos($offset)
 
 
-        $Coords = FromD3toScreenCoords($pos[0], $pos[1], $pos[2])
-        MouseMove($Coords[0], $Coords[1], 3)
+	$Coords = FromD3toScreenCoords($pos[0], $pos[1], $pos[2])
+	MouseMove($Coords[0], $Coords[1], 3)
 
-        $elite = DetectElite($Guid)
-        ;loop the attack until the mob is dead
-	    If $elite Then
-	    $CptElite += 1;on compte les élites
-	    EndIf
-	 
-        _log("Attacking : " & $name & "; Type : " & $elite);
-        While IterateActorAtribs($Guid, $Atrib_Hitpoints_Cur) > 0
- $myposs_aff = getcurrentpos()
+	$elite = DetectElite($Guid)
+	;loop the attack until the mob is dead
+	If $elite Then
+		$CptElite += 1;on compte les élites
+	EndIf
+	
+	_log("Attacking : " & $name & "; Type : " & $elite);
+	While IterateActorAtribs($Guid, $Atrib_Hitpoints_Cur) > 0
+		$myposs_aff = GetCurrentPos()
 
-                If _playerdead_revive() Then
-                        $return = False
-                        ExitLoop
-                EndIf
-Dim $pos = UpdateObjectsPos($offset)
+		If _playerdead_revive() Then
+			$return = False
+			ExitLoop
+		EndIf
+		Dim $pos = UpdateObjectsPos($offset)
 
-                 if $gestion_affixe="true" then maffmove($myposs_aff[0],$myposs_aff[1],$myposs_aff[2],$pos[0],$pos[1])
-for $a=0 to ubound($test_iterateallobjectslist2)-1
-   $CurrentACD = GetACDOffsetByACDGUID($test_iterateallobjectslist2[$a][0]); ###########
-	$CurrentIdAttrib = _memoryread($CurrentACD + 0x120, $d3, "ptr"); ###########
-	If GetAttribute($CurrentIdAttrib, $Atrib_Hitpoints_Cur) > 0 then
-			 dim $dist_maj=UpdateObjectsPos($test_iterateallobjectslist2[$a][8])
-			  $test_iterateallobjectslist2[$a][9]=$dist_maj[3]
-		   Else
-			  $test_iterateallobjectslist2[$a][9]=10000
-			  endif
-		   Next
-		   _ArraySort($test_iterateallobjectslist2, 0, 0, 0, 9)
-		      $dist_verif= getDistance($test_iterateallobjectslist2[0][2], $test_iterateallobjectslist2[0][3], $test_iterateallobjectslist2[0][4])
-			  Dim $pos = UpdateObjectsPos($offset)
-			  if $pos[3]>$dist_verif+5 then exitloop
+		If $gestion_affixe = "true" Then maffmove($myposs_aff[0], $myposs_aff[1], $myposs_aff[2], $pos[0], $pos[1])
+		For $a = 0 To UBound($test_iterateallobjectslist2) - 1
+			$CurrentACD = GetACDOffsetByACDGUID($test_iterateallobjectslist2[$a][0]); ###########
+			$CurrentIdAttrib = _memoryread($CurrentACD + 0x120, $d3, "ptr"); ###########
+			If GetAttribute($CurrentIdAttrib, $Atrib_Hitpoints_Cur) > 0 Then
+				Dim $dist_maj = UpdateObjectsPos($test_iterateallobjectslist2[$a][8])
+				$test_iterateallobjectslist2[$a][9] = $dist_maj[3]
+			Else
+				$test_iterateallobjectslist2[$a][9] = 10000
+			EndIf
+		Next
+		_ArraySort($test_iterateallobjectslist2, 0, 0, 0, 9)
+		$dist_verif = GetDistance($test_iterateallobjectslist2[0][2], $test_iterateallobjectslist2[0][3], $test_iterateallobjectslist2[0][4])
+		Dim $pos = UpdateObjectsPos($offset)
+		If $pos[3] > $dist_verif + 5 Then ExitLoop
 
-;if getDistance($pos[0], $pos[1], $pos[2])>20 and IterateFilterZone(30,1) then exitloop
+		;if getDistance($pos[0], $pos[1], $pos[2])>20 and IterateFilterZone(30,1) then exitloop
 
 
-                $Coords = FromD3toScreenCoords($pos[0], $pos[1], $pos[2])
-                MouseMove($Coords[0], $Coords[1], 3)
-GestSpellcast($pos[3], 1, $elite, $Guid, $offset)
-                If TimerDiff($begin) > $a_time Then
-                        $killtimeout += 1
-                        ; after this time, the mob should be dead, otherwise he is probly unkillable
-                        $return = False
-                        ExitLoop
-                EndIf
-        WEnd
-        Return $return
+		$Coords = FromD3toScreenCoords($pos[0], $pos[1], $pos[2])
+		MouseMove($Coords[0], $Coords[1], 3)
+		GestSpellcast($pos[3], 1, $elite, $Guid, $offset)
+		If TimerDiff($begin) > $a_time Then
+			$killtimeout += 1
+			; after this time, the mob should be dead, otherwise he is probly unkillable
+			$return = False
+			ExitLoop
+		EndIf
+	WEnd
+	Return $return
 EndFunc   ;==>KillMob
 
 
@@ -3037,7 +3037,7 @@ Func Grabit($name, $offset)
 			;If _inventoryfull() Then
 			If Detect_UI_error(0) Then
 				Unbuff()
-					TpRepairAndBack()
+				TpRepairAndBack()
 				Buffinit()
 			EndIf
 
@@ -3100,8 +3100,8 @@ Func CheckItem($_GUID, $_NAME, $_MODE = 0)
 		EndIf
 
 
-		If checkFromtable($GrabListTab, $_NAME, $quality) Then
-			If checkIlvlFromtable($GrabListTab, $ACD, $_NAME) Then
+		If checkFromTable($GrabListTab, $_NAME, $quality) Then
+			If checkIlvlFromTable($GrabListTab, $ACD, $_NAME) Then
 
 				If $_MODE = 0 Then
 					_log($_NAME & " ==> It's a rare in our list ")
@@ -3206,7 +3206,7 @@ Func checkIlvlFromTable($table, $ACD, $compare)
 		If StringRegExp($compare, "(?i)^" & $table[$i][0] & "") = 1 Then
 			;If StringInStr($compare, $table[$i][0]) Then
 			If $table[$i][1] > 0 Then
-				$ilvl = GetILvlFromACD($ACD)
+				$ilvl = GetIlvlFromACD($ACD)
 				If $ilvl >= $table[$i][1] Then
 					Return 1
 				EndIf
@@ -3258,7 +3258,7 @@ Func OpenWp(ByRef $item)
 	Local $maxtry = 0
 	If _playerdead() = False Then
 		_log($item[1] & " distance : " & $item[9])
-		While getDistance($item[2], $item[3], $item[4]) > 40 And $maxtry <= 15
+		While GetDistance($item[2], $item[3], $item[4]) > 40 And $maxtry <= 15
 			$Coords = FromD3toScreenCoords($item[2], $item[3], $item[4])
 			MouseClick("middle", $Coords[0], $Coords[1], 1, 10)
 			$maxtry += 1
@@ -3413,18 +3413,18 @@ Func _resumegame()
 		Local $wait_aftertoomanytry = Random(($Try_ResumeGame * 2) * 60000, ($Try_ResumeGame * 2) * 120000, 1)
 		_log("Sleep after too many _resumegame -> " & $wait_aftertoomanytry)
 		Sleep($wait_aftertoomanytry)
-    EndIf
-	If $Try_ResumeGame = 0 and $BreakCounter >= ($Breakafterxxgames + Random(-2, 2, 1)) and $TakeABreak = "true" Then;$Try_ResumeGame = 0 car on veut pas faire une pause en plein jeu
-		 Local $wait_BreakTimeafterxxgames = (($BreakTime*1000) + Random(60000, 180000, 1))
-	     _log("Break Time after xx games -> Sleep " & (_format_time($wait_BreakTimeafterxxgames)))
-		 Sleep($wait_BreakTimeafterxxgames)
-		  $BreakCounter = 0;on remet le compteur a 0
-		  $BreakTimeCounter += 1;on compte les pause effectuer
-		  $tempsPauseGame+= $wait_BreakTimeafterxxgames;on récupère le temps de pause game
-    Endif
-	If $Try_ResumeGame = 0 and $PauseRepas="true" Then; $Try_ResumeGame = 0 car on veut pas faire une pause en plein jeu
+	EndIf
+	If $Try_ResumeGame = 0 And $BreakCounter >= ($Breakafterxxgames + Random(-2, 2, 1)) And $TakeABreak = "true" Then;$Try_ResumeGame = 0 car on veut pas faire une pause en plein jeu
+		Local $wait_BreakTimeafterxxgames = (($BreakTime * 1000) + Random(60000, 180000, 1))
+		_log("Break Time after xx games -> Sleep " & (_format_time($wait_BreakTimeafterxxgames)))
+		Sleep($wait_BreakTimeafterxxgames)
+		$BreakCounter = 0;on remet le compteur a 0
+		$BreakTimeCounter += 1;on compte les pause effectuer
+		$tempsPauseGame += $wait_BreakTimeafterxxgames;on récupère le temps de pause game
+	EndIf
+	If $Try_ResumeGame = 0 And $PauseRepas = "true" Then; $Try_ResumeGame = 0 car on veut pas faire une pause en plein jeu
 		_pauseRepas($Totalruns)
-    EndIf
+	EndIf
 	_randomclick(106, 233)
 	$Try_ResumeGame += 1
 	Sleep(4000)
@@ -3465,23 +3465,23 @@ Func _leavegame()
 			Sleep(Random(200, 300, 1))
 		WEnd
 
-	;TCHAT
-	if($PartieSolo='false')Then
-		Switch Random(1,2,1)
-			Case 1
-				dialTchat("c'est fini on quitte et on relance")
-			Case 2
-				dialTchat("c'est clean on en refait une vite fait")
-		EndSwitch
-	EndIf
+		;TCHAT
+		If ($PartieSolo = 'false') Then
+			Switch Random(1, 2, 1)
+				Case 1
+					dialTchat("c'est fini on quitte et on relance")
+				Case 2
+					dialTchat("c'est clean on en refait une vite fait")
+			EndSwitch
+		EndIf
 		_randomclick(420, 323)
 		Sleep(Random(500, 1000, 1))
 		_log("Leave Game Done")
 	EndIf
 
-	if($PartieSolo='false')Then
+	If ($PartieSolo = 'false') Then
 		;attente du groupe entre 3 et 5 mns
-		Sleep(Random(180000,300000))
+		Sleep(Random(180000, 300000))
 	EndIf
 
 EndFunc   ;==>_leavegame
@@ -3605,12 +3605,12 @@ Func extendedstats()
 
 
 
-$sessionstats = "data.addRow([new Date(" & @YEAR & "," & @MON & "," & @MDAY & "," & @HOUR & "," & @MIN & ")," & ($dif_timer_stat / ($Totalruns) / 1000) & "," & $GOLDMOYbyH / 1000 & "," & ($Xp_Moy_Hrs / 100000) & "," & (($Death*3 + $Res_compt) / $Totalruns)*100 & "," & $successratio * 1000 & "]);"
-$szFile = "statscontrol.html"
-$szText = FileRead($szFile)
-$szText = StringReplace($szText, "//GoGoAu3End", $sessionstats & @CRLF & "//GoGoAu3End")
-FileDelete($szFile)
-FileWrite($szFile,$szText)
+		$sessionstats = "data.addRow([new Date(" & @YEAR & "," & @MON & "," & @MDAY & "," & @HOUR & "," & @MIN & ")," & ($dif_timer_stat / ($Totalruns) / 1000) & "," & $GOLDMOYbyH / 1000 & "," & ($Xp_Moy_Hrs / 100000) & "," & (($Death * 3 + $Res_compt) / $Totalruns) * 100 & "," & $successratio * 1000 & "]);"
+		$szFile = "statscontrol.html"
+		$szText = FileRead($szFile)
+		$szText = StringReplace($szText, "//GoGoAu3End", $sessionstats & @CRLF & "//GoGoAu3End")
+		FileDelete($szFile)
+		FileWrite($szFile, $szText)
 	EndIf
 EndFunc   ;==>extendedstats
 
@@ -3759,279 +3759,279 @@ EndFunc   ;==>GetArcane
 ;;      checkForSpell()
 ;;--------------------------------------------------------------------------------
 #cs
-Func checkForSpell()
+	Func checkForSpell()
 	checkForPotion()
 	;Local $mesurepot = TimerInit() ;;;;;;;;;;;;;;
 	Local $source
 	Local $MaximumSource
 	Switch $nameCharacter
-		Case "DemonHunter"
-			$discipline = GetDisc()
-			$hatred = GetHatred()
-			$life = GetLifep()
-
-			$diffRightClick = TimerDiff($timeforRightclick)
-			If $RightClickSpell = "True" And $life <= $LifeForRightClickSpell / 100 And $diffRightClick > $RightClickSpellDelay Then
-				If $RightClickSpellEnergy <> "" Then
-					If $RightClickSpellEnergy = "hatred" Then
-						If $hatred > $RightClickSpellEnergyNeeds / $MaximumHatred Then
-							MouseClick("right")
-							$timeforRightclick = TimerInit()
-						EndIf
-					Else
-						If $discipline > $RightClickSpellEnergyNeeds / $MaximumDiscipline Then
-							MouseClick("right")
-							$timeforRightclick = TimerInit()
-						EndIf
-					EndIf
-				Else
-					MouseClick("right")
-					$timeforRightclick = TimerInit()
-				EndIf
-			EndIf
-
-
-			$discipline = GetDisc()
-			$hatred = GetHatred()
-			$life = GetLifep()
-
-			$diffSpell1 = TimerDiff($timeforSpell1)
-			If $Spell1Activated = "True" And $life <= $LifeForSpell1 / 100 And $diffSpell1 > $DefayForSpell1 Then
-				If $EnergySpell1 <> "" Then
-					If $EnergySpell1 = "hatred" Then
-						If $hatred > $EnergyNeedsSpell1 / $MaximumHatred Then
-							Send($KeyForSpell1)
-							$timeforSpell1 = TimerInit()
-						EndIf
-					Else
-						If $discipline > $EnergyNeedsSpell1 / $MaximumDiscipline Then
-							Send($KeyForSpell1)
-							$timeforSpell1 = TimerInit()
-						EndIf
-					EndIf
-				Else
-					Send($KeyForSpell1)
-					$timeforSpell1 = TimerInit()
-				EndIf
-			EndIf
-
-			$discipline = GetDisc()
-			$hatred = GetHatred()
-			$life = GetLifep()
-
-			$diffSpell2 = TimerDiff($timeforSpell2)
-			If $Spell2Activated = "True" And $life <= $LifeForSpell2 / 100 And $diffSpell2 > $DefayForSpell2 Then
-				If $EnergySpell2 <> "" Then
-					If $EnergySpell2 = "hatred" Then
-						If $hatred > $EnergyNeedsSpell2 / $MaximumHatred Then
-							Send($KeyForSpell2)
-							$timeforSpell2 = TimerInit()
-						EndIf
-					Else
-						If $discipline > $EnergyNeedsSpell2 / $MaximumDiscipline Then
-							Send($KeyForSpell2)
-							$timeforSpell2 = TimerInit()
-						EndIf
-					EndIf
-				Else
-					Send($KeyForSpell2)
-					$timeforSpell2 = TimerInit()
-				EndIf
-			EndIf
-
-			$discipline = GetDisc()
-			$hatred = GetHatred()
-			$life = GetLifep()
-
-			$diffSpell3 = TimerDiff($timeforSpell3)
-			If $Spell3Activated = "True" And $life <= $LifeForSpell3 / 100 And $diffSpell3 > $DefayForSpell3 Then
-				If $EnergySpell3 <> "" Then
-					If $EnergySpell3 = "hatred" Then
-						If $hatred > $EnergyNeedsSpell3 / $MaximumHatred Then
-							Send($KeyForSpell3)
-							$timeforSpell3 = TimerInit()
-						EndIf
-					Else
-						If $discipline > $EnergyNeedsSpell3 / $MaximumDiscipline Then
-							Send($KeyForSpell3)
-							$timeforSpell3 = TimerInit()
-						EndIf
-					EndIf
-				Else
-					Send($KeyForSpell3)
-					$timeforSpell3 = TimerInit()
-				EndIf
-			EndIf
-
-			$discipline = GetDisc()
-			$hatred = GetHatred()
-			$life = GetLifep()
-
-			$diffSpell4 = TimerDiff($timeforSpell4)
-			If $Spell4Activated = "True" And $life <= $LifeForSpell4 / 100 And $diffSpell4 > $DefayForSpell4 Then
-				If $EnergySpell4 <> "" Then
-					If $EnergySpell4 = "hatred" Then
-						If $hatred > $EnergyNeedsSpell4 / $MaximumHatred Then
-							Send($KeyForSpell4)
-							$timeforSpell4 = TimerInit()
-						EndIf
-					Else
-						If $discipline > $EnergyNeedsSpell4 / $MaximumDiscipline Then
-							Send($KeyForSpell4)
-							$timeforSpell4 = TimerInit()
-						EndIf
-					EndIf
-				Else
-					Send($KeyForSpell4)
-					$timeforSpell4 = TimerInit()
-				EndIf
-			EndIf
-
-
-		Case "Monk"
-			$MaximumSource = $MaximumSpirit
-			actionForSpell($MaximumSource)
-		Case "Barbarian"
-			$MaximumSource = $MaximumFury
-			actionForSpell($MaximumSource)
-		Case "wizard"
-			$MaximumSource = $MaximumArcane
-			actionForSpell($MaximumSource)
-		Case "WitchDoctor"
-			$MaximumSource = $MaximumMana
-			actionForSpell($MaximumSource)
+	Case "DemonHunter"
+	$discipline = GetDisc()
+	$hatred = GetHatred()
+	$life = GetLifep()
+	
+	$diffRightClick = TimerDiff($timeforRightclick)
+	If $RightClickSpell = "True" And $life <= $LifeForRightClickSpell / 100 And $diffRightClick > $RightClickSpellDelay Then
+	If $RightClickSpellEnergy <> "" Then
+	If $RightClickSpellEnergy = "hatred" Then
+	If $hatred > $RightClickSpellEnergyNeeds / $MaximumHatred Then
+	MouseClick("right")
+	$timeforRightclick = TimerInit()
+	EndIf
+	Else
+	If $discipline > $RightClickSpellEnergyNeeds / $MaximumDiscipline Then
+	MouseClick("right")
+	$timeforRightclick = TimerInit()
+	EndIf
+	EndIf
+	Else
+	MouseClick("right")
+	$timeforRightclick = TimerInit()
+	EndIf
+	EndIf
+	
+	
+	$discipline = GetDisc()
+	$hatred = GetHatred()
+	$life = GetLifep()
+	
+	$diffSpell1 = TimerDiff($timeforSpell1)
+	If $Spell1Activated = "True" And $life <= $LifeForSpell1 / 100 And $diffSpell1 > $DefayForSpell1 Then
+	If $EnergySpell1 <> "" Then
+	If $EnergySpell1 = "hatred" Then
+	If $hatred > $EnergyNeedsSpell1 / $MaximumHatred Then
+	Send($KeyForSpell1)
+	$timeforSpell1 = TimerInit()
+	EndIf
+	Else
+	If $discipline > $EnergyNeedsSpell1 / $MaximumDiscipline Then
+	Send($KeyForSpell1)
+	$timeforSpell1 = TimerInit()
+	EndIf
+	EndIf
+	Else
+	Send($KeyForSpell1)
+	$timeforSpell1 = TimerInit()
+	EndIf
+	EndIf
+	
+	$discipline = GetDisc()
+	$hatred = GetHatred()
+	$life = GetLifep()
+	
+	$diffSpell2 = TimerDiff($timeforSpell2)
+	If $Spell2Activated = "True" And $life <= $LifeForSpell2 / 100 And $diffSpell2 > $DefayForSpell2 Then
+	If $EnergySpell2 <> "" Then
+	If $EnergySpell2 = "hatred" Then
+	If $hatred > $EnergyNeedsSpell2 / $MaximumHatred Then
+	Send($KeyForSpell2)
+	$timeforSpell2 = TimerInit()
+	EndIf
+	Else
+	If $discipline > $EnergyNeedsSpell2 / $MaximumDiscipline Then
+	Send($KeyForSpell2)
+	$timeforSpell2 = TimerInit()
+	EndIf
+	EndIf
+	Else
+	Send($KeyForSpell2)
+	$timeforSpell2 = TimerInit()
+	EndIf
+	EndIf
+	
+	$discipline = GetDisc()
+	$hatred = GetHatred()
+	$life = GetLifep()
+	
+	$diffSpell3 = TimerDiff($timeforSpell3)
+	If $Spell3Activated = "True" And $life <= $LifeForSpell3 / 100 And $diffSpell3 > $DefayForSpell3 Then
+	If $EnergySpell3 <> "" Then
+	If $EnergySpell3 = "hatred" Then
+	If $hatred > $EnergyNeedsSpell3 / $MaximumHatred Then
+	Send($KeyForSpell3)
+	$timeforSpell3 = TimerInit()
+	EndIf
+	Else
+	If $discipline > $EnergyNeedsSpell3 / $MaximumDiscipline Then
+	Send($KeyForSpell3)
+	$timeforSpell3 = TimerInit()
+	EndIf
+	EndIf
+	Else
+	Send($KeyForSpell3)
+	$timeforSpell3 = TimerInit()
+	EndIf
+	EndIf
+	
+	$discipline = GetDisc()
+	$hatred = GetHatred()
+	$life = GetLifep()
+	
+	$diffSpell4 = TimerDiff($timeforSpell4)
+	If $Spell4Activated = "True" And $life <= $LifeForSpell4 / 100 And $diffSpell4 > $DefayForSpell4 Then
+	If $EnergySpell4 <> "" Then
+	If $EnergySpell4 = "hatred" Then
+	If $hatred > $EnergyNeedsSpell4 / $MaximumHatred Then
+	Send($KeyForSpell4)
+	$timeforSpell4 = TimerInit()
+	EndIf
+	Else
+	If $discipline > $EnergyNeedsSpell4 / $MaximumDiscipline Then
+	Send($KeyForSpell4)
+	$timeforSpell4 = TimerInit()
+	EndIf
+	EndIf
+	Else
+	Send($KeyForSpell4)
+	$timeforSpell4 = TimerInit()
+	EndIf
+	EndIf
+	
+	
+	Case "Monk"
+	$MaximumSource = $MaximumSpirit
+	actionForSpell($MaximumSource)
+	Case "Barbarian"
+	$MaximumSource = $MaximumFury
+	actionForSpell($MaximumSource)
+	Case "wizard"
+	$MaximumSource = $MaximumArcane
+	actionForSpell($MaximumSource)
+	Case "WitchDoctor"
+	$MaximumSource = $MaximumMana
+	actionForSpell($MaximumSource)
 	EndSwitch
-
-EndFunc   ;==>checkForSpell
-
-
-Func actionForSpell($MaximumSource)
-
+	
+	EndFunc   ;==>checkForSpell
+	
+	
+	Func actionForSpell($MaximumSource)
+	
 	$life = GetLifep()
 	Switch $nameCharacter
-		Case "Monk"
-			$source = GetSpirit()
-		Case "Barbarian"
-			$source = GetFury()
-		Case "wizard"
-			$source = GetArcane()
-		Case "WitchDoctor"
-			$source = GetMana()
+	Case "Monk"
+	$source = GetSpirit()
+	Case "Barbarian"
+	$source = GetFury()
+	Case "wizard"
+	$source = GetArcane()
+	Case "WitchDoctor"
+	$source = GetMana()
 	EndSwitch
 	$diffRightClick = TimerDiff($timeforRightclick)
 	If $RightClickSpell = "True" And $life <= $LifeForRightClickSpell / 100 And $diffRightClick > $RightClickSpellDelay Then
-		If $RightClickSpellEnergy <> "" Then
-			If $source > $RightClickSpellEnergyNeeds / $MaximumSource Then
-				MouseClick("right")
-				$timeforRightclick = TimerInit()
-			EndIf
-		Else
-			MouseClick("right")
-			$timeforRightclick = TimerInit()
-		EndIf
+	If $RightClickSpellEnergy <> "" Then
+	If $source > $RightClickSpellEnergyNeeds / $MaximumSource Then
+	MouseClick("right")
+	$timeforRightclick = TimerInit()
 	EndIf
-
+	Else
+	MouseClick("right")
+	$timeforRightclick = TimerInit()
+	EndIf
+	EndIf
+	
 	$life = GetLifep()
 	Switch $nameCharacter
-		Case "Monk"
-			$source = GetSpirit()
-		Case "Barbarian"
-			$source = GetFury()
-		Case "wizard"
-			$source = GetArcane()
-		Case "WitchDoctor"
-			$source = GetMana()
+	Case "Monk"
+	$source = GetSpirit()
+	Case "Barbarian"
+	$source = GetFury()
+	Case "wizard"
+	$source = GetArcane()
+	Case "WitchDoctor"
+	$source = GetMana()
 	EndSwitch
-
+	
 	$diffSpell1 = TimerDiff($timeforSpell1)
 	If $Spell1Activated = "True" And $life <= $LifeForSpell1 / 100 And $diffSpell1 > $DefayForSpell1 Then
-		If $EnergySpell1 <> "" Then
-			If $source > $EnergyNeedsSpell1 / $MaximumSource Then
-				Send($KeyForSpell1)
-				$timeforSpell1 = TimerInit()
-			EndIf
-		Else
-			Send($KeyForSpell1)
-			$timeforSpell1 = TimerInit()
-		EndIf
+	If $EnergySpell1 <> "" Then
+	If $source > $EnergyNeedsSpell1 / $MaximumSource Then
+	Send($KeyForSpell1)
+	$timeforSpell1 = TimerInit()
 	EndIf
-
+	Else
+	Send($KeyForSpell1)
+	$timeforSpell1 = TimerInit()
+	EndIf
+	EndIf
+	
 	$life = GetLifep()
 	Switch $nameCharacter
-		Case "Monk"
-			$source = GetSpirit()
-		Case "Barbarian"
-			$source = GetFury()
-		Case "wizard"
-			$source = GetArcane()
-		Case "WitchDoctor"
-			$source = GetMana()
+	Case "Monk"
+	$source = GetSpirit()
+	Case "Barbarian"
+	$source = GetFury()
+	Case "wizard"
+	$source = GetArcane()
+	Case "WitchDoctor"
+	$source = GetMana()
 	EndSwitch
-
+	
 	$diffSpell2 = TimerDiff($timeforSpell2)
 	If $Spell2Activated = "True" And $life <= $LifeForSpell2 / 100 And $diffSpell2 > $DefayForSpell2 Then
-		If $EnergySpell2 <> "" Then
-			If $source > $EnergyNeedsSpell2 / $MaximumSource Then
-				Send($KeyForSpell2)
-				$timeforSpell2 = TimerInit()
-			EndIf
-		Else
-			Send($KeyForSpell2)
-			$timeforSpell2 = TimerInit()
-		EndIf
+	If $EnergySpell2 <> "" Then
+	If $source > $EnergyNeedsSpell2 / $MaximumSource Then
+	Send($KeyForSpell2)
+	$timeforSpell2 = TimerInit()
 	EndIf
-
+	Else
+	Send($KeyForSpell2)
+	$timeforSpell2 = TimerInit()
+	EndIf
+	EndIf
+	
 	$life = GetLifep()
 	Switch $nameCharacter
-		Case "Monk"
-			$source = GetSpirit()
-		Case "Barbarian"
-			$source = GetFury()
-		Case "wizard"
-			$source = GetArcane()
-		Case "WitchDoctor"
-			$source = GetMana()
+	Case "Monk"
+	$source = GetSpirit()
+	Case "Barbarian"
+	$source = GetFury()
+	Case "wizard"
+	$source = GetArcane()
+	Case "WitchDoctor"
+	$source = GetMana()
 	EndSwitch
-
+	
 	$diffSpell3 = TimerDiff($timeforSpell3)
 	If $Spell3Activated = "True" And $life <= $LifeForSpell3 / 100 And $diffSpell3 > $DefayForSpell3 Then
-		If $EnergySpell3 <> "" Then
-			If $source > $EnergyNeedsSpell3 / $MaximumSource Then
-				Send($KeyForSpell3)
-				$timeforSpell3 = TimerInit()
-			EndIf
-		Else
-			Send($KeyForSpell3)
-			$timeforSpell3 = TimerInit()
-		EndIf
+	If $EnergySpell3 <> "" Then
+	If $source > $EnergyNeedsSpell3 / $MaximumSource Then
+	Send($KeyForSpell3)
+	$timeforSpell3 = TimerInit()
 	EndIf
-
+	Else
+	Send($KeyForSpell3)
+	$timeforSpell3 = TimerInit()
+	EndIf
+	EndIf
+	
 	$life = GetLifep()
 	Switch $nameCharacter
-		Case "Monk"
-			$source = GetSpirit()
-		Case "Barbarian"
-			$source = GetFury()
-		Case "wizard"
-			$source = GetArcane()
-		Case "WitchDoctor"
-			$source = GetMana()
+	Case "Monk"
+	$source = GetSpirit()
+	Case "Barbarian"
+	$source = GetFury()
+	Case "wizard"
+	$source = GetArcane()
+	Case "WitchDoctor"
+	$source = GetMana()
 	EndSwitch
-
+	
 	$diffSpell4 = TimerDiff($timeforSpell4)
 	If $Spell4Activated = "True" And $life <= $LifeForSpell4 / 100 And $diffSpell4 > $DefayForSpell4 Then
-		If $EnergySpell4 <> "" Then
-			If $source > $EnergyNeedsSpell4 / $MaximumSource Then
-				Send($KeyForSpell4)
-				$timeforSpell4 = TimerInit()
-			EndIf
-		Else
-			Send($KeyForSpell4)
-			$timeforSpell4 = TimerInit()
-		EndIf
+	If $EnergySpell4 <> "" Then
+	If $source > $EnergyNeedsSpell4 / $MaximumSource Then
+	Send($KeyForSpell4)
+	$timeforSpell4 = TimerInit()
 	EndIf
-
-EndFunc   ;==>actionForSpell
+	Else
+	Send($KeyForSpell4)
+	$timeforSpell4 = TimerInit()
+	EndIf
+	EndIf
+	
+	EndFunc   ;==>actionForSpell
 #ce
 ;;--------------------------------------------------------------------------------
 ;;############# Stats by YoPens
@@ -4055,353 +4055,353 @@ EndFunc   ;==>FormatNumber
 
 Func StatsDisplay()
 
-        Local $index, $offset, $count, $item[4]
-		local $time_Xp_Full_Paragon = 0;ajouter pour la stast paragon 100 dans
-        startIterateLocalActor($index, $offset, $count)
-        While iterateLocalActorList($index, $offset, $count, $item)
-                If StringInStr($item[1], "GoldCoin-") Then
-                        $GOLD = IterateActorAtribs($item[0], $Atrib_ItemStackQuantityLo)
-                        ExitLoop
-                EndIf
-        WEnd
+	Local $index, $offset, $count, $item[4]
+	Local $time_Xp_Full_Paragon = 0;ajouter pour la stast paragon 100 dans
+	startIterateLocalActor($index, $offset, $count)
+	While iterateLocalActorList($index, $offset, $count, $item)
+		If StringInStr($item[1], "GoldCoin-") Then
+			$GOLD = IterateActorAtribs($item[0], $Atrib_ItemStackQuantityLo)
+			ExitLoop
+		EndIf
+	WEnd
 
-        If $Totalruns = 1 Then
-                $GOLDINI = $GOLD
-                $begin_timer_stat = TimerInit()
-                $GF = Ceiling(GetAttribute($_MyGuid, $Atrib_Gold_Find) * 100)
-                $MF = Ceiling(GetAttribute($_MyGuid, $Atrib_Magic_Find) * 100)
-                $PR = GetAttribute($_MyGuid, $Atrib_Gold_PickUp_Radius)
-                $MS = (GetAttribute($_MyGuid, $Atrib_Movement_Scalar_Capped_Total) - 1) * 100
-				$EBP = Ceiling(GetAttribute($_MyGuid, $Atrib_Experience_Bonus_Percent) * 100);% xp équipement
-				$LV = GetAttribute($_MyGuid, $Atrib_Level);level personage
-        Else
-                $GOLDInthepocket = $GOLD - $GOLDINI
-                $GOLDMOY = $GOLDInthepocket / ($Totalruns - 1)
-                $dif_timer_stat = TimerDiff($begin_timer_stat);temps total
-				$dif_timer_stat_pause = ($tempsPauseGame + $tempsPauserepas);calcule du temps de pause (game + repas)=total pause
-				$dif_timer_stat_game = ($dif_timer_stat - $dif_timer_stat_pause);calcule (temps totale - temps total pause)=Temps de jeu
-                $GOLDMOYbyH = $GOLDInthepocket * 3600000 / $dif_timer_stat;calcule du gold a l'heure temps total
-		        $GOLDMOYbyHgame = $GOLDInthepocket * 3600000 / $dif_timer_stat_game;calcule du gold a l'heure temp de jeu
+	If $Totalruns = 1 Then
+		$GOLDINI = $GOLD
+		$begin_timer_stat = TimerInit()
+		$GF = Ceiling(GetAttribute($_MyGuid, $Atrib_Gold_Find) * 100)
+		$MF = Ceiling(GetAttribute($_MyGuid, $Atrib_Magic_Find) * 100)
+		$PR = GetAttribute($_MyGuid, $Atrib_Gold_PickUp_Radius)
+		$MS = (GetAttribute($_MyGuid, $Atrib_Movement_Scalar_Capped_Total) - 1) * 100
+		$EBP = Ceiling(GetAttribute($_MyGuid, $Atrib_Experience_Bonus_Percent) * 100);% xp équipement
+		$LV = GetAttribute($_MyGuid, $Atrib_Level);level personage
+	Else
+		$GOLDInthepocket = $GOLD - $GOLDINI
+		$GOLDMOY = $GOLDInthepocket / ($Totalruns - 1)
+		$dif_timer_stat = TimerDiff($begin_timer_stat);temps total
+		$dif_timer_stat_pause = ($tempsPauseGame + $tempsPauserepas);calcule du temps de pause (game + repas)=total pause
+		$dif_timer_stat_game = ($dif_timer_stat - $dif_timer_stat_pause);calcule (temps totale - temps total pause)=Temps de jeu
+		$GOLDMOYbyH = $GOLDInthepocket * 3600000 / $dif_timer_stat;calcule du gold a l'heure temps total
+		$GOLDMOYbyHgame = $GOLDInthepocket * 3600000 / $dif_timer_stat_game;calcule du gold a l'heure temp de jeu
 
-        EndIf
+	EndIf
 
-        ;stat XP
+	;stat XP
 
-        ;Xp nécessaire pour passer un niveau de paragon
+	;Xp nécessaire pour passer un niveau de paragon
 
-        If $Totalruns = 1 Then
-                Global $level[102]
-                $level[1] = 7200000
-                $level[2] = 8640000
-                $level[3] = 10080000
-                $level[4] = 11520000
-                $level[5] = 12960000
-                $level[6] = 14400000
-                $level[7] = 15840000
-                $level[8] = 17280000
-                $level[9] = 18720000
-                $level[10] = 20160000
-                $level[11] = 21600000
-                $level[12] = 23040000
-                $level[13] = 24480000
-                $level[14] = 25920000
-                $level[15] = 27360000
-                $level[16] = 28800000
-                $level[17] = 30240000
-                $level[18] = 31680000
-                $level[19] = 33120000
-                $level[20] = 34560000
-                $level[21] = 36000000
-                $level[22] = 37440000
-                $level[23] = 38880000
-                $level[24] = 40320000
-                $level[25] = 41760000
-                $level[26] = 43200000
-                $level[27] = 44640000
-                $level[28] = 46080000
-                $level[29] = 47520000
-                $level[30] = 48960000
-                $level[31] = 50400000
-                $level[32] = 51840000
-                $level[33] = 53280000
-                $level[34] = 54720000
-                $level[35] = 56160000
-                $level[36] = 57600000
-                $level[37] = 59040000
-                $level[38] = 60480000
-                $level[39] = 61920000
-                $level[40] = 63360000
-                $level[41] = 64800000
-                $level[42] = 66240000
-                $level[43] = 67680000
-                $level[44] = 69120000
-                $level[45] = 70560000
-                $level[46] = 72000000
-                $level[47] = 73440000
-                $level[48] = 74880000
-                $level[49] = 76320000
-                $level[50] = 77760000
-                $level[51] = 79200000
-                $level[52] = 80640000
-                $level[53] = 82080000
-                $level[54] = 83520000
-                $level[55] = 84960000
-                $level[56] = 86400000
-                $level[57] = 87840000
-                $level[58] = 89280000
-                $level[59] = 90720000
-                $level[60] = 92160000
-                $level[61] = 95040000
-                $level[62] = 97920000
-                $level[63] = 100800000
-                $level[64] = 103680000
-                $level[65] = 106560000
-                $level[66] = 109440000
-                $level[67] = 112320000
-                $level[68] = 115200000
-                $level[69] = 118080000
-                $level[70] = 120960000
-                $level[71] = 126000000
-                $level[72] = 131040000
-                $level[73] = 136080000
-                $level[74] = 141120000
-                $level[75] = 146160000
-                $level[76] = 151200000
-                $level[77] = 156240000
-                $level[78] = 161280000
-                $level[79] = 166320000
-                $level[80] = 171360000
-                $level[81] = 177840000
-                $level[82] = 184320000
-                $level[83] = 190800000
-                $level[84] = 197280000
-                $level[85] = 203760000
-                $level[86] = 210240000
-                $level[87] = 216720000
-                $level[88] = 223200000
-                $level[89] = 229680000
-                $level[90] = 236160000
-                $level[91] = 244800000
-                $level[92] = 253440000
-                $level[93] = 262080000
-                $level[94] = 270720000
-                $level[95] = 279360000
-                $level[96] = 288000000
-                $level[97] = 296640000
-                $level[98] = 305280000
-                $level[99] = 313920000
-                $level[100] = 322560000
-                $level[101] = 0
-        EndIf
+	If $Totalruns = 1 Then
+		Global $level[102]
+		$level[1] = 7200000
+		$level[2] = 8640000
+		$level[3] = 10080000
+		$level[4] = 11520000
+		$level[5] = 12960000
+		$level[6] = 14400000
+		$level[7] = 15840000
+		$level[8] = 17280000
+		$level[9] = 18720000
+		$level[10] = 20160000
+		$level[11] = 21600000
+		$level[12] = 23040000
+		$level[13] = 24480000
+		$level[14] = 25920000
+		$level[15] = 27360000
+		$level[16] = 28800000
+		$level[17] = 30240000
+		$level[18] = 31680000
+		$level[19] = 33120000
+		$level[20] = 34560000
+		$level[21] = 36000000
+		$level[22] = 37440000
+		$level[23] = 38880000
+		$level[24] = 40320000
+		$level[25] = 41760000
+		$level[26] = 43200000
+		$level[27] = 44640000
+		$level[28] = 46080000
+		$level[29] = 47520000
+		$level[30] = 48960000
+		$level[31] = 50400000
+		$level[32] = 51840000
+		$level[33] = 53280000
+		$level[34] = 54720000
+		$level[35] = 56160000
+		$level[36] = 57600000
+		$level[37] = 59040000
+		$level[38] = 60480000
+		$level[39] = 61920000
+		$level[40] = 63360000
+		$level[41] = 64800000
+		$level[42] = 66240000
+		$level[43] = 67680000
+		$level[44] = 69120000
+		$level[45] = 70560000
+		$level[46] = 72000000
+		$level[47] = 73440000
+		$level[48] = 74880000
+		$level[49] = 76320000
+		$level[50] = 77760000
+		$level[51] = 79200000
+		$level[52] = 80640000
+		$level[53] = 82080000
+		$level[54] = 83520000
+		$level[55] = 84960000
+		$level[56] = 86400000
+		$level[57] = 87840000
+		$level[58] = 89280000
+		$level[59] = 90720000
+		$level[60] = 92160000
+		$level[61] = 95040000
+		$level[62] = 97920000
+		$level[63] = 100800000
+		$level[64] = 103680000
+		$level[65] = 106560000
+		$level[66] = 109440000
+		$level[67] = 112320000
+		$level[68] = 115200000
+		$level[69] = 118080000
+		$level[70] = 120960000
+		$level[71] = 126000000
+		$level[72] = 131040000
+		$level[73] = 136080000
+		$level[74] = 141120000
+		$level[75] = 146160000
+		$level[76] = 151200000
+		$level[77] = 156240000
+		$level[78] = 161280000
+		$level[79] = 166320000
+		$level[80] = 171360000
+		$level[81] = 177840000
+		$level[82] = 184320000
+		$level[83] = 190800000
+		$level[84] = 197280000
+		$level[85] = 203760000
+		$level[86] = 210240000
+		$level[87] = 216720000
+		$level[88] = 223200000
+		$level[89] = 229680000
+		$level[90] = 236160000
+		$level[91] = 244800000
+		$level[92] = 253440000
+		$level[93] = 262080000
+		$level[94] = 270720000
+		$level[95] = 279360000
+		$level[96] = 288000000
+		$level[97] = 296640000
+		$level[98] = 305280000
+		$level[99] = 313920000
+		$level[100] = 322560000
+		$level[101] = 0
+	EndIf
 
-        If $Totalruns = 1 Then
+	If $Totalruns = 1 Then
 
-                $NiveauParagon = GetAttribute($_MyGuid, $Atrib_Alt_Level)
-                $ExperienceNextLevel = GetAttribute($_MyGuid, $Atrib_Alt_Experience_Next)
-                $Expencours = $level[$NiveauParagon + 1] - $ExperienceNextLevel
-                $Xp_Run = 0
-                $Xp_Total = 0
-                $Xp_Moy_Run = 0
-                $Xp_Moy_Hrs = 0
-                $time_Xp = 0
-                $time_Xp = _format_time($time_Xp)
+		$NiveauParagon = GetAttribute($_MyGuid, $Atrib_Alt_Level)
+		$ExperienceNextLevel = GetAttribute($_MyGuid, $Atrib_Alt_Experience_Next)
+		$Expencours = $level[$NiveauParagon + 1] - $ExperienceNextLevel
+		$Xp_Run = 0
+		$Xp_Total = 0
+		$Xp_Moy_Run = 0
+		$Xp_Moy_Hrs = 0
+		$time_Xp = 0
+		$time_Xp = _format_time($time_Xp)
 
-        Else
-                ;calcul de l'xp du run
-                If $NiveauParagon = GetAttribute($_MyGuid, $Atrib_Alt_Level) Then; verification de level up (égalité => pas de level up
+	Else
+		;calcul de l'xp du run
+		If $NiveauParagon = GetAttribute($_MyGuid, $Atrib_Alt_Level) Then; verification de level up (égalité => pas de level up
 
-                        $Xp_Run = ($level[GetAttribute($_MyGuid, $Atrib_Alt_Level) + 1] - GetAttribute($_MyGuid, $Atrib_Alt_Experience_Next)) - $Expencours;experience run n - experience run n-1
+			$Xp_Run = ($level[GetAttribute($_MyGuid, $Atrib_Alt_Level) + 1] - GetAttribute($_MyGuid, $Atrib_Alt_Experience_Next)) - $Expencours;experience run n - experience run n-1
 
-                EndIf
+		EndIf
 
-                $Expencours = $level[GetAttribute($_MyGuid, $Atrib_Alt_Level) + 1] - GetAttribute($_MyGuid, $Atrib_Alt_Experience_Next)
+		$Expencours = $level[GetAttribute($_MyGuid, $Atrib_Alt_Level) + 1] - GetAttribute($_MyGuid, $Atrib_Alt_Experience_Next)
 
-                If $NiveauParagon <> GetAttribute($_MyGuid, $Atrib_Alt_Level) Then
+		If $NiveauParagon <> GetAttribute($_MyGuid, $Atrib_Alt_Level) Then
 
-                        $Xp_Run = $ExperienceNextLevel + $Expencours
+			$Xp_Run = $ExperienceNextLevel + $Expencours
 
-                EndIf
-
-
-                $Xp_Total = $Xp_Total + $Xp_Run
-                $Xp_Moy_Run = $Xp_Total / ($Totalruns - 1)
-                $Xp_Moy_Hrs = $Xp_Total * 3600000 / $dif_timer_stat;on calcul l'xp/heure en temps total
-				$Xp_Moy_Hrsgame = $Xp_Total * 3600000 / $dif_timer_stat_game;on calcul l'xp/heure en temps de jen
-				$Xp_Moy_HrsPerte = ($Xp_Moy_Hrsgame - $Xp_Moy_Hrs);on calcule la perte du au pause
-                $NiveauParagon = GetAttribute($_MyGuid, $Atrib_Alt_Level)
-                $ExperienceNextLevel = GetAttribute($_MyGuid, $Atrib_Alt_Experience_Next)
-
-                ;calcul temps avant prochain niveau
-                $Xp_Moy_Sec = $Xp_Total * 1000 / $dif_timer_stat
-                $time_Xp = Int($ExperienceNextLevel / $Xp_Moy_Sec) * 1000
-                $time_Xp = _format_time($time_Xp)
-
-				;<<<<<<<<<<<<<<<<<<<<<<<<< début ajouter pour paragon dans 100 >>>>>>>>>>>>>>>>>>>>>>>>>>>>
-				;; calcul de l'experience total puis temps nécessaire pour atteindre le paragon 100
-                ;; et 99 exclu c'est le dernier level
-                if $NiveauParagon < 99 then
-                ;; xp restant à faire pour le level paragon en cours
-                $ExperienceFullParagon = $ExperienceNextLevel
-                ;; on ajoute les n+1 levels paragons restants
-                $current_paragon_level = $NiveauParagon + 1
-                While $current_paragon_level <> 101
-                $ExperienceFullParagon += $level[$current_paragon_level]
-                $current_paragon_level += 1
-                Wend
-                ; calcul temps avant paragon 100
-                $time_Xp_Full_Paragon = Int($ExperienceFullParagon / $Xp_Moy_Sec) * 1000
-                $time_Xp_Full_Paragon = _format_time($time_Xp_Full_Paragon)
-                else
-                ;; cas du dernier level 99 ou alors paragon 100 deja atteind
-                if $NiveauParagon = 99 then
-                ;; on utilise le calcul existant
-                $time_Xp_Full_Paragon = $time_Xp
-                else
-                $time_Xp_Full_Paragon = "ALREADY 100 !!!"
-                endif
-                Endif
-                ;<<<<<<<<<<<<<<<<<<<<<<<<< fin ajouter pour paragon dans 100 >>>>>>>>>>>>>>>>>>>>>>>>>>>>
-        EndIf
-        ;########
-
-        $timer_stat_total = _format_time($dif_timer_stat);temps Total
-
-        If $Totalruns = 1 Then
-                $timer_stat_run_moyen = 0
-                ;Lv_stat=lv
-                ;Xp_next_stat=Xp_next
-                ;Xprun=0
-                ;Xptotal=0
-                ;Xpmoyen=0
-        Else
-                ;;;$dif_timer_stat_moyen = $dif_timer_stat / ($Totalruns - 1)
-				$dif_timer_stat_moyen = $dif_timer_stat_game / ($Totalruns - 1);on recalcule le temps moyen d'une run par raport au temps jeu
-                $timer_stat_run_moyen = _format_time($dif_timer_stat_moyen)
-        EndIf
-
-	    GetAct()
-	    GetMonsterPow2()
-		$DebugMessage = "                                 INFO RUNS ACT " & $Act & @CRLF
-		$DebugMessage = $DebugMessage & "PM " & $MP & @CRLF
-		$DebugMessage = $DebugMessage & "Runs : " & $Totalruns & @CRLF
-		$DebugMessage = $DebugMessage & "Morts : " & $Death & @CRLF
-		$DebugMessage = $DebugMessage & "Resurrections : " &  $Res_compt & @CRLF
-	    $DebugMessage = $DebugMessage & "Déconnexions  : " & $disconnectcount & @CRLF
-		$DebugMessage = $DebugMessage & "Sanctuaires Pris : " & $ShrineTaken & @CRLF
-	    $DebugMessage = $DebugMessage & "Élites Rencontrés : " & $CptElite & @CRLF
-		$DebugMessage = $DebugMessage & "Succès Runs : " & Round($successratio*100) & "%   ( " & ($Totalruns-$success) & " Avortés )" & @CRLF
-        $DebugMessage = $DebugMessage & "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" & @CRLF
-		$DebugMessage = $DebugMessage & "                                   INFO COFFRE" & @CRLF
-		$DebugMessage = $DebugMessage & "Nombre Objets Recylés : " & $ItemToRecycle & @CRLF
-		$DebugMessage = $DebugMessage & "Nombre de Legs au Coffre : " & $nbLegs & @CRLF
-		$DebugMessage = $DebugMessage & "Nombre de Rare ID au Coffre : " & $nbRares & @CRLF
-		$DebugMessage = $DebugMessage & "Nombre de Rare Unid au Coffre : " & $nbRaresUnid & @CRLF
-		$DebugMessage = $DebugMessage & "Objets Stockés Dans le Coffre : " & $ItemToStash & @CRLF
-		$DebugMessage = $DebugMessage & "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" & @CRLF
-		$DebugMessage = $DebugMessage & "                                     INFO GOLD" & @CRLF
-		$DebugMessage = $DebugMessage & "Gold au Coffre : " & formatNumber(Ceiling($GOLD)) & @CRLF
-		$DebugMessage = $DebugMessage & "Gold Total Obtenu  : " & formatNumber(Ceiling($GOLDInthepocket)) & @CRLF
-		$DebugMessage = $DebugMessage & "Gold Moyen/Run : " & formatNumber(Ceiling($GOLDMOY)) & @CRLF
-		$DebugMessage = $DebugMessage & "Gold Moyen/Heure : " & formatNumber(Ceiling($GOLDMOYbyH)) & @CRLF
-		;$DebugMessage = $DebugMessage & "Gold Moyen/Heure Jeu : " & formatNumber(Ceiling($GOLDMOYbyHgame)) & @CRLF ;====> gold de temps de jeu
-		$DebugMessage = $DebugMessage & "Perte Moyenne/Heure : " & formatNumber(Ceiling($GOLDMOYbyH-$GOLDMOYbyHgame)) & "   (" & Round(($GOLDMOYbyHgame-$GOLDMOYbyH)/$GOLDMOYbyHgame*100) & "%)" & @CRLF
-		$DebugMessage = $DebugMessage & "Nombre d'objet Vendu :  " & $ItemToSell & "  /  " & formatNumber(Ceiling($GoldBySale)) & "   (" & Round($GoldBySale/$GOLDInthepocket*100) & "%)" & @CRLF
-		$DebugMessage = $DebugMessage & "Gold Obtenu par Collecte  :    " & formatNumber(Ceiling($GOLDInthepocket - $GoldBySale - $GoldByRepaire)) & "   (" & Round(($GOLDInthepocket - $GoldBySale - $GoldByRepaire)/$GOLDInthepocket*100) & "%)" & @CRLF
-		$DebugMessage = $DebugMessage & "Nombre de Réparation : " & $RepairORsell & " / " & formatNumber(Ceiling($GoldByRepaire)) & "   (" & Round($GoldByRepaire/$GOLDInthepocket*100) & "%)" & @CRLF
-		$DebugMessage = $DebugMessage & "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" & @CRLF
-		$DebugMessage = $DebugMessage & "                                     INFO TEMPS " & @CRLF
-		;$DebugMessage = $DebugMessage & "Débuté à :  " & @HOUR & ":" & @MIN & @CRLF
-		$DebugMessage = $DebugMessage & "Durée Moyenne/Run : " & $timer_stat_run_moyen & @CRLF
-		$DebugMessage = $DebugMessage & "Temps Total De Bot:   " & $timer_stat_total & @CRLF
-		$DebugMessage = $DebugMessage & "Temps Total En Jeu :   " & _format_time($dif_timer_stat_game) & " (" & Round($dif_timer_stat_game/$dif_timer_stat*100) & "%)" & @CRLF
-		$DebugMessage = $DebugMessage & "Pauses Effectuées : " & ($BreakTimeCounter + $PauseRepasCounter) & "  /  "  & _format_time($dif_timer_stat_pause) & " (" & Round($dif_timer_stat_pause/$dif_timer_stat*100) & "%)" & @CRLF
-        ;stats XP
-        $DebugMessage = $DebugMessage & "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" & @CRLF
-		$DebugMessage = $DebugMessage & "                                        INFO XP" & @CRLF
-        $DebugMessage = $DebugMessage & "Bonus d'XP : " & $EBP & " %"  & @CRLF
-		
-        If ($Xp_Total < 1000000) Then ;afficher en "K"
-                $DebugMessage = $DebugMessage & "XP Obtenu : " & Int($Xp_Total / 1000) & " K" & @CRLF
-        EndIf
-        If ($Xp_Total > 999999) Then ;afficher en "M"
-                $DebugMessage = $DebugMessage & "XP Obtenu : " & Int($Xp_Total / 1000) / 1000 & " M" & @CRLF
-        EndIf
-
-        If ($Xp_Moy_Run < 1000000) Then ;afficher en "K"
-                $DebugMessage = $DebugMessage & "XP Moyen/Run : " & Int($Xp_Moy_Run / 1000) & " K" & @CRLF
-        EndIf
-        If ($Xp_Moy_Run > 999999) Then ;afficher en "M"
-                $DebugMessage = $DebugMessage & "XP Moyen/Run : " & Int($Xp_Moy_Run / 1000) / 1000 & " M" & @CRLF
-        EndIf
-
-        If ($Xp_Moy_Hrs < 1000000) Then ;afficher en "K"
-                $DebugMessage = $DebugMessage & "XP Moyen/Heure : " & Int($Xp_Moy_Hrs / 1000) & " K" & @CRLF
-        EndIf
-        If ($Xp_Moy_Hrs > 999999) Then ;afficher en "M"
-                $DebugMessage = $DebugMessage & "XP Moyen/Heure : " & Int($Xp_Moy_Hrs / 1000) / 1000 & " M" & @CRLF
-	    EndIf
-  #cs   If ($Xp_Moy_Hrsgame < 1000000) Then ;afficher en "K" ===> xp/h Temps de jeu
-                $DebugMessage = $DebugMessage & "XP Moyen/Heure Jeu: " & Int($Xp_Moy_Hrsgame / 1000) & " K" & @CRLF
-        EndIf
-        If ($Xp_Moy_Hrsgame > 999999) Then ;afficher en "M" ===> xp/h Temps de jeu
-                $DebugMessage = $DebugMessage & "XP Moyen/Heure Jeu: " & Int($Xp_Moy_Hrsgame / 1000) / 1000 & " M" & @CRLF
- #ce   EndIf
-		If ($Xp_Moy_HrsPerte < 1000000) Then ;afficher en "K"
-                $DebugMessage = $DebugMessage & "Perte Moyenne/Heure : -" & Int($Xp_Moy_HrsPerte / 1000) & " K (" & Round($Xp_Moy_HrsPerte/$Xp_Moy_Hrsgame*100) & "%)"  & @CRLF
-        EndIf
-        If ($Xp_Moy_HrsPerte > 999999) Then ;afficher en "M"
-                $DebugMessage = $DebugMessage & "Perte Moyenne/Heure : -" & Int($Xp_Moy_HrsPerte / 1000) / 1000 & " M (" & Round($Xp_Moy_HrsPerte/$Xp_Moy_Hrsgame*100) & "%)"  & @CRLF
-        EndIf	 
-        ;$DebugMessage = $DebugMessage & "temps avant prochain niveau : " $ExperienceNextLevel/ & " M" & @CRLF
-        $DebugMessage = $DebugMessage & "Temps Avant Prochain LV : " & $time_Xp & @CRLF
-		$DebugMessage = $DebugMessage & "Temps Avant Parangon 100 : " & $time_Xp_Full_Paragon & @CRLF
-        $DebugMessage = $DebugMessage & "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" & @CRLF
-        ;$DebugMessage = $DebugMessage & "XP Moyen par heure : " & $Xp_Moy_Hrs & @CRLF
-        ;$DebugMessage = $DebugMessage & "XP avant prochain niveau : " & int($ExperienceNextLevel/1000)/1000 &" M" & @CRLF
-        ;$DebugMessage = $DebugMessage & "niveau paragon actuel : " & $NiveauParagon & @CRLF
-
-        ;$DebugMessage = $DebugMessage & "#################################"& @CRLF
-
-        ;$DebugMessage = $DebugMessage & "test 1 : " & $level[$NiveauParagon+1] & @CRLF
-        ;$DebugMessage = $DebugMessage & "exp en cours : " & int($Expencours/1000)/1000 &" M" &@CRLF
-        ;$DebugMessage = $DebugMessage & "Xp_Run : " & int($Xp_Run/1000)/1000 &" M" &@CRLF
-        ;$DebugMessage = $DebugMessage & "#################################"& @CRLF
-        ;#########
+		EndIf
 
 
-        $DebugMessage = $DebugMessage & "                                    INFO PERSO " & @CRLF
-		$DebugMessage = $DebugMessage &  $nameCharacter & "  " & $LV & " [ " & $NiveauParagon & " ] " & @CRLF
-		$DebugMessage = $DebugMessage & "PickUp Radius  : " & $PR & @CRLF
-        $DebugMessage = $DebugMessage & "Movement Speed : " & Round($MS) & " %" & @CRLF
-		$DebugMessage = $DebugMessage & "Gold Find Total      : " & ($GF+($NiveauParagon*3)+($MP*25)) & " %" & @CRLF
-		$DebugMessage = $DebugMessage & "      Équipement : " & $GF & " %" & @CRLF
-        $DebugMessage = $DebugMessage & "Magic Find Total     : " & ($MF+($NiveauParagon*3)+($MP*25)) & " %" & @CRLF
-		$DebugMessage = $DebugMessage & "      Équipement : " & $MF & " %" & @CRLF
-        $DebugMessage = $DebugMessage & "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" & @CRLF
-		Switch $Choix_Act_Run
-			case -1
-				$file=FileOpen($fileLog,0)
-				$line=FileReadLine($file,1)
-				$DebugMessage = $DebugMessage & $line & @CRLF
-				$line= FileReadLine($file,$numLigneFichier)
-				$DebugMessage = $DebugMessage & $line & @CRLF
-				FileClose($file)
-			case 0
-				$DebugMessage = $DebugMessage & "Mode normal" & @CRLF
-			case 1
-				$DebugMessage = $DebugMessage & "Act 1 en automatique" & @CRLF
-			case 2
-				$DebugMessage = $DebugMessage & "Act 2 en automatique" & @CRLF
-			case 3
-				$DebugMessage = $DebugMessage & "Act 3 en automatique" & @CRLF
-		EndSwitch
+		$Xp_Total = $Xp_Total + $Xp_Run
+		$Xp_Moy_Run = $Xp_Total / ($Totalruns - 1)
+		$Xp_Moy_Hrs = $Xp_Total * 3600000 / $dif_timer_stat;on calcul l'xp/heure en temps total
+		$Xp_Moy_Hrsgame = $Xp_Total * 3600000 / $dif_timer_stat_game;on calcul l'xp/heure en temps de jen
+		$Xp_Moy_HrsPerte = ($Xp_Moy_Hrsgame - $Xp_Moy_Hrs);on calcule la perte du au pause
+		$NiveauParagon = GetAttribute($_MyGuid, $Atrib_Alt_Level)
+		$ExperienceNextLevel = GetAttribute($_MyGuid, $Atrib_Alt_Experience_Next)
+
+		;calcul temps avant prochain niveau
+		$Xp_Moy_Sec = $Xp_Total * 1000 / $dif_timer_stat
+		$time_Xp = Int($ExperienceNextLevel / $Xp_Moy_Sec) * 1000
+		$time_Xp = _format_time($time_Xp)
+
+		;<<<<<<<<<<<<<<<<<<<<<<<<< début ajouter pour paragon dans 100 >>>>>>>>>>>>>>>>>>>>>>>>>>>>
+		;; calcul de l'experience total puis temps nécessaire pour atteindre le paragon 100
+		;; et 99 exclu c'est le dernier level
+		If $NiveauParagon < 99 Then
+			;; xp restant à faire pour le level paragon en cours
+			$ExperienceFullParagon = $ExperienceNextLevel
+			;; on ajoute les n+1 levels paragons restants
+			$current_paragon_level = $NiveauParagon + 1
+			While $current_paragon_level <> 101
+				$ExperienceFullParagon += $level[$current_paragon_level]
+				$current_paragon_level += 1
+			WEnd
+			; calcul temps avant paragon 100
+			$time_Xp_Full_Paragon = Int($ExperienceFullParagon / $Xp_Moy_Sec) * 1000
+			$time_Xp_Full_Paragon = _format_time($time_Xp_Full_Paragon)
+		Else
+			;; cas du dernier level 99 ou alors paragon 100 deja atteind
+			If $NiveauParagon = 99 Then
+				;; on utilise le calcul existant
+				$time_Xp_Full_Paragon = $time_Xp
+			Else
+				$time_Xp_Full_Paragon = "ALREADY 100 !!!"
+			EndIf
+		EndIf
+		;<<<<<<<<<<<<<<<<<<<<<<<<< fin ajouter pour paragon dans 100 >>>>>>>>>>>>>>>>>>>>>>>>>>>>
+	EndIf
+	;########
+
+	$timer_stat_total = _format_time($dif_timer_stat);temps Total
+
+	If $Totalruns = 1 Then
+		$timer_stat_run_moyen = 0
+		;Lv_stat=lv
+		;Xp_next_stat=Xp_next
+		;Xprun=0
+		;Xptotal=0
+		;Xpmoyen=0
+	Else
+		;;;$dif_timer_stat_moyen = $dif_timer_stat / ($Totalruns - 1)
+		$dif_timer_stat_moyen = $dif_timer_stat_game / ($Totalruns - 1);on recalcule le temps moyen d'une run par raport au temps jeu
+		$timer_stat_run_moyen = _format_time($dif_timer_stat_moyen)
+	EndIf
+
+	GetAct()
+	GetMonsterPow2()
+	$DebugMessage = "                                 INFO RUNS ACT " & $Act & @CRLF
+	$DebugMessage = $DebugMessage & "PM " & $MP & @CRLF
+	$DebugMessage = $DebugMessage & "Runs : " & $Totalruns & @CRLF
+	$DebugMessage = $DebugMessage & "Morts : " & $Death & @CRLF
+	$DebugMessage = $DebugMessage & "Resurrections : " & $Res_compt & @CRLF
+	$DebugMessage = $DebugMessage & "Déconnexions  : " & $disconnectcount & @CRLF
+	$DebugMessage = $DebugMessage & "Sanctuaires Pris : " & $ShrineTaken & @CRLF
+	$DebugMessage = $DebugMessage & "Élites Rencontrés : " & $CptElite & @CRLF
+	$DebugMessage = $DebugMessage & "Succès Runs : " & Round($successratio * 100) & "%   ( " & ($Totalruns - $success) & " Avortés )" & @CRLF
+	$DebugMessage = $DebugMessage & "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" & @CRLF
+	$DebugMessage = $DebugMessage & "                                   INFO COFFRE" & @CRLF
+	$DebugMessage = $DebugMessage & "Nombre Objets Recylés : " & $ItemToRecycle & @CRLF
+	$DebugMessage = $DebugMessage & "Nombre de Legs au Coffre : " & $nbLegs & @CRLF
+	$DebugMessage = $DebugMessage & "Nombre de Rare ID au Coffre : " & $nbRares & @CRLF
+	$DebugMessage = $DebugMessage & "Nombre de Rare Unid au Coffre : " & $nbRaresUnid & @CRLF
+	$DebugMessage = $DebugMessage & "Objets Stockés Dans le Coffre : " & $ItemToStash & @CRLF
+	$DebugMessage = $DebugMessage & "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" & @CRLF
+	$DebugMessage = $DebugMessage & "                                     INFO GOLD" & @CRLF
+	$DebugMessage = $DebugMessage & "Gold au Coffre : " & FormatNumber(Ceiling($GOLD)) & @CRLF
+	$DebugMessage = $DebugMessage & "Gold Total Obtenu  : " & FormatNumber(Ceiling($GOLDInthepocket)) & @CRLF
+	$DebugMessage = $DebugMessage & "Gold Moyen/Run : " & FormatNumber(Ceiling($GOLDMOY)) & @CRLF
+	$DebugMessage = $DebugMessage & "Gold Moyen/Heure : " & FormatNumber(Ceiling($GOLDMOYbyH)) & @CRLF
+	;$DebugMessage = $DebugMessage & "Gold Moyen/Heure Jeu : " & formatNumber(Ceiling($GOLDMOYbyHgame)) & @CRLF ;====> gold de temps de jeu
+	$DebugMessage = $DebugMessage & "Perte Moyenne/Heure : " & FormatNumber(Ceiling($GOLDMOYbyH - $GOLDMOYbyHgame)) & "   (" & Round(($GOLDMOYbyHgame - $GOLDMOYbyH) / $GOLDMOYbyHgame * 100) & "%)" & @CRLF
+	$DebugMessage = $DebugMessage & "Nombre d'objet Vendu :  " & $ItemToSell & "  /  " & FormatNumber(Ceiling($GoldBySale)) & "   (" & Round($GoldBySale / $GOLDInthepocket * 100) & "%)" & @CRLF
+	$DebugMessage = $DebugMessage & "Gold Obtenu par Collecte  :    " & FormatNumber(Ceiling($GOLDInthepocket - $GoldBySale - $GoldByRepaire)) & "   (" & Round(($GOLDInthepocket - $GoldBySale - $GoldByRepaire) / $GOLDInthepocket * 100) & "%)" & @CRLF
+	$DebugMessage = $DebugMessage & "Nombre de Réparation : " & $RepairORsell & " / " & FormatNumber(Ceiling($GoldByRepaire)) & "   (" & Round($GoldByRepaire / $GOLDInthepocket * 100) & "%)" & @CRLF
+	$DebugMessage = $DebugMessage & "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" & @CRLF
+	$DebugMessage = $DebugMessage & "                                     INFO TEMPS " & @CRLF
+	;$DebugMessage = $DebugMessage & "Débuté à :  " & @HOUR & ":" & @MIN & @CRLF
+	$DebugMessage = $DebugMessage & "Durée Moyenne/Run : " & $timer_stat_run_moyen & @CRLF
+	$DebugMessage = $DebugMessage & "Temps Total De Bot:   " & $timer_stat_total & @CRLF
+	$DebugMessage = $DebugMessage & "Temps Total En Jeu :   " & _format_time($dif_timer_stat_game) & " (" & Round($dif_timer_stat_game / $dif_timer_stat * 100) & "%)" & @CRLF
+	$DebugMessage = $DebugMessage & "Pauses Effectuées : " & ($BreakTimeCounter + $PauseRepasCounter) & "  /  " & _format_time($dif_timer_stat_pause) & " (" & Round($dif_timer_stat_pause / $dif_timer_stat * 100) & "%)" & @CRLF
+	;stats XP
+	$DebugMessage = $DebugMessage & "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" & @CRLF
+	$DebugMessage = $DebugMessage & "                                        INFO XP" & @CRLF
+	$DebugMessage = $DebugMessage & "Bonus d'XP : " & $EBP & " %" & @CRLF
+	
+	If ($Xp_Total < 1000000) Then ;afficher en "K"
+		$DebugMessage = $DebugMessage & "XP Obtenu : " & Int($Xp_Total / 1000) & " K" & @CRLF
+	EndIf
+	If ($Xp_Total > 999999) Then ;afficher en "M"
+		$DebugMessage = $DebugMessage & "XP Obtenu : " & Int($Xp_Total / 1000) / 1000 & " M" & @CRLF
+	EndIf
+
+	If ($Xp_Moy_Run < 1000000) Then ;afficher en "K"
+		$DebugMessage = $DebugMessage & "XP Moyen/Run : " & Int($Xp_Moy_Run / 1000) & " K" & @CRLF
+	EndIf
+	If ($Xp_Moy_Run > 999999) Then ;afficher en "M"
+		$DebugMessage = $DebugMessage & "XP Moyen/Run : " & Int($Xp_Moy_Run / 1000) / 1000 & " M" & @CRLF
+	EndIf
+
+	If ($Xp_Moy_Hrs < 1000000) Then ;afficher en "K"
+		$DebugMessage = $DebugMessage & "XP Moyen/Heure : " & Int($Xp_Moy_Hrs / 1000) & " K" & @CRLF
+	EndIf
+	If ($Xp_Moy_Hrs > 999999) Then ;afficher en "M"
+		$DebugMessage = $DebugMessage & "XP Moyen/Heure : " & Int($Xp_Moy_Hrs / 1000) / 1000 & " M" & @CRLF
+	EndIf
+	#cs   If ($Xp_Moy_Hrsgame < 1000000) Then ;afficher en "K" ===> xp/h Temps de jeu
+		$DebugMessage = $DebugMessage & "XP Moyen/Heure Jeu: " & Int($Xp_Moy_Hrsgame / 1000) & " K" & @CRLF
+		EndIf
+		If ($Xp_Moy_Hrsgame > 999999) Then ;afficher en "M" ===> xp/h Temps de jeu
+		$DebugMessage = $DebugMessage & "XP Moyen/Heure Jeu: " & Int($Xp_Moy_Hrsgame / 1000) / 1000 & " M" & @CRLF
+	#ce   EndIf
+	If ($Xp_Moy_HrsPerte < 1000000) Then ;afficher en "K"
+		$DebugMessage = $DebugMessage & "Perte Moyenne/Heure : -" & Int($Xp_Moy_HrsPerte / 1000) & " K (" & Round($Xp_Moy_HrsPerte / $Xp_Moy_Hrsgame * 100) & "%)" & @CRLF
+	EndIf
+	If ($Xp_Moy_HrsPerte > 999999) Then ;afficher en "M"
+		$DebugMessage = $DebugMessage & "Perte Moyenne/Heure : -" & Int($Xp_Moy_HrsPerte / 1000) / 1000 & " M (" & Round($Xp_Moy_HrsPerte / $Xp_Moy_Hrsgame * 100) & "%)" & @CRLF
+	EndIf
+	;$DebugMessage = $DebugMessage & "temps avant prochain niveau : " $ExperienceNextLevel/ & " M" & @CRLF
+	$DebugMessage = $DebugMessage & "Temps Avant Prochain LV : " & $time_Xp & @CRLF
+	$DebugMessage = $DebugMessage & "Temps Avant Parangon 100 : " & $time_Xp_Full_Paragon & @CRLF
+	$DebugMessage = $DebugMessage & "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" & @CRLF
+	;$DebugMessage = $DebugMessage & "XP Moyen par heure : " & $Xp_Moy_Hrs & @CRLF
+	;$DebugMessage = $DebugMessage & "XP avant prochain niveau : " & int($ExperienceNextLevel/1000)/1000 &" M" & @CRLF
+	;$DebugMessage = $DebugMessage & "niveau paragon actuel : " & $NiveauParagon & @CRLF
+
+	;$DebugMessage = $DebugMessage & "#################################"& @CRLF
+
+	;$DebugMessage = $DebugMessage & "test 1 : " & $level[$NiveauParagon+1] & @CRLF
+	;$DebugMessage = $DebugMessage & "exp en cours : " & int($Expencours/1000)/1000 &" M" &@CRLF
+	;$DebugMessage = $DebugMessage & "Xp_Run : " & int($Xp_Run/1000)/1000 &" M" &@CRLF
+	;$DebugMessage = $DebugMessage & "#################################"& @CRLF
+	;#########
+
+
+	$DebugMessage = $DebugMessage & "                                    INFO PERSO " & @CRLF
+	$DebugMessage = $DebugMessage & $nameCharacter & "  " & $LV & " [ " & $NiveauParagon & " ] " & @CRLF
+	$DebugMessage = $DebugMessage & "PickUp Radius  : " & $PR & @CRLF
+	$DebugMessage = $DebugMessage & "Movement Speed : " & Round($MS) & " %" & @CRLF
+	$DebugMessage = $DebugMessage & "Gold Find Total      : " & ($GF + ($NiveauParagon * 3) + ($MP * 25)) & " %" & @CRLF
+	$DebugMessage = $DebugMessage & "      Équipement : " & $GF & " %" & @CRLF
+	$DebugMessage = $DebugMessage & "Magic Find Total     : " & ($MF + ($NiveauParagon * 3) + ($MP * 25)) & " %" & @CRLF
+	$DebugMessage = $DebugMessage & "      Équipement : " & $MF & " %" & @CRLF
+	$DebugMessage = $DebugMessage & "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" & @CRLF
+	Switch $Choix_Act_Run
+		Case -1
+			$file = FileOpen($fileLog, 0)
+			$line = FileReadLine($file, 1)
+			$DebugMessage = $DebugMessage & $line & @CRLF
+			$line = FileReadLine($file, $numLigneFichier)
+			$DebugMessage = $DebugMessage & $line & @CRLF
+			FileClose($file)
+		Case 0
+			$DebugMessage = $DebugMessage & "Mode normal" & @CRLF
+		Case 1
+			$DebugMessage = $DebugMessage & "Act 1 en automatique" & @CRLF
+		Case 2
+			$DebugMessage = $DebugMessage & "Act 2 en automatique" & @CRLF
+		Case 3
+			$DebugMessage = $DebugMessage & "Act 3 en automatique" & @CRLF
+	EndSwitch
 
 
 
-        $MESSAGE = $DebugMessage
-        ToolTip($MESSAGE, $DebugX, $DebugY)
+	$MESSAGE = $DebugMessage
+	ToolTip($MESSAGE, $DebugX, $DebugY)
 
-        $Totalruns = $Totalruns + 1 ;compte le nombre de run
+	$Totalruns = $Totalruns + 1 ;compte le nombre de run
 
 EndFunc   ;==>StatsDisplay
 
@@ -4411,16 +4411,16 @@ EndFunc   ;==>StatsDisplay
 ;
 ; Note(s): faster than YoPens : 100% if < 1mn, 150% if < 1h, 30% if more
 ;;--------------------------------------------------------------------------------
-Func _format_time($mS)
-        Switch $mS
-                Case 0 To 59999                 ; less than 1 mn
-                        Return Round(($mS / 1000), 2) & " s"
-                Case 60000 To 359999    ; 1 mn to 1 hour
-                        Return Int($mS / 60000) & " mn " & Round(($mS / 1000) - Int(Int($mS / 60000) * 60)) & " s"
-                Case Else                               ; more than 1 hour
-                        Return Int($mS / 3600000) & "h " & Int((Int($mS / 60000) - Int(Int($mS / 3600000) * 3600) / 60)) & "mn " & Round(($mS / 1000) - Int($mS / 3600000) * 3600 - Int(Int($mS / 60000) - Int(Int($mS / 3600000) * 3600) / 60) * 60) & "s"
-        EndSwitch
-        Return $mS
+Func _format_time($MS)
+	Switch $MS
+		Case 0 To 59999 ; less than 1 mn
+			Return Round(($MS / 1000), 2) & " s"
+		Case 60000 To 359999 ; 1 mn to 1 hour
+			Return Int($MS / 60000) & " mn " & Round(($MS / 1000) - Int(Int($MS / 60000) * 60)) & " s"
+		Case Else ; more than 1 hour
+			Return Int($MS / 3600000) & "h " & Int((Int($MS / 60000) - Int(Int($MS / 3600000) * 3600) / 60)) & "mn " & Round(($MS / 1000) - Int($MS / 3600000) * 3600 - Int(Int($MS / 60000) - Int(Int($MS / 3600000) * 3600) / 60) * 60) & "s"
+	EndSwitch
+	Return $MS
 EndFunc   ;==>_format_time
 
 ;;--------------------------------------------------------------------------------
@@ -4468,34 +4468,34 @@ EndFunc   ;==>enoughtPotions
 ;;--------------------------------------------------------------------------------
 Func shrine($name, $offset, $Guid)
 
-        Local $begin = TimerInit()
+	Local $begin = TimerInit()
 
-        While iterateactoratribs($Guid, $Atrib_gizmo_state) <> 1 And _playerdead() = False
+	While IterateActorAtribs($Guid, $Atrib_gizmo_state) <> 1 And _playerdead() = False
 
-                If getdistance(_MemoryRead($offset + 0xB0, $d3, 'float'), _MemoryRead($offset + 0xB4, $d3, 'float'), _MemoryRead($offset + 0xB8, $d3, 'float')) >= 8 Then
-                        If TimerDiff($begin) > 4000 Then
-                                _log('shrine is banned because time out')
-                                Return False
-                                ExitLoop
-                        Else
+		If GetDistance(_MemoryRead($offset + 0xB0, $d3, 'float'), _MemoryRead($offset + 0xB4, $d3, 'float'), _MemoryRead($offset + 0xB8, $d3, 'float')) >= 8 Then
+			If TimerDiff($begin) > 4000 Then
+				_log('shrine is banned because time out')
+				Return False
+				ExitLoop
+			Else
 
-                                $Coords = FromD3toScreenCoords(_MemoryRead($offset + 0xB0, $d3, 'float'), _MemoryRead($offset + 0xB4, $d3, 'float'), _MemoryRead($offset + 0xB8, $d3, 'float'))
-                                MouseMove($Coords[0], $Coords[1], 3)
+				$Coords = FromD3toScreenCoords(_MemoryRead($offset + 0xB0, $d3, 'float'), _MemoryRead($offset + 0xB4, $d3, 'float'), _MemoryRead($offset + 0xB8, $d3, 'float'))
+				MouseMove($Coords[0], $Coords[1], 3)
 
-                        EndIf
+			EndIf
 
-                EndIf
+		EndIf
 
-If TimerDiff($begin) > 6000 Then
-            _log('Fake shrine')
-            Return false
-        EndIf
+		If TimerDiff($begin) > 6000 Then
+			_log('Fake shrine')
+			Return False
+		EndIf
 
-                Interact(_MemoryRead($offset + 0xB0, $d3, 'float'), _MemoryRead($offset + 0xB4, $d3, 'float'), _MemoryRead($offset + 0xB8, $d3, 'float'))
+		Interact(_MemoryRead($offset + 0xB0, $d3, 'float'), _MemoryRead($offset + 0xB4, $d3, 'float'), _MemoryRead($offset + 0xB8, $d3, 'float'))
 
-        WEnd
+	WEnd
 
-		$ShrineTaken += 1;on compte les shrine qu'on prend
+	$ShrineTaken += 1;on compte les shrine qu'on prend
 
 EndFunc   ;==>shrine
 
@@ -4621,21 +4621,21 @@ EndFunc   ;==>_inventoryfull
 Func launch_spell($i)
 
 	Dim $buff_table[11]
-		Switch $i
+	Switch $i
 
-	case 0
-		$buff_table = $Skill1
-	case 1
-		$buff_table = $Skill2
-	case 2
-		$buff_table = $Skill3
-	case 3
-		$buff_table = $Skill4
-	case 4
-		$buff_table = $Skill5
-	case 5
-		$buff_table = $Skill6
-	Endswitch
+		Case 0
+			$buff_table = $Skill1
+		Case 1
+			$buff_table = $Skill2
+		Case 2
+			$buff_table = $Skill3
+		Case 3
+			$buff_table = $Skill4
+		Case 4
+			$buff_table = $Skill5
+		Case 5
+			$buff_table = $Skill6
+	EndSwitch
 
 	If $buff_table[1] = False Then
 		Switch $buff_table[6]
@@ -4648,13 +4648,13 @@ Func launch_spell($i)
 		EndSwitch
 		Sleep(10)
 
-   ElseIf $buff_table[1] and IsPowerReady($_MyGuid, $buff_table[9]) Then
+	ElseIf $buff_table[1] And IsPowerReady($_MyGuid, $buff_table[9]) Then
 		Switch $buff_table[6]
-	 Case "right"
+			Case "right"
 				MouseClick("right")
 			Case "left"
 				MouseClick("left")
-			 Case Else
+			Case Else
 
 				Send($buff_table[6])
 
@@ -4666,8 +4666,8 @@ Func launch_spell($i)
 EndFunc   ;==>launch_spell
 
 Func GetResource($idAttrib, $resource)
-   if $resource<>"" then
-   Switch $resource
+	If $resource <> "" Then
+		Switch $resource
 			Case "spirit"
 				$source = 0x3000
 				$MaximumSource = $MaximumSpirit
@@ -4687,13 +4687,13 @@ Func GetResource($idAttrib, $resource)
 				$MaximumSource = $MaximumDiscipline
 				$source = 0x6000
 		EndSwitch
-Return _memoryread(GetAttributeOfs($idAttrib, BitOR($Atrib_Resource_Cur[0], $source)), $d3, "float")/$MaximumSource
-else
-   return 1
-   endif
-EndFunc ;==>GetResource
+		Return _memoryread(GetAttributeOfs($idAttrib, BitOR($Atrib_Resource_Cur[0], $source)), $d3, "float") / $MaximumSource
+	Else
+		Return 1
+	EndIf
+EndFunc   ;==>GetResource
 
-Func GestSpellcast($Distance, $action_spell, $elite, $Guid=0, $Offset=0)
+Func GestSpellcast($Distance, $action_spell, $elite, $Guid = 0, $offset = 0)
 
 	; $action_spell = 0 -> movetopos
 	; $action_spell = 1 -> attack
@@ -4705,21 +4705,21 @@ Func GestSpellcast($Distance, $action_spell, $elite, $Guid=0, $Offset=0)
 
 		Dim $buff_table[11]
 
-			Switch $i
+		Switch $i
 
-	case 0
-		$buff_table = $Skill1
-	case 1
-		$buff_table = $Skill2
-	case 2
-		$buff_table = $Skill3
-	case 3
-		$buff_table = $Skill4
-	case 4
-		$buff_table = $Skill5
-	case 5
-		$buff_table = $Skill6
-	Endswitch
+			Case 0
+				$buff_table = $Skill1
+			Case 1
+				$buff_table = $Skill2
+			Case 2
+				$buff_table = $Skill3
+			Case 3
+				$buff_table = $Skill4
+			Case 4
+				$buff_table = $Skill5
+			Case 5
+				$buff_table = $Skill6
+		EndSwitch
 
 
 
@@ -4747,203 +4747,203 @@ Func GestSpellcast($Distance, $action_spell, $elite, $Guid=0, $Offset=0)
 ;~ 				$source = 5000
 		EndSwitch
 
-$source= GetResource( $_MyGuid, $buff_table[5])
+		$source = GetResource($_MyGuid, $buff_table[5])
 
-		If $buff_table[0] And ($source > $buff_table[4] / $MaximumSource Or $buff_table[5] = "") And (TimerDiff($buff_table[10]) > $buff_table[2] or $buff_table[2]="") Then ;skill Activé
+		If $buff_table[0] And ($source > $buff_table[4] / $MaximumSource Or $buff_table[5] = "") And (TimerDiff($buff_table[10]) > $buff_table[2] Or $buff_table[2] = "") Then ;skill Activé
 
-switch $action_spell
+			Switch $action_spell
 
-   case 0
-    Switch $buff_table[3]
-			case  0
-				If GetLifep() <= $buff_table[7] / 100 Then
-					launch_spell($i)
-					$buff_table[10] = TimerInit()
-				EndIf
+				Case 0
+					Switch $buff_table[3]
+						Case 0
+							If GetLifep() <= $buff_table[7] / 100 Then
+								launch_spell($i)
+								$buff_table[10] = TimerInit()
+							EndIf
 
-			case  7
-				If Not IsBuffActive($_MyGuid, $buff_table[9]) Then
+						Case 7
+							If Not IsBuffActive($_MyGuid, $buff_table[9]) Then
 ;~ 					$timer_buff = TimerInit()
-	  If $nameCharacter = "DemonHunter" Then
-						 if IsBuffActive($_MyGuid,$DemonHunter_Chakram )=False then
+								If $nameCharacter = "DemonHunter" Then
+									If IsBuffActive($_MyGuid, $DemonHunter_Chakram) = False Then
 
-							  Send("1")
+										Send("1")
 
- endif
- endif
- 					launch_spell($i)
+									EndIf
+								EndIf
+								launch_spell($i)
 
-					$buff_table[10] = TimerInit()
-				EndIf
-
-
-			case 9
-			   If GetLifep() <= $buff_table[7] / 100 Or ($Distance <= $buff_table[8] Or $buff_table[8] = "") Then
-					launch_spell($i)
-					$buff_table[10] = TimerInit()
-				 EndIf
-
-			case 10
-				If ($Distance <= $buff_table[8] Or $buff_table[8] = "") or $action_spell <> 1 Then
-					launch_spell($i)
-					$buff_table[10] = TimerInit()
-				EndIf
-
-			case 11
-				If IsBuffActive($_MyGuid, $buff_table[9]) = False Or GetLifep() <= $buff_table[7] / 100 Then
-					launch_spell($i)
-					$buff_table[10] = TimerInit()
-				EndIf
-
-			case 12
-				If IsBuffActive($_MyGuid, $buff_table[9]) = False Or GetLifep() <= $buff_table[7] / 100 Then
-					launch_spell($i)
-					$buff_table[10] = TimerInit()
-				EndIf
+								$buff_table[10] = TimerInit()
+							EndIf
 
 
-			case 16
-				If GetLifep() <= $buff_table[7] / 100 Or $elite > 0 Then
-					launch_spell($i)
-					$buff_table[10] = TimerInit()
-				 EndIf
+						Case 9
+							If GetLifep() <= $buff_table[7] / 100 Or ($Distance <= $buff_table[8] Or $buff_table[8] = "") Then
+								launch_spell($i)
+								$buff_table[10] = TimerInit()
+							EndIf
 
-			case 22
-				launch_spell($i)
-				$buff_table[10] = TimerInit()
+						Case 10
+							If ($Distance <= $buff_table[8] Or $buff_table[8] = "") Or $action_spell <> 1 Then
+								launch_spell($i)
+								$buff_table[10] = TimerInit()
+							EndIf
 
+						Case 11
+							If IsBuffActive($_MyGuid, $buff_table[9]) = False Or GetLifep() <= $buff_table[7] / 100 Then
+								launch_spell($i)
+								$buff_table[10] = TimerInit()
+							EndIf
 
-			endswitch
-
-		case 1
-
-
-		 Switch $buff_table[3]
-		 case  0
-				If GetLifep() <= $buff_table[7] / 100 Then
-					launch_spell($i)
-					$buff_table[10] = TimerInit()
-				 EndIf
-
-			case  1
-				If $Distance <= $buff_table[8] Or $buff_table[8] = "" Then
-					launch_spell($i)
-					$buff_table[10] = TimerInit()
-				EndIf
+						Case 12
+							If IsBuffActive($_MyGuid, $buff_table[9]) = False Or GetLifep() <= $buff_table[7] / 100 Then
+								launch_spell($i)
+								$buff_table[10] = TimerInit()
+							EndIf
 
 
-			case  2
-				launch_spell($i)
+						Case 16
+							If GetLifep() <= $buff_table[7] / 100 Or $elite > 0 Then
+								launch_spell($i)
+								$buff_table[10] = TimerInit()
+							EndIf
 
-			case  3
-			  if $elite > 0  then
-				launch_spell($i)
-				$buff_table[10] = TimerInit()
-
-				  endif
-
-			case  4
-				If Not IsBuffActive($_MyGuid, $buff_table[9]) And $action_spell = 1 Then
-
-					launch_spell($i)
-					$buff_table[10] = TimerInit()
-				EndIf
+						Case 22
+							launch_spell($i)
+							$buff_table[10] = TimerInit()
 
 
-			case  5
+					EndSwitch
+
+				Case 1
+
+
+					Switch $buff_table[3]
+						Case 0
+							If GetLifep() <= $buff_table[7] / 100 Then
+								launch_spell($i)
+								$buff_table[10] = TimerInit()
+							EndIf
+
+						Case 1
+							If $Distance <= $buff_table[8] Or $buff_table[8] = "" Then
+								launch_spell($i)
+								$buff_table[10] = TimerInit()
+							EndIf
+
+
+						Case 2
+							launch_spell($i)
+
+						Case 3
+							If $elite > 0 Then
+								launch_spell($i)
+								$buff_table[10] = TimerInit()
+
+							EndIf
+
+						Case 4
+							If Not IsBuffActive($_MyGuid, $buff_table[9]) And $action_spell = 1 Then
+
+								launch_spell($i)
+								$buff_table[10] = TimerInit()
+							EndIf
+
+
+						Case 5
 ;~ 			    local $IgnoreList=""
-				;Not IsBuffActive($_MyGuid, $buff_table[9]) And
-				if $buff_table[8]="" Then
-				   $dist=20
-				Else
-				   $dist=$buff_table[8]
-				EndIf
+							;Not IsBuffActive($_MyGuid, $buff_table[9]) And
+							If $buff_table[8] = "" Then
+								$dist = 20
+							Else
+								$dist = $buff_table[8]
+							EndIf
 
-				If  $action_spell = 1  and IterateFilterZone($dist) Then
-				   _log("mauvais click droit")
-					launch_spell($i)
-					$buff_table[10] = TimerInit()
-				EndIf
+							If $action_spell = 1 And IterateFilterZone($dist) Then
+								_log("mauvais click droit")
+								launch_spell($i)
+								$buff_table[10] = TimerInit()
+							EndIf
 
 
-			case 6
+						Case 6
 ;~ 			    local $IgnoreList=""
-				if IsBuffActive($_MyGuid, $buff_table[9])=false then
-				if $buff_table[8]="" Then
-				   $dist=20
-				Else
-				   $dist=$buff_table[8]
-				EndIf
-				If  IterateFilterZone($dist) Then
-					launch_spell($i)
-					$buff_table[10] = TimerInit()
-				EndIf
-			 endif
+							If IsBuffActive($_MyGuid, $buff_table[9]) = False Then
+								If $buff_table[8] = "" Then
+									$dist = 20
+								Else
+									$dist = $buff_table[8]
+								EndIf
+								If IterateFilterZone($dist) Then
+									launch_spell($i)
+									$buff_table[10] = TimerInit()
+								EndIf
+							EndIf
 
 
-			case 8
-				If GetLifep() <= $buff_table[7] / 100 And ($Distance <= $buff_table[8] Or $buff_table[8] = "") Then
-					launch_spell($i)
-					$buff_table[10] = TimerInit()
-				EndIf
-			case 11
-				If IsBuffActive($_MyGuid, $buff_table[9]) = False Or GetLifep() <= $buff_table[7] / 100 Then
-					launch_spell($i)
-					$buff_table[10] = TimerInit()
-				EndIf
+						Case 8
+							If GetLifep() <= $buff_table[7] / 100 And ($Distance <= $buff_table[8] Or $buff_table[8] = "") Then
+								launch_spell($i)
+								$buff_table[10] = TimerInit()
+							EndIf
+						Case 11
+							If IsBuffActive($_MyGuid, $buff_table[9]) = False Or GetLifep() <= $buff_table[7] / 100 Then
+								launch_spell($i)
+								$buff_table[10] = TimerInit()
+							EndIf
 
-			case 13
-				If IsBuffActive($_MyGuid, $buff_table[9]) = False And GetLifep() <= $buff_table[7] / 100 Then
-					launch_spell($i)
-					$buff_table[10] = TimerInit()
-				EndIf
+						Case 13
+							If IsBuffActive($_MyGuid, $buff_table[9]) = False And GetLifep() <= $buff_table[7] / 100 Then
+								launch_spell($i)
+								$buff_table[10] = TimerInit()
+							EndIf
 
-			case 14
-				If IsBuffActive($_MyGuid, $buff_table[9]) = False Or ($Distance <= $buff_table[8] Or $buff_table[8] = "") Then
-					launch_spell($i)
-					$buff_table[10] = TimerInit()
-				EndIf
+						Case 14
+							If IsBuffActive($_MyGuid, $buff_table[9]) = False Or ($Distance <= $buff_table[8] Or $buff_table[8] = "") Then
+								launch_spell($i)
+								$buff_table[10] = TimerInit()
+							EndIf
 
-			case 15
-				If IsBuffActive($_MyGuid, $buff_table[9]) = False And ($Distance <= $buff_table[8] Or $buff_table[8] = "") Then
-					launch_spell($i)
-					$buff_table[10] = TimerInit()
-				EndIf
+						Case 15
+							If IsBuffActive($_MyGuid, $buff_table[9]) = False And ($Distance <= $buff_table[8] Or $buff_table[8] = "") Then
+								launch_spell($i)
+								$buff_table[10] = TimerInit()
+							EndIf
 
 
-			case 17
-				If GetLifep() <= $buff_table[7] / 100 And $elite > 0 Then
-					launch_spell($i)
-					$buff_table[10] = TimerInit()
-				EndIf
+						Case 17
+							If GetLifep() <= $buff_table[7] / 100 And $elite > 0 Then
+								launch_spell($i)
+								$buff_table[10] = TimerInit()
+							EndIf
 
-			case 18
-				If ($Distance <= $buff_table[8] Or $buff_table[8] = "") Or $elite > 0 Then
-					launch_spell($i)
-					$buff_table[10] = TimerInit()
-				EndIf
+						Case 18
+							If ($Distance <= $buff_table[8] Or $buff_table[8] = "") Or $elite > 0 Then
+								launch_spell($i)
+								$buff_table[10] = TimerInit()
+							EndIf
 
-			case 19
-				If ($Distance <= $buff_table[8] Or $buff_table[8] = "") And $elite > 0 Then
-					launch_spell($i)
-					$buff_table[10] = TimerInit()
-				EndIf
+						Case 19
+							If ($Distance <= $buff_table[8] Or $buff_table[8] = "") And $elite > 0 Then
+								launch_spell($i)
+								$buff_table[10] = TimerInit()
+							EndIf
 
-			case 20
-				If IsBuffActive($_MyGuid, $buff_table[9]) = False And $elite > 0 Then
-					launch_spell($i)
-					$buff_table[10] = TimerInit()
-				EndIf
+						Case 20
+							If IsBuffActive($_MyGuid, $buff_table[9]) = False And $elite > 0 Then
+								launch_spell($i)
+								$buff_table[10] = TimerInit()
+							EndIf
 
-			case 21
-				If IsBuffActive($_MyGuid, $buff_table[9]) = False Or $elite > 0 Then
-					launch_spell($i)
-					$buff_table[10] = TimerInit()
-				 EndIf
+						Case 21
+							If IsBuffActive($_MyGuid, $buff_table[9]) = False Or $elite > 0 Then
+								launch_spell($i)
+								$buff_table[10] = TimerInit()
+							EndIf
 
-			case 22
-				launch_spell($i)
-				$buff_table[10] = TimerInit()
+						Case 22
+							launch_spell($i)
+							$buff_table[10] = TimerInit()
 
 ;~ 			case 23
 ;~ 			   ;or ($buff_table[1] and IsPowerReady($_MyGuid, $buff_table[9]))
@@ -5028,28 +5028,28 @@ switch $action_spell
 
 ;~ 				$buff_table[10] = TimerInit()
 
-			Endswitch
+					EndSwitch
 
-		 case 2
-			 Switch $buff_table[3]
-case  0
-				If GetLifep() <= $buff_table[7] / 100 Then
-					launch_spell($i)
-					$buff_table[10] = TimerInit()
-				EndIf
-			case 22
-				launch_spell($i)
-				$buff_table[10] = TimerInit()
+				Case 2
+					Switch $buff_table[3]
+						Case 0
+							If GetLifep() <= $buff_table[7] / 100 Then
+								launch_spell($i)
+								$buff_table[10] = TimerInit()
+							EndIf
+						Case 22
+							launch_spell($i)
+							$buff_table[10] = TimerInit()
 
-			case  7
-				If Not IsBuffActive($_MyGuid, $buff_table[9]) Then
-					$timer_buff = TimerInit()
-						 if IsBuffActive($_MyGuid,$DemonHunter_Chakram )=False then
+						Case 7
+							If Not IsBuffActive($_MyGuid, $buff_table[9]) Then
+								$timer_buff = TimerInit()
+								If IsBuffActive($_MyGuid, $DemonHunter_Chakram) = False Then
 
-   If $nameCharacter = "DemonHunter" Then Send("1")
+									If $nameCharacter = "DemonHunter" Then Send("1")
 
- endif
- 					launch_spell($i)
+								EndIf
+								launch_spell($i)
 
 ;~ 					Send("{" & $buff_table[6] & " down}")
 ;~ 					While Not IsBuffActive($_MyGuid, $buff_table[9])
@@ -5057,11 +5057,11 @@ case  0
 ;~ 						Sleep(50)
 ;~ 					WEnd
 ;~ 					Send("{" & $buff_table[6] & " up}")
-					$buff_table[10] = TimerInit()
-				EndIf
+								$buff_table[10] = TimerInit()
+							EndIf
 
-EndSwitch
-endswitch
+					EndSwitch
+			EndSwitch
 
 
 		EndIf
@@ -5086,179 +5086,179 @@ EndFunc   ;==>GestSpellcast
 
 Func GestSpellInit()
 
-		For $i = 0 To 5
+	For $i = 0 To 5
 
-			Dim $buff_table[11]
-			Dim $buff_conf_table[6]
+		Dim $buff_table[11]
+		Dim $buff_conf_table[6]
 
-			If $i = 0 Then
-				$buff_conf_table = $Skill_conf1
-				$buff_table = $Skill1
-			ElseIf $i = 1 Then
-				$buff_conf_table = $Skill_conf2
-				$buff_table = $Skill2
-			ElseIf $i = 2 Then
-				$buff_conf_table = $Skill_conf3
-				$buff_table = $Skill3
-			ElseIf $i = 3 Then
-				$buff_conf_table = $Skill_conf4
-				$buff_table = $Skill4
-			ElseIf $i = 4 Then
-				$buff_conf_table = $Skill_conf5
-				$buff_table = $Skill5
-			ElseIf $i = 5 Then
-				$buff_conf_table = $Skill_conf6
-				$buff_table = $Skill6
+		If $i = 0 Then
+			$buff_conf_table = $Skill_conf1
+			$buff_table = $Skill1
+		ElseIf $i = 1 Then
+			$buff_conf_table = $Skill_conf2
+			$buff_table = $Skill2
+		ElseIf $i = 2 Then
+			$buff_conf_table = $Skill_conf3
+			$buff_table = $Skill3
+		ElseIf $i = 3 Then
+			$buff_conf_table = $Skill_conf4
+			$buff_table = $Skill4
+		ElseIf $i = 4 Then
+			$buff_conf_table = $Skill_conf5
+			$buff_table = $Skill5
+		ElseIf $i = 5 Then
+			$buff_conf_table = $Skill_conf6
+			$buff_table = $Skill6
+		EndIf
+
+
+		If Not $buff_conf_table[0] Or $buff_conf_table[0] = "false" Then
+			$buff_table[0] = False
+		Else
+			$buff_table[0] = True
+		EndIf
+
+		If $buff_table[0] Then ;Si skill actived
+
+			If Not trim($buff_conf_table[1]) = "" Then ;Delay
+				$buff_table[2] = $buff_conf_table[1]
 			EndIf
 
-
-			If Not $buff_conf_table[0] Or $buff_conf_table[0] = "false" Then
-				$buff_table[0] = False
-			Else
-				$buff_table[0] = True
+			If Not trim($buff_conf_table[2]) = "" Then ;Type
+				$buff_table[3] = $buff_conf_table[2]
 			EndIf
 
-			If $buff_table[0] Then ;Si skill actived
-
-				if NOT trim($buff_conf_table[1]) = "" Then ;Delay
-					$buff_table[2] = $buff_conf_table[1]
-				EndIf
-
-				if NOT trim($buff_conf_table[2]) = "" Then ;Type
-					$buff_table[3] = $buff_conf_table[2]
-				EndIf
-
-				if NOT trim($buff_conf_table[3]) = "" Then ;EnergyNeeds
-					$buff_table[4] = $buff_conf_table[3]
-				EndIf
-
-				if NOT trim($buff_conf_table[4]) = "" Then ;Trigger Life
-					$buff_table[7] = $buff_conf_table[4]
-				EndIf
-
-				if NOT trim($buff_conf_table[5]) = "" Then ;Trigger Distance
-					$buff_table[8] = $buff_conf_table[5]
-				EndIf
-
-			EndIF
-
-   Select
-
-		case $buff_table[3] = "life"
-				$type=0
-
-			case $buff_table[3] = "attack"
-				$type=1
-
-
-			case $buff_table[3] = "physical"
-				$type=2
-
-			case $buff_table[3] = "elite"
-				$type=3
-
-
-
-			case $buff_table[3] = "buff"
-				$type=4
-
-
-			case $buff_table[3] = "zone"
-			   $type=5
-
-
-			case StringInStr($buff_table[3], "zone") And StringInStr($buff_table[3], "&") And StringInStr($buff_table[3], "buff")
-			   $type=6
-
-			case $buff_table[3] = "move"
-				$type=7
-
-			case StringInStr($buff_table[3], "life") And StringInStr($buff_table[3], "&") And StringInStr($buff_table[3], "attack")
-				$type=8
-
-			case StringInStr($buff_table[3], "life") And StringInStr($buff_table[3], "|") And StringInStr($buff_table[3], "attack")
-				$type=9
-
-			case StringInStr($buff_table[3], "move") And StringInStr($buff_table[3], "|") And StringInStr($buff_table[3], "attack")
-				$type=10
-
-			case StringInStr($buff_table[3], "life") And StringInStr($buff_table[3], "|") And StringInStr($buff_table[3], "buff")
-				$type=11
-
-			case StringInStr($buff_table[3], "life") And StringInStr($buff_table[3], "|") And StringInStr($buff_table[3], "move")
-				$type=12
-
-			case StringInStr($buff_table[3], "life") And StringInStr($buff_table[3], "&") And StringInStr($buff_table[3], "buff")
-				$type=13
-
-			case StringInStr($buff_table[3], "attack") And StringInStr($buff_table[3], "|") And StringInStr($buff_table[3], "buff")
-				$type=14
-
-			case StringInStr($buff_table[3], "attack") And StringInStr($buff_table[3], "&") And StringInStr($buff_table[3], "buff")
-				$type=15
-
-			case StringInStr($buff_table[3], "life") And StringInStr($buff_table[3], "|") And StringInStr($buff_table[3], "elite")
-				$type=16
-
-			case StringInStr($buff_table[3], "life") And StringInStr($buff_table[3], "&") And StringInStr($buff_table[3], "elite")
-				$type=17
-
-			case StringInStr($buff_table[3], "attack") And StringInStr($buff_table[3], "|") And StringInStr($buff_table[3], "elite")
-				$type=18
-
-			case StringInStr($buff_table[3], "attack") And StringInStr($buff_table[3], "&") And StringInStr($buff_table[3], "elite")
-				$type=19
-
-			case StringInStr($buff_table[3], "elite") And StringInStr($buff_table[3], "&") And StringInStr($buff_table[3], "buff")
-				$type=20
-
-			case StringInStr($buff_table[3], "elite") And StringInStr($buff_table[3], "|") And StringInStr($buff_table[3], "buff")
-				$type=21
-
-			case $buff_table[3]="buff_permanent"
-				$type=22
-
-			case $buff_table[3]="canalisation"
-				$type=23
-
-			Endselect
-
-		$buff_table[3]=$type
-
-			If $i = 0 Then
-				$Skill1 = $buff_table
-			ElseIf $i = 1 Then
-				$Skill2 = $buff_table
-			ElseIf $i = 2 Then
-				$Skill3 = $buff_table
-			ElseIf $i = 3 Then
-				$Skill4 = $buff_table
-			ElseIf $i = 4 Then
-				$Skill5 = $buff_table
-			ElseIf $i = 5 Then
-				$Skill6 = $buff_table
+			If Not trim($buff_conf_table[3]) = "" Then ;EnergyNeeds
+				$buff_table[4] = $buff_conf_table[3]
 			EndIf
-_log($buff_table[3])
-		Next
+
+			If Not trim($buff_conf_table[4]) = "" Then ;Trigger Life
+				$buff_table[7] = $buff_conf_table[4]
+			EndIf
+
+			If Not trim($buff_conf_table[5]) = "" Then ;Trigger Distance
+				$buff_table[8] = $buff_conf_table[5]
+			EndIf
+
+		EndIf
+
+		Select
+
+			Case $buff_table[3] = "life"
+				$Type = 0
+
+			Case $buff_table[3] = "attack"
+				$Type = 1
+
+
+			Case $buff_table[3] = "physical"
+				$Type = 2
+
+			Case $buff_table[3] = "elite"
+				$Type = 3
+
+
+
+			Case $buff_table[3] = "buff"
+				$Type = 4
+
+
+			Case $buff_table[3] = "zone"
+				$Type = 5
+
+
+			Case StringInStr($buff_table[3], "zone") And StringInStr($buff_table[3], "&") And StringInStr($buff_table[3], "buff")
+				$Type = 6
+
+			Case $buff_table[3] = "move"
+				$Type = 7
+
+			Case StringInStr($buff_table[3], "life") And StringInStr($buff_table[3], "&") And StringInStr($buff_table[3], "attack")
+				$Type = 8
+
+			Case StringInStr($buff_table[3], "life") And StringInStr($buff_table[3], "|") And StringInStr($buff_table[3], "attack")
+				$Type = 9
+
+			Case StringInStr($buff_table[3], "move") And StringInStr($buff_table[3], "|") And StringInStr($buff_table[3], "attack")
+				$Type = 10
+
+			Case StringInStr($buff_table[3], "life") And StringInStr($buff_table[3], "|") And StringInStr($buff_table[3], "buff")
+				$Type = 11
+
+			Case StringInStr($buff_table[3], "life") And StringInStr($buff_table[3], "|") And StringInStr($buff_table[3], "move")
+				$Type = 12
+
+			Case StringInStr($buff_table[3], "life") And StringInStr($buff_table[3], "&") And StringInStr($buff_table[3], "buff")
+				$Type = 13
+
+			Case StringInStr($buff_table[3], "attack") And StringInStr($buff_table[3], "|") And StringInStr($buff_table[3], "buff")
+				$Type = 14
+
+			Case StringInStr($buff_table[3], "attack") And StringInStr($buff_table[3], "&") And StringInStr($buff_table[3], "buff")
+				$Type = 15
+
+			Case StringInStr($buff_table[3], "life") And StringInStr($buff_table[3], "|") And StringInStr($buff_table[3], "elite")
+				$Type = 16
+
+			Case StringInStr($buff_table[3], "life") And StringInStr($buff_table[3], "&") And StringInStr($buff_table[3], "elite")
+				$Type = 17
+
+			Case StringInStr($buff_table[3], "attack") And StringInStr($buff_table[3], "|") And StringInStr($buff_table[3], "elite")
+				$Type = 18
+
+			Case StringInStr($buff_table[3], "attack") And StringInStr($buff_table[3], "&") And StringInStr($buff_table[3], "elite")
+				$Type = 19
+
+			Case StringInStr($buff_table[3], "elite") And StringInStr($buff_table[3], "&") And StringInStr($buff_table[3], "buff")
+				$Type = 20
+
+			Case StringInStr($buff_table[3], "elite") And StringInStr($buff_table[3], "|") And StringInStr($buff_table[3], "buff")
+				$Type = 21
+
+			Case $buff_table[3] = "buff_permanent"
+				$Type = 22
+
+			Case $buff_table[3] = "canalisation"
+				$Type = 23
+
+		EndSelect
+
+		$buff_table[3] = $Type
+
+		If $i = 0 Then
+			$Skill1 = $buff_table
+		ElseIf $i = 1 Then
+			$Skill2 = $buff_table
+		ElseIf $i = 2 Then
+			$Skill3 = $buff_table
+		ElseIf $i = 3 Then
+			$Skill4 = $buff_table
+		ElseIf $i = 4 Then
+			$Skill5 = $buff_table
+		ElseIf $i = 5 Then
+			$Skill6 = $buff_table
+		EndIf
+		_log($buff_table[3])
+	Next
 
 EndFunc   ;==>GestSpellInit
 
 #cs
-Func offset_spell_search($str)
+	Func offset_spell_search($str)
 	$var = ""
 	If $str = "" Then
-		$var = "false"
+	$var = "false"
 	Else
-
-		$var = Eval($str)
-		If $var = "" Then
-			$var = "wrong"
-		EndIf
+	
+	$var = Eval($str)
+	If $var = "" Then
+	$var = "wrong"
+	EndIf
 	EndIf
 	;_log("search :" & $var)
 	Return $var
-
-EndFunc   ;==>offset_spell_search
+	
+	EndFunc   ;==>offset_spell_search
 #ce
 
 ;;================================================================================
@@ -5297,18 +5297,18 @@ EndFunc   ;==>GetActorFromId
 
 Func GoToTown()
 
-		_log("start loop _onloginscreen() = False And _intown() = False And _playerdead() = False")
+	_log("start loop _onloginscreen() = False And _intown() = False And _playerdead() = False")
 
 	Local $nbTriesTownPortal = 0
 	While (_intown() = False And _inmenu() = False)
 		$nbTriesTownPortal += 1
 
 		If $nbTriesTownPortal < 3 Then
-			if NOT _TownPortalnew(10) Then
+			If Not _TownPortalnew(10) Then
 				$nbTriesTownPortal = 3
 			EndIf
 		Else
-			_leaveGame()
+			_leavegame()
 			$nbTriesTownPortal = 0
 			Sleep(10000)
 			While _inmenu() = False
@@ -5348,33 +5348,33 @@ Func TpRepairAndBack()
 
 	While Not _intown()
 		#cs
-		$grabskip = 1
-		Attack()
-		$grabskip = 0
-		Sleep(500)
-		$CurrentLoc = getcurrentpos()
-		MoveToPos($CurrentLoc[0] + 5, $CurrentLoc[1] + 5, $CurrentLoc[2], 0, 6)
-		If _playerdead() = False Then
+			$grabskip = 1
+			Attack()
+			$grabskip = 0
+			Sleep(500)
+			$CurrentLoc = getcurrentpos()
+			MoveToPos($CurrentLoc[0] + 5, $CurrentLoc[1] + 5, $CurrentLoc[2], 0, 6)
+			If _playerdead() = False Then
 			_townportal()
-		Else
+			Else
 			Return False
 			ExitLoop
-		EndIf
+			EndIf
 		#ce
-        #cs; =====> modification _TownPortalnew() par _TownPortalnew2()
-		if Not _TownPortalnew() Then
+		#cs; =====> modification _TownPortalnew() par _TownPortalnew2()
+			if Not _TownPortalnew() Then
 			$GameFailed=1
 			Return False
+			EndIf
+		#ce
+		If Not _TownPortalnew2() Then
+			$GameFailed = 1
+			Return False
 		EndIf
-        #ce
-		if Not _TownPortalnew2() Then 
-            $GameFailed=1 
-            Return False 
-        EndIf
 
-    WEnd
+	WEnd
 
-	$PortBack = true
+	$PortBack = True
 
 
 	StashAndRepair()
@@ -5389,7 +5389,7 @@ Func TpRepairAndBack()
 
 	$games = 0
 
-EndFunc
+EndFunc   ;==>TpRepairAndBack
 
 Func StashAndRepair()
 
@@ -5397,312 +5397,312 @@ Func StashAndRepair()
 	$RepairORsell += 1
 	$item_to_stash = 0
 
-	If  trim(StringLower($Unidentified))="true" or (trim(StringLower($Unidentified)="false") and trim(StringLower($Identified))="false") Then ; swicht unidentifier
-     _log("Unidentified")
+	If trim(StringLower($Unidentified)) = "true" Or (trim(StringLower($Unidentified) = "false") And trim(StringLower($Identified)) = "false") Then ; swicht unidentifier
+		_log("Unidentified")
 
-	  While _checkInventoryopen() = False
-		  Send("i")
-		  Sleep(Random(200, 300))
-	  WEnd
+		While _checkInventoryopen() = False
+			Send("i")
+			Sleep(Random(200, 300))
+		WEnd
 
-	  While Not offsetlist()
-		  Sleep(10)
-	  WEnd
+		While Not offsetlist()
+			Sleep(10)
+		WEnd
 
-	  Sleep(Random(500, 1000))
+		Sleep(Random(500, 1000))
 
-	  _log('Filter Backpack2')
-	  $items = FilterBackpack2()
-	  $ToStash = _ArrayFindAll($items, "Stash", 0, 0, 0, 1, 2)
+		_log('Filter Backpack2')
+		$items = FilterBackpack2()
+		$ToStash = _ArrayFindAll($items, "Stash", 0, 0, 0, 1, 2)
 
-	  If $ToStash <> -1 Then
-		  Send("{SPACE}")
-		  Sleep(500)
-		  InteractByActorName('Player_Shared_Stash')
-		  Sleep(700)
-		  Local $stashtry = 0
+		If $ToStash <> -1 Then
+			Send("{SPACE}")
+			Sleep(500)
+			InteractByActorName('Player_Shared_Stash')
+			Sleep(700)
+			Local $stashtry = 0
 
-		  While _checkStashopen() = False
-			  If $stashtry <= 4 Then
-				  _log('Fail to open Stash')
-				  $stashtry += 1
-				  InteractByActorName("Player_Shared_Stash")
-				  Sleep(Random(100, 200))
+			While _checkStashopen() = False
+				If $stashtry <= 4 Then
+					_log('Fail to open Stash')
+					$stashtry += 1
+					InteractByActorName("Player_Shared_Stash")
+					Sleep(Random(100, 200))
 
-			  Else
-				  Send("{PRINTSCREEN}")
-				  Sleep(200)
-				  Log('Failed to open Stash after 4 try')
-				  WinSetOnTop("Diablo III", "", 0)
-				  MsgBox(0, "Impossible d'ouvrir le stash :", "SVP, veuillez reporter ce problème sur le forum. Erreur : s001 ")
-				  Terminate()
+				Else
+					Send("{PRINTSCREEN}")
+					Sleep(200)
+					Log('Failed to open Stash after 4 try')
+					WinSetOnTop("Diablo III", "", 0)
+					MsgBox(0, "Impossible d'ouvrir le stash :", "SVP, veuillez reporter ce problème sur le forum. Erreur : s001 ")
+					Terminate()
 
-			  EndIf
-		  WEnd
-		  $tabfull = 0
-		  CheckWindowD3Size()
+				EndIf
+			WEnd
+			$tabfull = 0
+			CheckWindowD3Size()
 
-		  For $i = 0 To UBound($ToStash) - 1
-			  _log($items[$ToStash[$i]][0] & " stash : " & $items[$ToStash[$i]][1])
+			For $i = 0 To UBound($ToStash) - 1
+				_log($items[$ToStash[$i]][0] & " stash : " & $items[$ToStash[$i]][1])
 
-			  Sleep(Random(100, 200))
-			  InventoryMove($items[$ToStash[$i]][0], $items[$ToStash[$i]][1])
-			  Sleep(Random(100, 500))
+				Sleep(Random(100, 200))
+				InventoryMove($items[$ToStash[$i]][0], $items[$ToStash[$i]][1])
+				Sleep(Random(100, 500))
 
-			  If $items[$ToStash[$i]][3] >= 6 Then
-				  #cs $item_name = fastCheckuiValue("Root.TopLayer.item 2.stack.top_wrapper.stack.name", 1, 354)
-					  $item_stats = fastCheckuiValue("Root.TopLayer.item 2.stack.frame body.stack.stats", 1, 827)
-					  $item_to_stash += 1
-					  ;_log("name file -> " & $ftpfilename)
+				If $items[$ToStash[$i]][3] >= 6 Then
+					#cs $item_name = fastCheckuiValue("Root.TopLayer.item 2.stack.top_wrapper.stack.name", 1, 354)
+						$item_stats = fastCheckuiValue("Root.TopLayer.item 2.stack.frame body.stack.stats", 1, 827)
+						$item_to_stash += 1
+						;_log("name file -> " & $ftpfilename)
+						
+						Xml_To_Str(xml_to_item($item_name, $item_stats), $ftpfilename)
+					#ce
 
-					  Xml_To_Str(xml_to_item($item_name, $item_stats), $ftpfilename)
-				  #ce
+				EndIf
 
-			  EndIf
+				MouseClick('Right')
+				Sleep(Random(50, 200))
+				If Detect_UI_error(1) Then
+					_log('Tab is full : Switching tab')
+					CheckWindowD3Size()
+					$i = $i - 1
+					If $tabfull = 0 Then
+						MouseClick('left', 286, 194, 5)
+						$tabfull = 1
+					ElseIf $tabfull = 1 Then
+						MouseClick('left', 282, 266, 5)
+						$tabfull = 2
+					ElseIf $tabfull = 2 Then
+						_log('Stash is full : Botting stopped')
+						Terminate()
+					EndIf
 
-			  MouseClick('Right')
-			  Sleep(Random(50, 200))
-			  If Detect_UI_error(1) Then
-				  _log('Tab is full : Switching tab')
-				  CheckWindowD3Size()
-				  $i = $i - 1
-				  If $tabfull = 0 Then
-					  MouseClick('left', 286, 194, 5)
-					  $tabfull = 1
-				  ElseIf $tabfull = 1 Then
-					  MouseClick('left', 282, 266, 5)
-					  $tabfull = 2
-				  ElseIf $tabfull = 2 Then
-					  _log('Stash is full : Botting stopped')
-					  Terminate()
-				  EndIf
+					Sleep(5000)
 
-				  Sleep(5000)
+				Else
+					$ItemToStash = $ItemToStash + 1
+				EndIf
+			Next
 
-			  Else
-				  $ItemToStash = $ItemToStash + 1
-			  EndIf
-		  Next
+			;If $item_to_stash > 0 Then
+			;Ftp_Upload_To_Xml($ftpfilename)
+			;EndIf
 
-		  ;If $item_to_stash > 0 Then
-			  ;Ftp_Upload_To_Xml($ftpfilename)
-		  ;EndIf
+			Sleep(Random(50, 100))
+			Send("{SPACE}")
+			Sleep(Random(100, 150))
 
-		  Sleep(Random(50, 100))
-		  Send("{SPACE}")
-		  Sleep(Random(100, 150))
+			;****************************************************************
+			If Not Verif_Attrib_GlobalStuff() Then
+				_log("CHANGEMENT DE STUFF ON TOURNE EN ROND (Stash and Repair - Stash)!!!!!")
+				antiidle()
+			EndIf
+			;****************************************************************
 
-		  ;****************************************************************
-		  If NOT Verif_Attrib_GlobalStuff() Then
-			  _log("CHANGEMENT DE STUFF ON TOURNE EN ROND (Stash and Repair - Stash)!!!!!")
-			  antiidle()
-		  EndIf
-		  ;****************************************************************
+		EndIf
 
-	   EndIf
+	EndIf ; fin swicht Unidentier
 
-   Endif  ; fin swicht Unidentier
+	If trim(StringLower($Identified)) = "true" Then ;swicht identifier
 
-   If trim(StringLower($Identified)) = "true" Then   ;swicht identifier
+		_log("Identified")
 
-	  _log("Identified")
+		While _checkInventoryopen() = False
+			Send("i")
+			Sleep(Random(200, 300))
+		WEnd
 
-	  While _checkInventoryopen() = False
-		  Send("i")
-		  Sleep(Random(200, 300))
-	  WEnd
+		While Not offsetlist()
+			Sleep(10)
+		WEnd
 
-	  While Not offsetlist()
-		  Sleep(10)
-	  WEnd
+		Sleep(Random(500, 1000))
 
-	  Sleep(Random(500, 1000))
+		_log('Filter Backpack')
+		$items = FilterBackpack()
+		$ToStash = _ArrayFindAll($items, "Stash", 0, 0, 0, 1, 2)
 
-	  _log('Filter Backpack')
-	  $items = FilterBackpack()
-	  $ToStash = _ArrayFindAll($items, "Stash", 0, 0, 0, 1, 2)
+		If $ToStash <> -1 Then
+			Send("{SPACE}")
+			Sleep(500)
+			InteractByActorName('Player_Shared_Stash')
+			Sleep(700)
+			Local $stashtry = 0
 
-	  If $ToStash <> -1 Then
-		  Send("{SPACE}")
-		  Sleep(500)
-		  InteractByActorName('Player_Shared_Stash')
-		  Sleep(700)
-		  Local $stashtry = 0
+			While _checkStashopen() = False
+				If $stashtry <= 4 Then
+					_log('Fail to open Stash')
+					$stashtry += 1
+					InteractByActorName("Player_Shared_Stash")
+					Sleep(Random(100, 200))
 
-		  While _checkStashopen() = False
-			  If $stashtry <= 4 Then
-				  _log('Fail to open Stash')
-				  $stashtry += 1
-				  InteractByActorName("Player_Shared_Stash")
-				  Sleep(Random(100, 200))
+				Else
+					Send("{PRINTSCREEN}")
+					Sleep(200)
+					Log('Failed to open Stash after 4 try')
+					WinSetOnTop("Diablo III", "", 0)
+					MsgBox(0, "Impossible d'ouvrir le stash :", "SVP, veuillez reporter ce problème sur le forum. Erreur : s001 ")
+					Terminate()
 
-			  Else
-				  Send("{PRINTSCREEN}")
-				  Sleep(200)
-				  Log('Failed to open Stash after 4 try')
-				  WinSetOnTop("Diablo III", "", 0)
-				  MsgBox(0, "Impossible d'ouvrir le stash :", "SVP, veuillez reporter ce problème sur le forum. Erreur : s001 ")
-				  Terminate()
+				EndIf
+			WEnd
+			$tabfull = 0
+			CheckWindowD3Size()
 
-			  EndIf
-		  WEnd
-		  $tabfull = 0
-		  CheckWindowD3Size()
+			For $i = 0 To UBound($ToStash) - 1
+				_log($items[$ToStash[$i]][0] & " stash : " & $items[$ToStash[$i]][1])
 
-		  For $i = 0 To UBound($ToStash) - 1
-			  _log($items[$ToStash[$i]][0] & " stash : " & $items[$ToStash[$i]][1])
+				Sleep(Random(100, 200))
+				InventoryMove($items[$ToStash[$i]][0], $items[$ToStash[$i]][1])
+				Sleep(Random(100, 500))
 
-			  Sleep(Random(100, 200))
-			  InventoryMove($items[$ToStash[$i]][0], $items[$ToStash[$i]][1])
-			  Sleep(Random(100, 500))
+				If $items[$ToStash[$i]][3] >= 6 Then
+					#cs $item_name = fastCheckuiValue("Root.TopLayer.item 2.stack.top_wrapper.stack.name", 1, 354)
+						$item_stats = fastCheckuiValue("Root.TopLayer.item 2.stack.frame body.stack.stats", 1, 827)
+						$item_to_stash += 1
+						;_log("name file -> " & $ftpfilename)
+						
+						Xml_To_Str(xml_to_item($item_name, $item_stats), $ftpfilename)
+					#ce
 
-			  If $items[$ToStash[$i]][3] >= 6 Then
-				  #cs $item_name = fastCheckuiValue("Root.TopLayer.item 2.stack.top_wrapper.stack.name", 1, 354)
-					  $item_stats = fastCheckuiValue("Root.TopLayer.item 2.stack.frame body.stack.stats", 1, 827)
-					  $item_to_stash += 1
-					  ;_log("name file -> " & $ftpfilename)
+				EndIf
 
-					  Xml_To_Str(xml_to_item($item_name, $item_stats), $ftpfilename)
-				  #ce
+				MouseClick('Right')
+				Sleep(Random(50, 200))
+				If Detect_UI_error(1) Then
+					_log('Tab is full : Switching tab')
+					CheckWindowD3Size()
+					$i = $i - 1
+					If $tabfull = 0 Then
+						MouseClick('left', 286, 194, 5)
+						$tabfull = 1
+					ElseIf $tabfull = 1 Then
+						MouseClick('left', 282, 266, 5)
+						$tabfull = 2
+					ElseIf $tabfull = 2 Then
+						_log('Stash is full : Botting stopped')
+						Terminate()
+					EndIf
 
-			  EndIf
+					Sleep(5000)
 
-			  MouseClick('Right')
-			  Sleep(Random(50, 200))
-			  If Detect_UI_error(1) Then
-				  _log('Tab is full : Switching tab')
-				  CheckWindowD3Size()
-				  $i = $i - 1
-				  If $tabfull = 0 Then
-					  MouseClick('left', 286, 194, 5)
-					  $tabfull = 1
-				  ElseIf $tabfull = 1 Then
-					  MouseClick('left', 282, 266, 5)
-					  $tabfull = 2
-				  ElseIf $tabfull = 2 Then
-					  _log('Stash is full : Botting stopped')
-					  Terminate()
-				  EndIf
+				Else
+					$ItemToStash = $ItemToStash + 1
+				EndIf
+			Next
 
-				  Sleep(5000)
+			;If $item_to_stash > 0 Then
+			;Ftp_Upload_To_Xml($ftpfilename)
+			;EndIf
 
-			  Else
-				  $ItemToStash = $ItemToStash + 1
-			  EndIf
-		  Next
+			Sleep(Random(50, 100))
+			Send("{SPACE}")
+			Sleep(Random(100, 150))
 
-		  ;If $item_to_stash > 0 Then
-			  ;Ftp_Upload_To_Xml($ftpfilename)
-		  ;EndIf
+			;****************************************************************
+			If Not Verif_Attrib_GlobalStuff() Then
+				_log("CHANGEMENT DE STUFF ON TOURNE EN ROND (Stash and Repair - Stash)!!!!!")
+				antiidle()
+			EndIf
+			;****************************************************************
 
-		  Sleep(Random(50, 100))
-		  Send("{SPACE}")
-		  Sleep(Random(100, 150))
+		EndIf ; fin swicht Indentifier
 
-		  ;****************************************************************
-		  If NOT Verif_Attrib_GlobalStuff() Then
-			  _log("CHANGEMENT DE STUFF ON TOURNE EN ROND (Stash and Repair - Stash)!!!!!")
-			  antiidle()
-		  EndIf
-		  ;****************************************************************
-
-	  EndIf ; fin swicht Indentifier
-
-   EndIF
+	EndIf
 
 	Sleep(Random(100, 200))
 	Send("{SPACE}")
 	Sleep(Random(100, 200))
 	Sleep(Random(500, 1000))
-		if (trim(StringLower($Unidentified)) = "true" and trim(StringLower($Identified)) = "false") Then
-			Take_BookOfCain()
-		    Sleep(Random(100, 200))
-	        Send("{SPACE}")
-	        Sleep(Random(100, 200))
-		Endif
+	If (trim(StringLower($Unidentified)) = "true" And trim(StringLower($Identified)) = "false") Then
+		Take_BookOfCain()
+		Sleep(Random(100, 200))
+		Send("{SPACE}")
+		Sleep(Random(100, 200))
+	EndIf
 
 	; <<<<<<<<<<<<<<<<<<<<<<<<<        Test pour le recyclage ITEM  >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
-$ToRecycle = _ArrayFindAll($items, "Recycle", 0, 0, 0, 1, 2)
+	$ToRecycle = _ArrayFindAll($items, "Recycle", 0, 0, 0, 1, 2)
 
-If $ToRecycle <> -1 Then
-Send("{SPACE}")
-Sleep(500)
-InteractByActorName('Blacksmith_RepairShortcut')
-Sleep(700)
-Local $stashtry = 0
+	If $ToRecycle <> -1 Then
+		Send("{SPACE}")
+		Sleep(500)
+		InteractByActorName('Blacksmith_RepairShortcut')
+		Sleep(700)
+		Local $stashtry = 0
 
-#cs While _checkStashopen() = False
-If $stashtry <= 4 Then
-_log('Fail to open Stash')
-$stashtry += 1
-InteractByActorName("Blacksmith_RepairShortcut")
-Sleep(Random(100, 200))
+		#cs While _checkStashopen() = False
+			If $stashtry <= 4 Then
+			_log('Fail to open Stash')
+			$stashtry += 1
+			InteractByActorName("Blacksmith_RepairShortcut")
+			Sleep(Random(100, 200))
+			
+			Else
+			Send("{PRINTSCREEN}")
+			Sleep(200)
+			Log('Failed to open Stash after 4 try')
+			WinSetOnTop("Diablo III", "", 0)
+			MsgBox(0, "Impossible d'ouvrir le stash :", "SVP, veuillez reporter ce problème sur le forum. Erreur : s001 ")
+			Terminate()
+			
+			EndIf
+			WEnd
+		#ce
+		$tabfull = 0
+		CheckWindowD3Size()
+		MouseMove(150, 150, 2) ; clic sur dez
+		MouseClick('Left')
 
-Else
-Send("{PRINTSCREEN}")
-Sleep(200)
-Log('Failed to open Stash after 4 try')
-WinSetOnTop("Diablo III", "", 0)
-MsgBox(0, "Impossible d'ouvrir le stash :", "SVP, veuillez reporter ce problème sur le forum. Erreur : s001 ")
-Terminate()
+		For $i = 0 To UBound($ToRecycle) - 1
 
-EndIf
-WEnd
-#ce
-$tabfull = 0
-CheckWindowD3Size()
-MouseMove(150,150, 2) ; clic sur dez
-MouseClick('Left')
+			_log($items[$ToRecycle[$i]][0] & " stash : " & $items[$ToRecycle[$i]][1])
+			Sleep(Random(100, 200))
+			InventoryMove($items[$ToRecycle[$i]][0], $items[$ToRecycle[$i]][1]);dez l'objet
+			Sleep(Random(100, 500))
 
-For $i = 0 To UBound($ToRecycle) - 1
+			MouseClick('Left')
+			Sleep(Random(40, 250))
+			$ItemToRecycle += 1 ;on compste les objets recyclés
+			If $items[$ToRecycle[$i]][3] > 8 Then ; si leg ou plus, clique sur OK
+				MouseMove(300, 210, 2)
+				Sleep(Random(100, 500))
+				MouseClick('Left')
+			EndIf
 
-_log($items[$ToRecycle[$i]][0] & " stash : " & $items[$ToRecycle[$i]][1])
-Sleep(Random(100, 200))
-InventoryMove($items[$ToRecycle[$i]][0], $items[$ToRecycle[$i]][1]);dez l'objet
-Sleep(Random(100, 500))
+		Next
 
-MouseClick('Left')
-Sleep(Random(40, 250))
-$ItemToRecycle+= 1 ;on compste les objets recyclés
-if $items[$ToRecycle[$i]][3] > 8 then ; si leg ou plus, clique sur OK
-MouseMove(300,210, 2)
-Sleep(Random(100, 500))
-MouseClick('Left')
-endif
+		;If $item_to_stash > 0 Then
+		;Ftp_Upload_To_Xml($ftpfilename)
+		;EndIf
 
-Next
+		Sleep(Random(50, 100))
+		Send("{SPACE}")
+		Sleep(Random(100, 150))
 
-;If $item_to_stash > 0 Then
-;Ftp_Upload_To_Xml($ftpfilename)
-;EndIf
+		;****************************************************************
+		If Not Verif_Attrib_GlobalStuff() Then
+			_log("CHANGEMENT DE STUFF ON TOURNE EN ROND (Stash and Repair - Stash)!!!!!")
+			antiidle()
+		EndIf
+		;****************************************************************
 
-Sleep(Random(50, 100))
-Send("{SPACE}")
-Sleep(Random(100, 150))
+	EndIf
 
-;****************************************************************
-If Not Verif_Attrib_GlobalStuff() Then
-_log("CHANGEMENT DE STUFF ON TOURNE EN ROND (Stash and Repair - Stash)!!!!!")
-antiidle()
-EndIf
-;****************************************************************
+	; <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<          Fin de test recyclage ITEM          >>>>>>>>>>>>>>>>>>>>>>
 
-EndIf
-
-; <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<          Fin de test recyclage ITEM          >>>>>>>>>>>>>>>>>>>>>>
-
-	   ;on mesure l'or avant la réparation
-	    Local $GoldBeforeRepaire = getGold()
-		
-		Repair()
+	;on mesure l'or avant la réparation
+	Local $GoldBeforeRepaire = getGold()
+	
+	Repair()
 	Sleep(Random(100, 200))
 	Send("{SPACE}")
 	Sleep(Random(100, 200))
 	
-       ;on mesure l'or après
-	    Local $GoldAfterRepaire = getGold()
-		$GoldByRepaire += $GoldAfterRepaire - $GoldBeforeRepaire;on compte le cout de la réparation
+	;on mesure l'or après
+	Local $GoldAfterRepaire = getGold()
+	$GoldByRepaire += $GoldAfterRepaire - $GoldBeforeRepaire;on compte le cout de la réparation
 
 	;Trash
 	$ToTrash = _ArrayFindAll($items, "Trash", 0, 0, 0, 1, 2)
@@ -5712,42 +5712,42 @@ EndIf
 		Sleep(500)
 
 		;on mesure l'or avant la vente d'objets
-        Local $GoldBeforeSell = getGold()
-        InteractByActorName($RepairVendor)
-        Sleep(600)
-        Local $vendortry = 0
-        While Not _checkVendoropen()
-            If $vendortry < 6 Then
-                _log('Fail to open vendor')
-                $vendortry += 1
-                InteractByActorName($RepairVendor)
-            Else
-                Send("{PRINTSCREEN}")
-                Sleep(200)
-                _log('Failed to open Vendor after 5 try')
-                WinSetOnTop("Diablo III", "", 0)
-                MsgBox(0, "Impossible d'ouvrir le vendeur :", "SVP, veuillez reporter ce problème sur le forum. Erreur : v002 ")
-                Terminate()
-                ExitLoop
-            EndIf
-        WEnd
-        CheckWindowD3Size()
-        For $i = 0 To UBound($ToTrash) - 1
-            InventoryMove($items[$ToTrash[$i]][0], $items[$ToTrash[$i]][1])
-            Sleep(Random(100, 350))
-            $ItemToSell += 1
-            MouseClick('Right')
-            Sleep(Random(100, 200))
-        Next
-        Sleep(Random(100, 200))
+		Local $GoldBeforeSell = getGold()
+		InteractByActorName($RepairVendor)
+		Sleep(600)
+		Local $vendortry = 0
+		While Not _checkVendoropen()
+			If $vendortry < 6 Then
+				_log('Fail to open vendor')
+				$vendortry += 1
+				InteractByActorName($RepairVendor)
+			Else
+				Send("{PRINTSCREEN}")
+				Sleep(200)
+				_log('Failed to open Vendor after 5 try')
+				WinSetOnTop("Diablo III", "", 0)
+				MsgBox(0, "Impossible d'ouvrir le vendeur :", "SVP, veuillez reporter ce problème sur le forum. Erreur : v002 ")
+				Terminate()
+				ExitLoop
+			EndIf
+		WEnd
+		CheckWindowD3Size()
+		For $i = 0 To UBound($ToTrash) - 1
+			InventoryMove($items[$ToTrash[$i]][0], $items[$ToTrash[$i]][1])
+			Sleep(Random(100, 350))
+			$ItemToSell += 1
+			MouseClick('Right')
+			Sleep(Random(100, 200))
+		Next
+		Sleep(Random(100, 200))
 		Send("{SPACE}")
 		Sleep(Random(100, 200))
 		; on mesure l'or après
 		Local $GoldAfterSell = getGold()
-		$GoldBySale += $GoldAfterSell - $GoldBeforeSell;on compte l'or par vente 
+		$GoldBySale += $GoldAfterSell - $GoldBeforeSell;on compte l'or par vente
 
 		;****************************************************************
-		If NOT Verif_Attrib_GlobalStuff() Then
+		If Not Verif_Attrib_GlobalStuff() Then
 			_log("CHANGEMENT DE STUFF ON TOURNE EN ROND (Stash and Repair - vendeur)!!!!!")
 			antiidle()
 		EndIf
@@ -6192,66 +6192,66 @@ EndFunc   ;==>Ftp_Upload_To_Xml
 
 
 Func fastcheckuiitemvisiblesize($valuetocheckfor, $visibility, $bucket)
-        Global $itemsize[4]
-        $ptr1 = _memoryread($ofs_objectmanager, $d3, "ptr")
-        $ptr2 = _memoryread($ptr1 + 2420, $d3, "ptr")
-        $ptr3 = _memoryread($ptr2 + 0, $d3, "ptr")
-        $ofs_uielements = _memoryread($ptr3 + 8, $d3, "ptr")
-        $uielementpointer = _memoryread($ofs_uielements + 4 * $bucket, $d3, "ptr")
-        While $uielementpointer <> 0
-                $npnt = _memoryread($uielementpointer + 528, $d3, "ptr")
-                $name = BinaryToString(_memoryread($npnt + 56, $d3, "byte[256]"), 4)
-                If StringInStr($name, $valuetocheckfor) Then
-                        If _memoryread($npnt + 40, $d3, "int") = $visibility Then
+	Global $itemsize[4]
+	$ptr1 = _memoryread($ofs_objectmanager, $d3, "ptr")
+	$ptr2 = _memoryread($ptr1 + 2420, $d3, "ptr")
+	$ptr3 = _memoryread($ptr2 + 0, $d3, "ptr")
+	$ofs_uielements = _memoryread($ptr3 + 8, $d3, "ptr")
+	$uielementpointer = _memoryread($ofs_uielements + 4 * $bucket, $d3, "ptr")
+	While $uielementpointer <> 0
+		$npnt = _memoryread($uielementpointer + 528, $d3, "ptr")
+		$name = BinaryToString(_memoryread($npnt + 56, $d3, "byte[256]"), 4)
+		If StringInStr($name, $valuetocheckfor) Then
+			If _memoryread($npnt + 40, $d3, "int") = $visibility Then
 
 
-                                $x = _memoryread($npnt + 0x508, $d3, "float") ;left
-                                $y = _memoryread($npnt + 0x50C, $d3, "float") ;top
-                                $r = _memoryread($npnt + 0x510, $d3, "float") ;right
-                                $B = _memoryread($npnt + 0x514, $d3, "float") ;bot
-                                _log(" x :" & $x & " y :" & $y & " R :" & $r & " B:" & $B)
+				$x = _memoryread($npnt + 0x508, $d3, "float") ;left
+				$y = _memoryread($npnt + 0x50C, $d3, "float") ;top
+				$r = _memoryread($npnt + 0x510, $d3, "float") ;right
+				$B = _memoryread($npnt + 0x514, $d3, "float") ;bot
+				_log(" x :" & $x & " y :" & $y & " R :" & $r & " B:" & $B)
 
 
-                                Dim $itemsize[4] = [$x, $y, $r, $B]
+				Dim $itemsize[4] = [$x, $y, $r, $B]
 
 
 
-                                Return $itemsize
-                        Else
-                                _log("The UI element we are looking for is invisible")
-                                Return False
-                        EndIf
-                EndIf
-                $uielementpointer = _memoryread($uielementpointer, $d3, "ptr")
-        WEnd
-        Return False
+				Return $itemsize
+			Else
+				_log("The UI element we are looking for is invisible")
+				Return False
+			EndIf
+		EndIf
+		$uielementpointer = _memoryread($uielementpointer, $d3, "ptr")
+	WEnd
+	Return False
 EndFunc   ;==>fastcheckuiitemvisiblesize
 
 Func _checkbackpacksize()
-        $sizelookfor = "Root.NormalLayer.inventory_dialog_mainPage.inventory_button_backpack"
+	$sizelookfor = "Root.NormalLayer.inventory_dialog_mainPage.inventory_button_backpack"
 
-        $count_fastcheckuiitemvisiblesize = 0
-        $sizecheck = 0
-        While $count_fastcheckuiitemvisiblesize <= 100 And $sizecheck = 0
-                fastcheckuiitemvisiblesize($sizelookfor, 1, 1180)
-                $count_fastcheckuiitemvisiblesize += 1
-                if $itemsize[0] <> 0 Then
-                $sizecheck = 1
-                Endif
-        WEnd
+	$count_fastcheckuiitemvisiblesize = 0
+	$sizecheck = 0
+	While $count_fastcheckuiitemvisiblesize <= 100 And $sizecheck = 0
+		fastcheckuiitemvisiblesize($sizelookfor, 1, 1180)
+		$count_fastcheckuiitemvisiblesize += 1
+		If $itemsize[0] <> 0 Then
+			$sizecheck = 1
+		EndIf
+	WEnd
 
-        If $itemsize[0] = 1035 And $itemsize[1] = 652 And $itemsize[2] = 1575 And $itemsize[3] = 972 Then
-                _log("UI Size check OK : " & $itemsize[0] & ":" & $itemsize[1] & ":" & $itemsize[2] & ":" & $itemsize[3])
-                Return True
-        Else
+	If $itemsize[0] = 1035 And $itemsize[1] = 652 And $itemsize[2] = 1575 And $itemsize[3] = 972 Then
+		_log("UI Size check OK : " & $itemsize[0] & ":" & $itemsize[1] & ":" & $itemsize[2] & ":" & $itemsize[3])
+		Return True
+	Else
 
-                If $itemsize[0] = False Then
-                _log("UI Size check failed for unknow reason : " & $itemsize[0] & ":" & $itemsize[1] & ":" & $itemsize[2] & ":" & $itemsize[3])
-                else
-                _log("UI Size check failed cuz windows is wrong size : " & $itemsize[0] & ":" & $itemsize[1] & ":" & $itemsize[2] & ":" & $itemsize[3])
-                Endif
-                antiidle()
-        EndIf
+		If $itemsize[0] = False Then
+			_log("UI Size check failed for unknow reason : " & $itemsize[0] & ":" & $itemsize[1] & ":" & $itemsize[2] & ":" & $itemsize[3])
+		Else
+			_log("UI Size check failed cuz windows is wrong size : " & $itemsize[0] & ":" & $itemsize[1] & ":" & $itemsize[2] & ":" & $itemsize[3])
+		EndIf
+		antiidle()
+	EndIf
 
 EndFunc   ;==>_checkbackpacksize
 
@@ -6263,65 +6263,65 @@ EndFunc   ;==>_checkbackpacksize
 Func Auto_spell_init()
 	If StringLower(Trim($nameCharacter)) = "monk" Then
 		Dim $tab_skill_temp = $Monk_skill_Table
-		if $Gest_affixe_ByClass = "true" Then
-			$Gestion_affixe_loot = "false"
-			$Gestion_affixe = "false"
+		If $Gest_affixe_ByClass = "true" Then
+			$gestion_affixe_loot = "false"
+			$gestion_affixe = "false"
 			_log("Monk detected, Gest Affix disabled")
 		EndIf
 	ElseIf StringLower(Trim($nameCharacter)) = "barbarian" Then
 		Dim $tab_skill_temp = $Barbarian_Skill_Table
-		if $Gest_affixe_ByClass = "true" Then
-			$Gestion_affixe_loot = "false"
-			$Gestion_affixe = "false"
+		If $Gest_affixe_ByClass = "true" Then
+			$gestion_affixe_loot = "false"
+			$gestion_affixe = "false"
 			_log("Barbarian detected, Gest Affix disabled")
 		EndIf
 	ElseIf StringLower(Trim($nameCharacter)) = "witchdoctor" Then
 		Dim $tab_skill_temp = $WitchDoctor_Skill_Table
-		if $Gest_affixe_ByClass = "true" Then
-			$Gestion_affixe_loot = "true"
-			$Gestion_affixe = "true"
+		If $Gest_affixe_ByClass = "true" Then
+			$gestion_affixe_loot = "true"
+			$gestion_affixe = "true"
 			_log("WitchDoctor detected, Gest Affix Enabled")
 		EndIf
 	ElseIf StringLower(Trim($nameCharacter)) = "demonhunter" Then
 		Dim $tab_skill_temp = $DemonHunter_skill_Table
-		if $Gest_affixe_ByClass = "true" Then
-			$Gestion_affixe_loot = "true"
-			$Gestion_affixe = "true"
+		If $Gest_affixe_ByClass = "true" Then
+			$gestion_affixe_loot = "true"
+			$gestion_affixe = "true"
 			_log("DemonHunter detected, Gest Affix Enabled")
 		EndIf
 	Else
 		Dim $tab_skill_temp = $Wizard_skill_Table
-		if $Gest_affixe_ByClass = "true" Then
-			$Gestion_affixe_loot = "true"
-			$Gestion_affixe = "true"
+		If $Gest_affixe_ByClass = "true" Then
+			$gestion_affixe_loot = "true"
+			$gestion_affixe = "true"
 			_log("Wizard detected, Gest Affix Enabled")
 		EndIf
 	EndIf
 
 
-	for $i=-1 to 4
-		For $y=0 to Ubound($tab_skill_temp) - 1
+	For $i = -1 To 4
+		For $y = 0 To UBound($tab_skill_temp) - 1
 
-			if GetActivePlayerSkill($i) = $tab_skill_temp[$y][0] Then
-				If $i= -1 Then
+			If GetActivePlayerSkill($i) = $tab_skill_temp[$y][0] Then
+				If $i = -1 Then
 					$Skill1 = assoc_skill($y, "left", $tab_skill_temp)
-				Elseif $i=0 Then
-					$skill2 = assoc_skill($y, "right", $tab_skill_temp)
-				ElseIf $i=1 Then
-					$skill3 = assoc_skill($y, $Key1, $tab_skill_temp)
-				ElseIf $i=2 Then
-					$skill4 = assoc_skill($y, $Key2, $tab_skill_temp)
-				ElseIf $i=3 Then
-					$skill5 = assoc_skill($y, $Key3, $tab_skill_temp)
-				ElseIf $i=4 Then
-					$skill6 = assoc_skill($y, $Key4, $tab_skill_temp)
+				ElseIf $i = 0 Then
+					$Skill2 = assoc_skill($y, "right", $tab_skill_temp)
+				ElseIf $i = 1 Then
+					$Skill3 = assoc_skill($y, $Key1, $tab_skill_temp)
+				ElseIf $i = 2 Then
+					$Skill4 = assoc_skill($y, $Key2, $tab_skill_temp)
+				ElseIf $i = 3 Then
+					$Skill5 = assoc_skill($y, $Key3, $tab_skill_temp)
+				ElseIf $i = 4 Then
+					$Skill6 = assoc_skill($y, $Key4, $tab_skill_temp)
 				EndIf
-				Exitloop
-			EndIF
+				ExitLoop
+			EndIf
 
 		Next
 	Next
-EndFunc
+EndFunc   ;==>Auto_spell_init
 
 Func assoc_skill($y, $key, $tab_skill_temp)
 	Dim $tab[11]
@@ -6336,188 +6336,188 @@ Func assoc_skill($y, $key, $tab_skill_temp)
 	$tab[8] = $tab_skill_temp[$y][7]
 	$tab[9] = $tab_skill_temp[$y][0]
 	$tab[10] = ""
-	return $tab
-EndFunc
+	Return $tab
+EndFunc   ;==>assoc_skill
 
-Func Detect_UI_error($mode=0)
+Func Detect_UI_error($mode = 0)
 
-        ;$mode=0 -> Detection inventory full
-        ;$mode=1 -> Detection Stash full
-        ;$mode=2 -> Detection Deny Boss tp
-        ;$mode=3 -> Detection No item IDentify
+	;$mode=0 -> Detection inventory full
+	;$mode=1 -> Detection Stash full
+	;$mode=2 -> Detection Deny Boss tp
+	;$mode=3 -> Detection No item IDentify
 
-        $bucket_inventory_full = 1185
-        $valuetocheckfor = "Root.TopLayer.error_notify.error_text"
-        $Visibility = 1
+	$bucket_inventory_full = 1185
+	$valuetocheckfor = "Root.TopLayer.error_notify.error_text"
+	$Visibility = 1
 
-        $ptr1 = _memoryread($ofs_objectmanager, $d3, "ptr")
-        $ptr2 = _memoryread($ptr1 + 2420, $d3, "ptr")
-        $ptr3 = _memoryread($ptr2 + 0, $d3, "ptr")
-        $ofs_uielements = _memoryread($ptr3 + 8, $d3, "ptr")
-        $uielementpointer = _memoryread($ofs_uielements + 4 * $bucket_inventory_full, $d3, "ptr")
+	$ptr1 = _memoryread($ofs_objectmanager, $d3, "ptr")
+	$ptr2 = _memoryread($ptr1 + 2420, $d3, "ptr")
+	$ptr3 = _memoryread($ptr2 + 0, $d3, "ptr")
+	$ofs_uielements = _memoryread($ptr3 + 8, $d3, "ptr")
+	$uielementpointer = _memoryread($ofs_uielements + 4 * $bucket_inventory_full, $d3, "ptr")
 
-        While $uielementpointer <> 0
-                $npnt = _memoryread($uielementpointer + 528, $d3, "ptr")
-                $name = BinaryToString(_memoryread($npnt + 56, $d3, "byte[256]"), 4)
-                $uitextptr = _memoryread($npnt + 0xAE0, $d3, "ptr")
+	While $uielementpointer <> 0
+		$npnt = _memoryread($uielementpointer + 528, $d3, "ptr")
+		$name = BinaryToString(_memoryread($npnt + 56, $d3, "byte[256]"), 4)
+		$uitextptr = _memoryread($npnt + 0xAE0, $d3, "ptr")
 
-                If StringInStr($name, $valuetocheckfor) Then
-                        If _memoryread($npnt + 40, $d3, "int") = $visibility Then
+		If StringInStr($name, $valuetocheckfor) Then
+			If _memoryread($npnt + 40, $d3, "int") = $Visibility Then
 
-                                ;_log("Ui Error Visible")
+				;_log("Ui Error Visible")
 
-                                If $mode = 0 Then       ;Detect inventory full
-                                        $uitext_InventaireFull = _memoryread($uitextptr, $d3, "byte["&$Byte_full_inventory[1]&"]")
-                                        If $Byte_full_inventory[0] = $uitext_InventaireFull Then
-                                                _log("Detection Inventaire Full !")
-                                                return true
-                                        EndIf
-                                ElseIf $mode = 1 Then ;Detect Stash full
-                                        $uitext_StashFull = _memoryread($uitextptr, $d3, "byte["&$Byte_Full_Stash[1]&"]")
-                                        If $Byte_Full_Stash[0] = $uitext_StashFull Then
-                                                _log("Detection Stash Full !")
-                                                return true
-                                        EndIf
-                                ElseIf $mode = 2 Then ;Detect Deny Tp
-                                        $uitext_BossTpDeny = _memoryread($uitextptr, $d3, "byte["&$Byte_Boss_TpDeny[1]&"]")
-                                        If $Byte_Boss_TpDeny[0] = $uitext_BossTpDeny Then
-                                                _log("Detection Deny Tp, Boss room !")
-                                                return true
-                                        EndIf
-                                ElseIf $mode = 3 Then ;Detect No Item identify
-                                        $uitext_NoItemIdentify = _memoryread($uitextptr, $d3, "byte["&$Byte_NoItem_Identify[1]&"]")
-                                        If $Byte_NoItem_Identify[0] = $uitext_NoItemIdentify Then
-                                                _log("Detection No Item IDentify !")
-                                                return true
-                                        EndIf
-                                ElseIf $mode > 3 Then ;Test Mode
+				If $mode = 0 Then ;Detect inventory full
+					$uitext_InventaireFull = _memoryread($uitextptr, $d3, "byte[" & $Byte_full_inventory[1] & "]")
+					If $Byte_full_inventory[0] = $uitext_InventaireFull Then
+						_log("Detection Inventaire Full !")
+						Return True
+					EndIf
+				ElseIf $mode = 1 Then ;Detect Stash full
+					$uitext_StashFull = _memoryread($uitextptr, $d3, "byte[" & $Byte_Full_Stash[1] & "]")
+					If $Byte_Full_Stash[0] = $uitext_StashFull Then
+						_log("Detection Stash Full !")
+						Return True
+					EndIf
+				ElseIf $mode = 2 Then ;Detect Deny Tp
+					$uitext_BossTpDeny = _memoryread($uitextptr, $d3, "byte[" & $Byte_Boss_TpDeny[1] & "]")
+					If $Byte_Boss_TpDeny[0] = $uitext_BossTpDeny Then
+						_log("Detection Deny Tp, Boss room !")
+						Return True
+					EndIf
+				ElseIf $mode = 3 Then ;Detect No Item identify
+					$uitext_NoItemIdentify = _memoryread($uitextptr, $d3, "byte[" & $Byte_NoItem_Identify[1] & "]")
+					If $Byte_NoItem_Identify[0] = $uitext_NoItemIdentify Then
+						_log("Detection No Item IDentify !")
+						Return True
+					EndIf
+				ElseIf $mode > 3 Then ;Test Mode
 
-                                        $uitext_InventaireFull = _memoryread($uitextptr, $d3, "byte["&$Byte_full_inventory[1]&"]")
-                                        $uitext_StashFull = _memoryread($uitextptr, $d3, "byte["&$Byte_Full_Stash[1]&"]")
-                                        $uitext_BossTpDeny = _memoryread($uitextptr, $d3, "byte["&$Byte_Boss_TpDeny[1]&"]")
-                                        $uitext_NoItemIdentify = _memoryread($uitextptr, $d3, "byte["&$Byte_NoItem_Identify[1]&"]")
+					$uitext_InventaireFull = _memoryread($uitextptr, $d3, "byte[" & $Byte_full_inventory[1] & "]")
+					$uitext_StashFull = _memoryread($uitextptr, $d3, "byte[" & $Byte_Full_Stash[1] & "]")
+					$uitext_BossTpDeny = _memoryread($uitextptr, $d3, "byte[" & $Byte_Boss_TpDeny[1] & "]")
+					$uitext_NoItemIdentify = _memoryread($uitextptr, $d3, "byte[" & $Byte_NoItem_Identify[1] & "]")
 
-                                        If $Byte_full_inventory[0] = $uitext_InventaireFull Then
-                                                _log("Detection Inventaire Full !")
-                                                return true
-                                        ElseIf $Byte_Full_Stash[0] = $uitext_StashFull Then
-                                                _log("Detection Stash Full !")
-                                                return true
-                                        ElseIf $Byte_Boss_TpDeny[0] = $uitext_BossTpDeny Then
-                                                _log("Detection Deny Tp, Boss room !")
-                                                return true
-                                        ElseIf $Byte_NoItem_Identify[0] = $uitext_NoItemIdentify Then
-                                                _log("Detection No Item IDentify !")
-                                                return true
-                                        EndIf
+					If $Byte_full_inventory[0] = $uitext_InventaireFull Then
+						_log("Detection Inventaire Full !")
+						Return True
+					ElseIf $Byte_Full_Stash[0] = $uitext_StashFull Then
+						_log("Detection Stash Full !")
+						Return True
+					ElseIf $Byte_Boss_TpDeny[0] = $uitext_BossTpDeny Then
+						_log("Detection Deny Tp, Boss room !")
+						Return True
+					ElseIf $Byte_NoItem_Identify[0] = $uitext_NoItemIdentify Then
+						_log("Detection No Item IDentify !")
+						Return True
+					EndIf
 
-                                EndIf
+				EndIf
 
-                        Else
-                                _log("No detection")
-                                Return False
-                        EndIf
+			Else
+				_log("No detection")
+				Return False
+			EndIf
 
-                EndIf
+		EndIf
 
-                $uielementpointer = _memoryread($uielementpointer, $d3, "ptr")
-        WEnd
-        Return False
-EndFunc
+		$uielementpointer = _memoryread($uielementpointer, $d3, "ptr")
+	WEnd
+	Return False
+EndFunc   ;==>Detect_UI_error
 
 
 Func Detect_Str_full_inventory()
 
-        Global $Byte_Full_Inventory[2]
-        Global $Byte_Full_Stash[2]
-        Global $Byte_Boss_TpDeny[2]
-                Global $Byte_NoItem_Identify[2]
+	Global $Byte_Full_Inventory[2]
+	Global $Byte_Full_Stash[2]
+	Global $Byte_Boss_TpDeny[2]
+	Global $Byte_NoItem_Identify[2]
 
-        Dim $list = IndexSNO($ofs_StringListDef,0)
-        ;_arraydisplay($list)
+	Dim $list = IndexSNO($ofs_StringListDef, 0)
+	;_arraydisplay($list)
 
-        For $y=1 to Ubound($List) - 1
+	For $y = 1 To UBound($list) - 1
 
-                If $list[$y][1] = 0xCB21 Then
-                        $count =  _MemoryRead($list[$y][0] + 0x1c, $d3, "int")
-                        $count = $count / 0x50
+		If $list[$y][1] = 0xCB21 Then
+			$count = _MemoryRead($list[$y][0] + 0x1c, $d3, "int")
+			$count = $count / 0x50
 
-                        $offset = $list[$y][0] + 0x28
+			$offset = $list[$y][0] + 0x28
 
-                        For $i=0 to $count - 1
-
-
-                                $structtest = DllStructCreate("ptr;byte[8];int;ptr;byte[8];int;ptr;byte[8];int;ptr;byte[8];int;byte[16]")
-                                ;$structtest = DllStructCreate("ptr;byte[4];ptr;int;byte[8];ptr;int;byte[8]ptr;int;byte[8];ptr;int;byte[16]")
-                                DllCall($d3[0], 'int', 'ReadProcessMemory', 'int', $d3[1], 'int', $offset, 'ptr', DllStructGetPtr($structtest), 'int', DllStructGetSize($structtest), 'int', '')
-
-                                $str1 = DllStructGetData($structtest, 1)
-                                $size1 = DllStructGetData($structtest, 3)
-
-                                $str2 = DllStructGetData($structtest, 4)
-                                $size2 = DllStructGetData($structtest, 6)
+			For $i = 0 To $count - 1
 
 
-                                $str_to_check = BinaryToString( _MemoryRead($str1, $d3, "char[" & $size1 & "]"), 4)
+				$structtest = DllStructCreate("ptr;byte[8];int;ptr;byte[8];int;ptr;byte[8];int;ptr;byte[8];int;byte[16]")
+				;$structtest = DllStructCreate("ptr;byte[4];ptr;int;byte[8];ptr;int;byte[8]ptr;int;byte[8];ptr;int;byte[16]")
+				DllCall($d3[0], 'int', 'ReadProcessMemory', 'int', $d3[1], 'int', $offset, 'ptr', DllStructGetPtr($structtest), 'int', DllStructGetSize($structtest), 'int', '')
 
-                                If StringInStr($str_to_check, "Pickup_NoSuitableSlot") Then
-                                        _log("1) Pickup_NoSuitableSlot found")
-                                        $Byte_Full_Inventory[0] = _MemoryRead($str2, $d3, "byte[" & $size2 & "]")
-                                        $Byte_Full_Inventory[1] = $size2
-                                ElseIf StringInStr($str_to_check, "IAR_NotEnoughRoom") Then
-                                        _log("2) IAR_NotEnoughRoom found")
-                                        $Byte_Full_Stash[0] = _MemoryRead($str2, $d3, "byte[" & $size2 & "]")
-                                        $Byte_Full_Stash[1] = $size2
-                                ElseIf StringInStr($str_to_check, "PowerUnusableDuringBossEncounter") Then
-                                        _log("3) PowerUnusableDuringBossEncounter found")
-                                        $Byte_boss_TpDeny[0] = _MemoryRead($str2, $d3, "byte[" & $size2 & "]")
-                                        $Byte_boss_TpDeny[1] = $size2
-                                ElseIf StringInStr($str_to_check, "IdentifyAllNoItems") Then
-                                        _log("4) IdentifyAllNoItems found")
-                                        $Byte_NoItem_Identify[0] = _MemoryRead($str2, $d3, "byte[" & $size2 & "]")
-                                        $Byte_NoItem_Identify[1] = $size2
-                                EndIf
+				$str1 = DllStructGetData($structtest, 1)
+				$size1 = DllStructGetData($structtest, 3)
+
+				$str2 = DllStructGetData($structtest, 4)
+				$size2 = DllStructGetData($structtest, 6)
 
 
-                        $offset += 0x50
-                        $structtest = ""
-                        Next
-                EndIf
-        Next
+				$str_to_check = BinaryToString( _MemoryRead($str1, $d3, "char[" & $size1 & "]"), 4)
 
-EndFunc
+				If StringInStr($str_to_check, "Pickup_NoSuitableSlot") Then
+					_log("1) Pickup_NoSuitableSlot found")
+					$Byte_Full_Inventory[0] = _MemoryRead($str2, $d3, "byte[" & $size2 & "]")
+					$Byte_Full_Inventory[1] = $size2
+				ElseIf StringInStr($str_to_check, "IAR_NotEnoughRoom") Then
+					_log("2) IAR_NotEnoughRoom found")
+					$Byte_Full_Stash[0] = _MemoryRead($str2, $d3, "byte[" & $size2 & "]")
+					$Byte_Full_Stash[1] = $size2
+				ElseIf StringInStr($str_to_check, "PowerUnusableDuringBossEncounter") Then
+					_log("3) PowerUnusableDuringBossEncounter found")
+					$Byte_boss_TpDeny[0] = _MemoryRead($str2, $d3, "byte[" & $size2 & "]")
+					$Byte_boss_TpDeny[1] = $size2
+				ElseIf StringInStr($str_to_check, "IdentifyAllNoItems") Then
+					_log("4) IdentifyAllNoItems found")
+					$Byte_NoItem_Identify[0] = _MemoryRead($str2, $d3, "byte[" & $size2 & "]")
+					$Byte_NoItem_Identify[1] = $size2
+				EndIf
+
+
+				$offset += 0x50
+				$structtest = ""
+			Next
+		EndIf
+	Next
+
+EndFunc   ;==>Detect_Str_full_inventory
 
 Func GetLocalPlayer()
 	Global $ObjManStorage = 0x7CC ;0x794
 	$v0 = _MemoryRead(_MemoryRead($ofs_objectmanager, $d3, 'int') + 0x984, $d3, 'int') ;0x94C/934
 	$v1 = _MemoryRead(_MemoryRead($ofs_objectmanager, $d3, 'int') + $ObjManStorage + 0xA8, $d3, 'int')
 
-	if $v0 <> 0 AND _MemoryRead($v0, $d3, 'int') <> -1 AND $v1 <> 0 Then
-		return 0x8008 * _MemoryRead($v0, $d3, 'int') + $v1 + 0x58
+	If $v0 <> 0 And _MemoryRead($v0, $d3, 'int') <> -1 And $v1 <> 0 Then
+		Return 0x8008 * _MemoryRead($v0, $d3, 'int') + $v1 + 0x58
 	Else
-		return 0
+		Return 0
 	EndIf
-EndFunc
+EndFunc   ;==>GetLocalPlayer
 
 Func GetActivePlayerSkill($index)
 	$Local_player = GetLocalPlayer()
-	If $local_player <> 0 Then
-		return _MemoryRead($local_player + 4 * (3 * $index + 0x30), $d3, 'int')
+	If $Local_player <> 0 Then
+		Return _MemoryRead($Local_player + 4 * (3 * $index + 0x30), $d3, 'int')
 	Else
-		return 0
+		Return 0
 	EndIf
-EndFunc
+EndFunc   ;==>GetActivePlayerSkill
 
 Func GoToTown_Portal()
 
 
-EndFunc
+EndFunc   ;==>GoToTown_Portal
 
-Func _TownPortalnew($mode=0)
+Func _TownPortalnew($mode = 0)
 
-;TCHAT
-if($PartieSolo='false')Then
-		Switch Random(1,3,1)
+	;TCHAT
+	If ($PartieSolo = 'false') Then
+		Switch Random(1, 3, 1)
 			Case 1
 				dialTchat("sell")
 			Case 2
@@ -6525,9 +6525,9 @@ if($PartieSolo='false')Then
 			Case 3
 				dialTchat("je retourne en ville")
 		EndSwitch
-EndIf
+	EndIf
 
-$compt=0
+	$compt = 0
 
 	While Not _intown()
 
@@ -6538,70 +6538,70 @@ $compt=0
 		$timer = 0
 		$try = 0
 
-		if $mode<>0 AND $compt > $mode Then
+		If $mode <> 0 And $compt > $mode Then
 			_log("Too Much TP try !!!")
 			ExitLoop
-		EndIF
+		EndIf
 
 		_log("enclenche attack")
 		$grabskip = 1
-			Attack()
+		Attack()
 		$grabskip = 0
 
 		Sleep(100)
 
-		$CurrentLoc = getcurrentpos()
+		$CurrentLoc = GetCurrentPos()
 		MoveToPos($CurrentLoc[0] + 5, $CurrentLoc[1] + 5, $CurrentLoc[2], 0, 6)
 
 
 		If _playerdead() = False Then
 
-			sleep(250)
-				send("t")
-			sleep(250)
+			Sleep(250)
+			Send("t")
+			Sleep(250)
 
-			If $Choix_Act_Run<100 And Detect_UI_error(2) AND NOT _intown()  Then
-             _log('Detection Asmo room')
-             Return False
-            EndIf
+			If $Choix_Act_Run < 100 And Detect_UI_error(2) And Not _intown() Then
+				_log('Detection Asmo room')
+				Return False
+			EndIf
 
 			$Current_area = GetLevelAreaId()
 
 			_log("enclenchement fastCheckui de la barre de loading")
 
-			while fastcheckuiitemvisible("Root.NormalLayer.game_dialog_backgroundScreen.loopinganimmeter.progressBar", 1, 996)
-				if $compt_while = 0 Then
+			While fastcheckuiitemvisible("Root.NormalLayer.game_dialog_backgroundScreen.loopinganimmeter.progressBar", 1, 996)
+				If $compt_while = 0 Then
 					_log("enclenchement du timer")
-					$timer = timerinit()
-				EndIF
+					$timer = TimerInit()
+				EndIf
 
-				sleep(100)
+				Sleep(100)
 				$compt_while += 1
 			WEnd
 
 			_log("compare time to tp -> " & TimerDiff($timer) & "> 3700")
-			if TimerDiff($timer) > 3700 Then
-				while NOT _intown() AND $try < 6
+			If TimerDiff($timer) > 3700 Then
+				While Not _intown() And $try < 6
 					_log("on a peut etre reussi a tp, on reste inerte pendant 6sec voir si on arrive en ville, tentative -> " & $try)
 					$try += 1
-					sleep(1000)
+					Sleep(1000)
 				WEnd
 			EndIf
 
-				Sleep(500)
+			Sleep(500)
 
 
-				if $Current_area <> GetLevelAreaId() Then
-					_log("Changement d'arreat, on quite la boucle")
-					ExitLoop
-				EndIf
+			If $Current_area <> GetLevelAreaId() Then
+				_log("Changement d'arreat, on quite la boucle")
+				ExitLoop
+			EndIf
 
 		Else
 			_log("Vous etes morts lors d'une tentative de teleporte !!!")
 			Return False
 		EndIf
 
-		sleep(100)
+		Sleep(100)
 		$PortBack = True
 	WEnd
 
@@ -6610,387 +6610,387 @@ $compt=0
 		Sleep(10)
 	WEnd
 
-	return true
- EndFunc;end Func _TownPortalnew($mode=0)
- 
- Func _TownPortalnew2() 
-        Do ;execute au moins 1 fois de tp avant de faire le test du until 
-                If _playerdead() = False Then 
-                        _log("enclenche attack") 
-                        $grabskip = 1 
-                        Attack() 
-                        $grabskip = 0 
-                        sleep(250) 
-                        _log("on enclenche TP") 
-                        send("t") 
-                        sleep(250) 
-                        while (fastcheckuiitemvisible("Root.NormalLayer.game_dialog_backgroundScreen.loopinganimmeter.progressBar", 1, 996)) ; on attend que la barre du tp disparaise pour tester si on est en ville 
-                        WEnd 
-                Else 
-                        _log("Vous etes morts lors d'une tentative de teleporte !!!") 
-                        Return False 
-                EndIf 
-        Until _intown() ;Tant qu'on est pas en ville 
-        return true 
-EndFunc ;==> _TownPortalnew2()
+	Return True
+EndFunc   ;==>_TownPortalnew
+
+Func _TownPortalnew2()
+	Do ;execute au moins 1 fois de tp avant de faire le test du until
+		If _playerdead() = False Then
+			_log("enclenche attack")
+			$grabskip = 1
+			Attack()
+			$grabskip = 0
+			Sleep(250)
+			_log("on enclenche TP")
+			Send("t")
+			Sleep(250)
+			While (fastcheckuiitemvisible("Root.NormalLayer.game_dialog_backgroundScreen.loopinganimmeter.progressBar", 1, 996)) ; on attend que la barre du tp disparaise pour tester si on est en ville
+			WEnd
+		Else
+			_log("Vous etes morts lors d'une tentative de teleporte !!!")
+			Return False
+		EndIf
+	Until _intown() ;Tant qu'on est pas en ville
+	Return True
+EndFunc   ;==>_TownPortalnew2
 
 
 
 
 Func GetMaxResource($idAttrib, $classe)
 
-   Switch $classe
-   Case "monk"
-    $source = 0x3000
-    $MaximumSpirit=_memoryread(GetAttributeOfs($idAttrib, BitOR($Atrib_Resource_Max_Total[0], $source)), $d3, "float")
-    _log("Ressource Maximum : " & $MaximumSpirit)
-   Case "barbarian"
-    $source = 0x2000
-    $MaximumFury=_memoryread(GetAttributeOfs($idAttrib, BitOR($Atrib_Resource_Max_Total[0], $source)), $d3, "float")
-    _log("Ressource Maximum : " & $MaximumFury)
-   Case "wizard"
-    $source = 0x1000
-    $MaximumArcane=_memoryread(GetAttributeOfs($idAttrib, BitOR($Atrib_Resource_Max_Total[0], $source)), $d3, "float")
-    _log("Ressource Maximum : " & $MaximumArcane)
-   Case "witchdoctor"
-    $source = 0
-    $MaximumMana=_memoryread(GetAttributeOfs($idAttrib, BitOR($Atrib_Resource_Max_Total[0], $source)), $d3, "float")
-    _log("Ressource Maximum : " & $MaximumMana)
-   Case "demonhunter"
-    $source = 0x5000
-    $MaximumHatred=_memoryread(GetAttributeOfs($idAttrib, BitOR($Atrib_Resource_Max_Total[0], $source)), $d3, "float")
-       $source = 0x6000
-    $MaximumDiscipline=_memoryread(GetAttributeOfs($idAttrib, BitOR($Atrib_Resource_Max_Total[0], $source)), $d3, "float")
-      _log("Ressource Maximum : " & $MaximumHatred)
-      _log("Ressource Maximum : " & $MaximumDiscipline)
+	Switch $classe
+		Case "monk"
+			$source = 0x3000
+			$MaximumSpirit = _memoryread(GetAttributeOfs($idAttrib, BitOR($Atrib_Resource_Max_Total[0], $source)), $d3, "float")
+			_log("Ressource Maximum : " & $MaximumSpirit)
+		Case "barbarian"
+			$source = 0x2000
+			$MaximumFury = _memoryread(GetAttributeOfs($idAttrib, BitOR($Atrib_Resource_Max_Total[0], $source)), $d3, "float")
+			_log("Ressource Maximum : " & $MaximumFury)
+		Case "wizard"
+			$source = 0x1000
+			$MaximumArcane = _memoryread(GetAttributeOfs($idAttrib, BitOR($Atrib_Resource_Max_Total[0], $source)), $d3, "float")
+			_log("Ressource Maximum : " & $MaximumArcane)
+		Case "witchdoctor"
+			$source = 0
+			$MaximumMana = _memoryread(GetAttributeOfs($idAttrib, BitOR($Atrib_Resource_Max_Total[0], $source)), $d3, "float")
+			_log("Ressource Maximum : " & $MaximumMana)
+		Case "demonhunter"
+			$source = 0x5000
+			$MaximumHatred = _memoryread(GetAttributeOfs($idAttrib, BitOR($Atrib_Resource_Max_Total[0], $source)), $d3, "float")
+			$source = 0x6000
+			$MaximumDiscipline = _memoryread(GetAttributeOfs($idAttrib, BitOR($Atrib_Resource_Max_Total[0], $source)), $d3, "float")
+			_log("Ressource Maximum : " & $MaximumHatred)
+			_log("Ressource Maximum : " & $MaximumDiscipline)
 
-  EndSwitch
+	EndSwitch
 
-EndFunc ;==>GetMaxResource
-
-
-
-func reset_timer_ignore()
-   if timerdiff($timer_ignore_reset)>120000 Then
-
- redim  $ignore_affix[1][2]
- $timer_ignore_reset=timerinit()
-EndIf
-endfunc
-
-func check_ignore_affix($_x_verif,$_y_verif)
-   for $a=0 to ubound($ignore_affix)-1
-	  if $_x_verif=$ignore_affix[$a][0] and $_y_verif=$ignore_affix[$a][1] Then
-		 return False
-		 $a=ubound($ignore_affix)-1
-	  Else
-		 return True
-	  EndIf
-   Next
-
-EndFunc
+EndFunc   ;==>GetMaxResource
 
 
 
-func is_zone_safe($x_perso,$y_perso,$z_test,$item_safe)
-   $condition_affixe=0
-          for $aa=0 to ubound($item_safe)-1
+Func reset_timer_ignore()
+	If TimerDiff($timer_ignore_reset) > 120000 Then
 
-                 $distance_centre_affixe=sqrt(($item_safe[$aa][2]-$x_perso)^2 + ($item_safe[$aa][3]-$y_perso)^2)
-                 if $distance_centre_affixe<$item_safe[$aa][10] then
-					$condition_affixe=$condition_affixe+1
+		ReDim $ignore_affix[1][2]
+		$timer_ignore_reset = TimerInit()
+	EndIf
+EndFunc   ;==>reset_timer_ignore
+
+Func check_ignore_affix($_x_verif, $_y_verif)
+	For $a = 0 To UBound($ignore_affix) - 1
+		If $_x_verif = $ignore_affix[$a][0] And $_y_verif = $ignore_affix[$a][1] Then
+			Return False
+			$a = UBound($ignore_affix) - 1
+		Else
+			Return True
+		EndIf
+	Next
+
+EndFunc   ;==>check_ignore_affix
+
+
+
+Func is_zone_safe($x_perso, $y_perso, $z_test, $item_safe)
+	$condition_affixe = 0
+	For $aa = 0 To UBound($item_safe) - 1
+
+		$distance_centre_affixe = Sqrt(($item_safe[$aa][2] - $x_perso) ^ 2 + ($item_safe[$aa][3] - $y_perso) ^ 2)
+		If $distance_centre_affixe < $item_safe[$aa][10] Then
+			$condition_affixe = $condition_affixe + 1
 ;~ 					$aa=ubound($item_safe)-1
-				 EndIf
+		EndIf
 
-          next
+	Next
 
-          if $condition_affixe=0 Then
+	If $condition_affixe = 0 Then
 
-                 return true
-          Else
-                 return false
-          EndIf
+		Return True
+	Else
+		Return False
+	EndIf
 
-EndFunc
+EndFunc   ;==>is_zone_safe
 
-func zone_safe($x_perso,$y_perso,$item_verif,$z_test,$x_mob,$y_mob)
-      dim $safe_array[1][3]
-          $bb=-1
-		  if $x_mob-$x_perso>0 then
-			 $ord=1
-		  else
-			 $ord=-1
-		  EndIf
+Func zone_safe($x_perso, $y_perso, $item_verif, $z_test, $x_mob, $y_mob)
+	Dim $safe_array[1][3]
+	$bb = -1
+	If $x_mob - $x_perso > 0 Then
+		$ord = 1
+	Else
+		$ord = -1
+	EndIf
 
-		  if $y_mob-$y_perso>0 then
-			 $abs=1
-		  else
-			 $abs=-1
-		  EndIf
+	If $y_mob - $y_perso > 0 Then
+		$abs = 1
+	Else
+		$abs = -1
+	EndIf
 
-   for $b=0 to ubound($tab_aff2)-1
-		$x_test=$x_perso+$ord*$tab_aff2[$b][0]
-		$y_test=$y_perso+$abs*$tab_aff2[$b][1]
-		if is_zone_safe($x_test,$y_test,$z_test,$item_verif)  and check_ignore_affix($x_test,$y_test) Then
-			ReDim $safe_array[$bb+2][3]
-			$bb=$bb+1
-			$distance_safe=getdistance($x_test,$y_test,0)
-			$safe_array[$bb][1]=$x_test
-			$safe_array[$bb][2]=$y_test
-			$safe_array[$bb][0]=$distance_safe
+	For $B = 0 To UBound($tab_aff2) - 1
+		$x_test = $x_perso + $ord * $tab_aff2[$B][0]
+		$y_test = $y_perso + $abs * $tab_aff2[$B][1]
+		If is_zone_safe($x_test, $y_test, $z_test, $item_verif) And check_ignore_affix($x_test, $y_test) Then
+			ReDim $safe_array[$bb + 2][3]
+			$bb = $bb + 1
+			$distance_safe = GetDistance($x_test, $y_test, 0)
+			$safe_array[$bb][1] = $x_test
+			$safe_array[$bb][2] = $y_test
+			$safe_array[$bb][0] = $distance_safe
 ;~ 			$safe_array[$bb+1][1]=$x_test
 ;~ 			$safe_array[$bb+1][2]=$y_test
 ;~ 			$safe_array[$bb+1][0]=$distance_safe
 ;~ 		   $b= ubound($tab_aff2)-1
 		EndIf
 
-	    $x_test=$x_perso-$ord*$tab_aff2[$b][0]
-		$y_test=$y_perso-$abs*$tab_aff2[$b][1]
-		if is_zone_safe($x_test,$y_test,$z_test,$item_verif)  and check_ignore_affix($x_test,$y_test) Then
-			ReDim $safe_array[$bb+2][3]
-			$bb=$bb+1
-			$distance_safe=getdistance($x_test,$y_test,0)
-			$safe_array[$bb][1]=$x_test
-			$safe_array[$bb][2]=$y_test
-			$safe_array[$bb][0]=$distance_safe
+		$x_test = $x_perso - $ord * $tab_aff2[$B][0]
+		$y_test = $y_perso - $abs * $tab_aff2[$B][1]
+		If is_zone_safe($x_test, $y_test, $z_test, $item_verif) And check_ignore_affix($x_test, $y_test) Then
+			ReDim $safe_array[$bb + 2][3]
+			$bb = $bb + 1
+			$distance_safe = GetDistance($x_test, $y_test, 0)
+			$safe_array[$bb][1] = $x_test
+			$safe_array[$bb][2] = $y_test
+			$safe_array[$bb][0] = $distance_safe
 ;~ 			$safe_array[$bb+1][1]=$x_test
 ;~ 			$safe_array[$bb+1][2]=$y_test
 ;~ 			$safe_array[$bb+1][0]=$distance_safe
 ;~ 		   $b= ubound($tab_aff2)-1
 		EndIf
 
-	    $x_test=$x_perso+$ord*$tab_aff2[$b][0]
-		$y_test=$y_perso-$abs*$tab_aff2[$b][1]
-		if is_zone_safe($x_test,$y_test,$z_test,$item_verif)  and check_ignore_affix($x_test,$y_test) Then
-			ReDim $safe_array[$bb+2][3]
-			$bb=$bb+1
-			$distance_safe=getdistance($x_test,$y_test,0)
-			$safe_array[$bb][1]=$x_test
-			$safe_array[$bb][2]=$y_test
-			$safe_array[$bb][0]=$distance_safe
+		$x_test = $x_perso + $ord * $tab_aff2[$B][0]
+		$y_test = $y_perso - $abs * $tab_aff2[$B][1]
+		If is_zone_safe($x_test, $y_test, $z_test, $item_verif) And check_ignore_affix($x_test, $y_test) Then
+			ReDim $safe_array[$bb + 2][3]
+			$bb = $bb + 1
+			$distance_safe = GetDistance($x_test, $y_test, 0)
+			$safe_array[$bb][1] = $x_test
+			$safe_array[$bb][2] = $y_test
+			$safe_array[$bb][0] = $distance_safe
 ;~ 			$safe_array[$bb+1][1]=$x_test
 ;~ 			$safe_array[$bb+1][2]=$y_test
 ;~ 			$safe_array[$bb+1][0]=$distance_safe
 ;~ 		   $b= ubound($tab_aff2)-1
 		EndIf
 
-	    $x_test=$x_perso-$ord*$tab_aff2[$b][0]
-		$y_test=$y_perso+$abs*$tab_aff2[$b][1]
-		if is_zone_safe($x_test,$y_test,$z_test,$item_verif)  and check_ignore_affix($x_test,$y_test) Then
-			ReDim $safe_array[$bb+2][3]
-			$bb=$bb+1
-			$distance_safe=getdistance($x_test,$y_test,0)
-			$safe_array[$bb][1]=$x_test
-			$safe_array[$bb][2]=$y_test
-			$safe_array[$bb][0]=$distance_safe
+		$x_test = $x_perso - $ord * $tab_aff2[$B][0]
+		$y_test = $y_perso + $abs * $tab_aff2[$B][1]
+		If is_zone_safe($x_test, $y_test, $z_test, $item_verif) And check_ignore_affix($x_test, $y_test) Then
+			ReDim $safe_array[$bb + 2][3]
+			$bb = $bb + 1
+			$distance_safe = GetDistance($x_test, $y_test, 0)
+			$safe_array[$bb][1] = $x_test
+			$safe_array[$bb][2] = $y_test
+			$safe_array[$bb][0] = $distance_safe
 ;~ 			$safe_array[$bb+1][1]=$x_test
 ;~ 			$safe_array[$bb+1][2]=$y_test
 ;~ 			$safe_array[$bb+1][0]=$distance_safe
 ;~ 		   $b= ubound($tab_aff2)-1
 		EndIf
-   Next
-   if $safe_array[0][0]<>0 then
-          _ArraySort($safe_array)
-          dim $move_aff[2]
-          $move_aff[0]=$safe_array[0][1]
-          $move_aff[1]=$safe_array[0][2]
+	Next
+	If $safe_array[0][0] <> 0 Then
+		_ArraySort($safe_array)
+		Dim $move_aff[2]
+		$move_aff[0] = $safe_array[0][1]
+		$move_aff[1] = $safe_array[0][2]
 
-   Else
-          $move_aff[0]=$x_test
-          $move_aff[1]=$y_test
+	Else
+		$move_aff[0] = $x_test
+		$move_aff[1] = $y_test
 
-   EndIf
-return $move_aff
+	EndIf
+	Return $move_aff
 
-EndFunc
+EndFunc   ;==>zone_safe
 
-Func maffmove($_x_aff,$_y_aff,$_z_aff,$x_mob,$y_mob)
-   reset_timer_ignore()
-   if timerdiff($maff_timer)>500 then
-        Dim $item_maff_move = IterateFilterAffix()
-        If IsArray($item_maff_move) Then
-           $a=0
-			while $a<=ubound($item_maff_move)-1
-			   checkforpotion()
-			   mouseup('left')
+Func maffmove($_x_aff, $_y_aff, $_z_aff, $x_mob, $y_mob)
+	reset_timer_ignore()
+	If TimerDiff($maff_timer) > 500 Then
+		Dim $item_maff_move = IterateFilterAffix()
+		If IsArray($item_maff_move) Then
+			$a = 0
+			While $a <= UBound($item_maff_move) - 1
+				checkForPotion()
+				MouseUp('left')
 ;~ 			   $dist_aff=sqrt(($_x_aff-$item_maff_move[$a][2])*($_x_aff-$item_maff_move[$a][2]) + ($_y_aff-$item_maff_move[$a][3])*($_y_aff-$item_maff_move[$a][3]) + ($_z_aff-$item_maff_move[$a][4])*($_z_aff-$item_maff_move[$a][4]))
-			   if $item_maff_move[$a][9]<$item_maff_move[$a][10] and _playerdead()=false then
-				  dim $move_coords[2]
-				  $move_coords=zone_safe($_x_aff,$_y_aff,$item_maff_move,$_z_aff,$x_mob,$y_mob)
-				  $Coords_affixe = FromD3toScreenCoords($move_coords[0],$move_coords[1],$_z_aff)
-				  Mousemove($Coords_affixe[0], $Coords_affixe[1], 3)
-				  GestSpellcast(0, 0, 0)
-				  MouseClick("middle")
-				  $ignore_timer=timerinit()
-				  while _MemoryRead($ClickToMoveToggle,$d3,"float")<>0
+				If $item_maff_move[$a][9] < $item_maff_move[$a][10] And _playerdead() = False Then
+					Dim $move_coords[2]
+					$move_coords = zone_safe($_x_aff, $_y_aff, $item_maff_move, $_z_aff, $x_mob, $y_mob)
+					$Coords_affixe = FromD3toScreenCoords($move_coords[0], $move_coords[1], $_z_aff)
+					MouseMove($Coords_affixe[0], $Coords_affixe[1], 3)
+					GestSpellcast(0, 0, 0)
+					MouseClick("middle")
+					$ignore_timer = TimerInit()
+					While _MemoryRead($ClickToMoveToggle, $d3, "float") <> 0
 ;~ 					 GestSpellcast(0, 2, 0)
-					 if timerdiff($ignore_timer)>10000 then exitloop
-					 sleep(10)
+						If TimerDiff($ignore_timer) > 10000 Then ExitLoop
+						Sleep(10)
 
-				  wend
-				  if timerdiff($ignore_timer)<30 Then
-					 $nbr_ignore=ubound($ignore_affix)
-					 redim $ignore_affix[$nbr_ignore+1][2]
-					 $ignore_affix[$nbr_ignore][0]=$move_coords[0]
-					 $ignore_affix[$nbr_ignore][1]=$move_coords[1]
-				  endif
+					WEnd
+					If TimerDiff($ignore_timer) < 30 Then
+						$nbr_ignore = UBound($ignore_affix)
+						ReDim $ignore_affix[$nbr_ignore + 1][2]
+						$ignore_affix[$nbr_ignore][0] = $move_coords[0]
+						$ignore_affix[$nbr_ignore][1] = $move_coords[1]
+					EndIf
 
-				  $maff_timer=timerinit()
-				  exitloop
+					$maff_timer = TimerInit()
+					ExitLoop
 
-			   endif
-			   $a +=1
-			wend
-		 endif
+				EndIf
+				$a += 1
+			WEnd
+		EndIf
 
-   endif
-EndFunc  ;maffmove
+	EndIf
+EndFunc   ;==>maffmove
 
 Func IterateFilterAffix()
-        Local $index, $offset, $count, $item[10]
-        startIterateObjectsList($index, $offset, $count)
-        Dim $item_affix_2D[1][11]
-        Local $i = 0
-	    $pv_affix=getlifep()
-        $compt = 0
+	Local $index, $offset, $count, $item[10]
+	startIterateObjectsList($index, $offset, $count)
+	Dim $item_affix_2D[1][11]
+	Local $i = 0
+	$pv_affix = GetLifep()
+	$compt = 0
 ;~ 		 $ii=0
-        While iterateObjectsList($index, $offset, $count, $item)
-			$compt += 1
-			If Is_Affix($item,$pv_affix)  Then
-			   ReDim $item_affix_2D[$i + 1][11]
-			   For $x = 0 To 9
-				  $item_affix_2D[$i][$x] = $item[$x]
-			   Next
+	While iterateObjectsList($index, $offset, $count, $item)
+		$compt += 1
+		If Is_Affix($item, $pv_affix) Then
+			ReDim $item_affix_2D[$i + 1][11]
+			For $x = 0 To 9
+				$item_affix_2D[$i][$x] = $item[$x]
+			Next
 
-			   if (StringInStr($item[1],"woodWraith_explosion") or StringInStr($item[1],"WoodWraith_sporeCloud_emitter") ) then  $item_affix_2D[$i][10] = $range_ice
-			   if StringInStr($item[1],"sandwasp_projectile") then $item_affix_2D[$i][10] = $range_arcane
-			   if StringInStr($item[1],"molten_trail") then $item_affix_2D[$i][10] = $range_lave
-			   if StringInStr($item[1],"Desecrator") then $item_affix_2D[$i][10] = $range_profa
-			   if (StringInStr($item[1],"bomb_buildup") or StringInStr($item[1],"Icecluster") or stringinstr($item[1],"Molten_deathExplosion") or stringinstr($item[1],"Molten_deathStart")) then  $item_affix_2D[$i][10] = $range_ice
-			   if (StringInStr($item[1],"demonmine_C") or StringInStr($item[1],"Crater_DemonClawBomb")) then $item_affix_2D[$i][10] = $range_mine
-			   if StringInStr($item[1],"creepMobArm") then $item_affix_2D[$i][10] = $range_arm
-			   if (StringInStr($item[1],"spore") or StringInStr($item[1],"Plagued_endCloud") or StringInStr($item[1],"Poison")) then $item_affix_2D[$i][10] = $range_peste
-			   if StringInStr($item[1],"ArcaneEnchanted_petsweep") then $item_affix_2D[$i][10] = $range_arcane
+			If (StringInStr($item[1], "woodWraith_explosion") Or StringInStr($item[1], "WoodWraith_sporeCloud_emitter")) Then $item_affix_2D[$i][10] = $range_ice
+			If StringInStr($item[1], "sandwasp_projectile") Then $item_affix_2D[$i][10] = $range_arcane
+			If StringInStr($item[1], "molten_trail") Then $item_affix_2D[$i][10] = $range_lave
+			If StringInStr($item[1], "Desecrator") Then $item_affix_2D[$i][10] = $range_profa
+			If (StringInStr($item[1], "bomb_buildup") Or StringInStr($item[1], "Icecluster") Or StringInStr($item[1], "Molten_deathExplosion") Or StringInStr($item[1], "Molten_deathStart")) Then $item_affix_2D[$i][10] = $range_ice
+			If (StringInStr($item[1], "demonmine_C") Or StringInStr($item[1], "Crater_DemonClawBomb")) Then $item_affix_2D[$i][10] = $range_mine
+			If StringInStr($item[1], "creepMobArm") Then $item_affix_2D[$i][10] = $range_arm
+			If (StringInStr($item[1], "spore") Or StringInStr($item[1], "Plagued_endCloud") Or StringInStr($item[1], "Poison")) Then $item_affix_2D[$i][10] = $range_peste
+			If StringInStr($item[1], "ArcaneEnchanted_petsweep") Then $item_affix_2D[$i][10] = $range_arcane
 
 ;~ 			   if $item_affix_2D[$i][10]-$item_affix_2D[$i][9]>0 then $ii=$ii+1
 
-			   $i += 1
-			EndIf
-        WEnd
+			$i += 1
+		EndIf
+	WEnd
 ;~  or $ii=0
-        If $i = 0 Then
-                Return False
-        Else
+	If $i = 0 Then
+		Return False
+	Else
 
-                _ArraySort($item_affix_2D, 0, 0, 0, 9)
+		_ArraySort($item_affix_2D, 0, 0, 0, 9)
 
-                Return $item_affix_2D
-        EndIf
- EndFunc   ;==>IterateFilterAffix
+		Return $item_affix_2D
+	EndIf
+EndFunc   ;==>IterateFilterAffix
 
-$BanAffixList="poison_humanoid|"&$BanAffixList
+$BanAffixList = "poison_humanoid|" & $BanAffixList
 
- Func Is_Affix($item,$pv=0)
-	if $item[9]<50 then
-                 if ((StringInStr($item[1],"bomb_buildup") and $pv<=$Life_explo/100 ) or _
-					(StringInStr($item[1],"demonmine_C") and $pv<=$Life_mine/100)  or _
-					(StringInStr($item[1],"creepMobArm") and $pv<=$Life_arm/100 )  or _
-					(StringInStr($item[1],"woodWraith_explosion") and $pv<=$Life_spore/100)  or _
-				    (StringInStr($item[1],"WoodWraith_sporeCloud_emitter") and $pv<=$Life_spore/100 )  or _
-				    (StringInStr($item[1],"sandwasp_projectile") and $pv<=$Life_proj/100 )  or _
-					(StringInStr($item[1],"Crater_DemonClawBomb") and $pv<=$Life_mine/100 )  or _
-					(stringinstr($item[1],"Molten_deathExplosion") and $pv<=$Life_explo/100 ) or _
-					(stringinstr($item[1],"Molten_deathStart") and $pv<=$Life_explo/100 )   or _
-					(StringInStr($item[1],"icecluster") and $pv<=$Life_ice/100 )   or _
-					(StringInStr($item[1],"spore") and $pv<=$Life_spore/100 )  or _
-					(StringInStr($item[1],"ArcaneEnchanted_petsweep") and $pv<=$Life_arcane/100 ) or _
-					(StringInStr($item[1],"desecrator") and $pv<=$Life_profa/100 ) or _
-					(StringInStr($item[1],"Plagued_endCloud") and $pv<=$Life_peste/100 )  or _
-					(StringInStr($item[1],"poison") and $pv<=$Life_poison/100 ) or _
-					(StringInStr($item[1],"molten_trail") and $pv<=$Life_lave/100 )) _
-					and checkfromlist($BanAffixList, $item[1]) = 0 then
-                Return True
-        Else
-                Return False
-		 EndIf
-   EndIf
+Func Is_Affix($item, $pv = 0)
+	If $item[9] < 50 Then
+		If ((StringInStr($item[1], "bomb_buildup") And $pv <= $Life_explo / 100) Or _
+				(StringInStr($item[1], "demonmine_C") And $pv <= $Life_mine / 100) Or _
+				(StringInStr($item[1], "creepMobArm") And $pv <= $Life_arm / 100) Or _
+				(StringInStr($item[1], "woodWraith_explosion") And $pv <= $Life_spore / 100) Or _
+				(StringInStr($item[1], "WoodWraith_sporeCloud_emitter") And $pv <= $Life_spore / 100) Or _
+				(StringInStr($item[1], "sandwasp_projectile") And $pv <= $Life_proj / 100) Or _
+				(StringInStr($item[1], "Crater_DemonClawBomb") And $pv <= $Life_mine / 100) Or _
+				(StringInStr($item[1], "Molten_deathExplosion") And $pv <= $Life_explo / 100) Or _
+				(StringInStr($item[1], "Molten_deathStart") And $pv <= $Life_explo / 100) Or _
+				(StringInStr($item[1], "icecluster") And $pv <= $Life_ice / 100) Or _
+				(StringInStr($item[1], "spore") And $pv <= $Life_spore / 100) Or _
+				(StringInStr($item[1], "ArcaneEnchanted_petsweep") And $pv <= $Life_arcane / 100) Or _
+				(StringInStr($item[1], "desecrator") And $pv <= $Life_profa / 100) Or _
+				(StringInStr($item[1], "Plagued_endCloud") And $pv <= $Life_peste / 100) Or _
+				(StringInStr($item[1], "poison") And $pv <= $Life_poison / 100) Or _
+				(StringInStr($item[1], "molten_trail") And $pv <= $Life_lave / 100)) _
+				And checkFromList($BanAffixList, $item[1]) = 0 Then
+			Return True
+		Else
+			Return False
+		EndIf
+	EndIf
 
- EndFunc   ;==>Is_Affix
+EndFunc   ;==>Is_Affix
 
- Func Take_BookOfCain()
+Func Take_BookOfCain()
 
-;TCHAT
-if($PartieSolo='false')Then
-		Switch Random(1,2,1)
+	;TCHAT
+	If ($PartieSolo = 'false') Then
+		Switch Random(1, 2, 1)
 			Case 1
 				dialTchat("je vends")
 			Case 2
 				dialTchat("bof rien à garder comme d'hab")
 		EndSwitch
-EndIf
-	 If _checkInventoryopen() = true Then
-        Send("i")
-        Sleep(150)
-	 Endif
+	EndIf
+	If _checkInventoryopen() = True Then
+		Send("i")
+		Sleep(150)
+	EndIf
 
 	Switch $Act
-            Case 1
-	            InteractByActorName("Waypoint_Town");ajouter pour ne pas blocqué au coffre
-				MoveToPos(2955.8681640625, 2803.51489257813, 24.0453319549561,0,20)
-			Case 2
-				;do nothing act 2
-			Case 3 To 4
-				MoveToPos(395.930847167969, 390.577362060547, 0.408410131931305,0,20)
+		Case 1
+			InteractByActorName("Waypoint_Town");ajouter pour ne pas blocqué au coffre
+			MoveToPos(2955.8681640625, 2803.51489257813, 24.0453319549561, 0, 20)
+		Case 2
+			;do nothing act 2
+		Case 3 To 4
+			MoveToPos(395.930847167969, 390.577362060547, 0.408410131931305, 0, 20)
 	EndSwitch
 
-        InteractByActorName("All_Book_Of_Cain")
-        While NOT fastcheckuiitemvisible("Root.NormalLayer.game_dialog_backgroundScreen.loopinganimmeter", 1, 1512) AND NOT Detect_UI_error(3)
-                ;_log("Ui : " & fastcheckuiitemvisible("Root.NormalLayer.game_dialog_backgroundScreen.loopinganimmeter", 1, 1512) & " Error : " &  fastcheckuiitemvisible("Root.TopLayer.error_notify.error_text", 1, 1185))
-                _log("tour boucle")
-                if NOT fastcheckuiitemvisible("Root.NormalLayer.game_dialog_backgroundScreen.loopinganimmeter", 1, 1512) Then
-                        InteractByActorName("All_Book_Of_Cain")
-                EndIf
-        WEnd
-        While fastcheckuiitemvisible("Root.NormalLayer.game_dialog_backgroundScreen.loopinganimmeter", 1, 1512)
-                sleep(50)
-        Wend
-EndFunc
+	InteractByActorName("All_Book_Of_Cain")
+	While Not fastcheckuiitemvisible("Root.NormalLayer.game_dialog_backgroundScreen.loopinganimmeter", 1, 1512) And Not Detect_UI_error(3)
+		;_log("Ui : " & fastcheckuiitemvisible("Root.NormalLayer.game_dialog_backgroundScreen.loopinganimmeter", 1, 1512) & " Error : " &  fastcheckuiitemvisible("Root.TopLayer.error_notify.error_text", 1, 1185))
+		_log("tour boucle")
+		If Not fastcheckuiitemvisible("Root.NormalLayer.game_dialog_backgroundScreen.loopinganimmeter", 1, 1512) Then
+			InteractByActorName("All_Book_Of_Cain")
+		EndIf
+	WEnd
+	While fastcheckuiitemvisible("Root.NormalLayer.game_dialog_backgroundScreen.loopinganimmeter", 1, 1512)
+		Sleep(50)
+	WEnd
+EndFunc   ;==>Take_BookOfCain
 
 Func Zero_Point();function qui a pour bu de le placer au point voulu dans chaque act
 
-	 If _checkInventoryopen() = true Then
-        Send("i")
-        Sleep(150)
-	 Endif
+	If _checkInventoryopen() = True Then
+		Send("i")
+		Sleep(150)
+	EndIf
 
 	Switch $Act
-            Case 1
-				MoveToPos(2955.8681640625, 2803.51489257813, 24.0453319549561,0,20)
-			Case 2
-				;do nothing act 2
-			Case 3 To 4
-				;do nothing act 3 and 4
+		Case 1
+			MoveToPos(2955.8681640625, 2803.51489257813, 24.0453319549561, 0, 20)
+		Case 2
+			;do nothing act 2
+		Case 3 To 4
+			;do nothing act 3 and 4
 	EndSwitch
 
-	    sleep(50)
- EndFunc
+	Sleep(50)
+EndFunc   ;==>Zero_Point
 
 Func getGold()
-        IterateLocalActor()
-        $foundobject = 0
-        For  $i = 0 To UBound ( $__ACTOR ,1 )-1
-                If StringInStr($__ACTOR[$i][2],"GoldCoin-") Then
-                        return IterateActorAtribs( $__ACTOR[$i][1],$Atrib_ItemStackQuantityLo)
-                        ExitLoop
-                EndIf
-        Next
-        Return 0
-	EndFunc
+	IterateLocalActor()
+	$foundobject = 0
+	For $i = 0 To UBound($__ACTOR, 1) - 1
+		If StringInStr($__ACTOR[$i][2], "GoldCoin-") Then
+			Return IterateActorAtribs($__ACTOR[$i][1], $Atrib_ItemStackQuantityLo)
+			ExitLoop
+		EndIf
+	Next
+	Return 0
+EndFunc   ;==>getGold
 
 ;TCHAT
-func dialTchat($phrase)
-	ConsoleWrite("--------------------> TCHAT : "& $phrase & @crlf)
-	send("{ENTER}") ;validation de la fenetre de tchat sur le groupe
-	send ('' & $phrase &'');Ecriture du message
-	send("{ENTER}") ;Envoie du message et sort de la fenetre du tchat
-EndFunc
+Func dialTchat($phrase)
+	ConsoleWrite("--------------------> TCHAT : " & $phrase & @CRLF)
+	Send("{ENTER}") ;validation de la fenetre de tchat sur le groupe
+	Send('' & $phrase & '');Ecriture du message
+	Send("{ENTER}") ;Envoie du message et sort de la fenetre du tchat
+EndFunc   ;==>dialTchat

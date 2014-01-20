@@ -44,31 +44,31 @@
 ;==================================================================================
 Func _MemoryOpen($iv_Pid, $iv_DesiredAccess = 0x1F0FFF, $iv_InheritHandle = 1)
 
-        If Not ProcessExists($iv_Pid) Then
-                SetError(1)
-        Return 0
-        EndIf
+	If Not ProcessExists($iv_Pid) Then
+		SetError(1)
+		Return 0
+	EndIf
 
-        Local $ah_Handle[2] = [DllOpen('kernel32.dll')]
+	Local $ah_Handle[2] = [DllOpen('kernel32.dll')]
 
-        If @Error Then
-        SetError(2)
-        Return 0
-    EndIf
+	If @error Then
+		SetError(2)
+		Return 0
+	EndIf
 
-        Local $av_OpenProcess = DllCall($ah_Handle[0], 'int', 'OpenProcess', 'int', $iv_DesiredAccess, 'int', $iv_InheritHandle, 'int', $iv_Pid)
+	Local $av_OpenProcess = DllCall($ah_Handle[0], 'int', 'OpenProcess', 'int', $iv_DesiredAccess, 'int', $iv_InheritHandle, 'int', $iv_Pid)
 
-        If @Error Then
-        DllClose($ah_Handle[0])
-        SetError(3)
-        Return 0
-    EndIf
+	If @error Then
+		DllClose($ah_Handle[0])
+		SetError(3)
+		Return 0
+	EndIf
 
-        $ah_Handle[1] = $av_OpenProcess[0]
+	$ah_Handle[1] = $av_OpenProcess[0]
 
-        Return $ah_Handle
+	Return $ah_Handle
 
-EndFunc
+EndFunc   ;==>_MemoryOpen
 
 ;==================================================================================
 ; Function:                     _MemoryRead($iv_Address, $ah_Handle[, $sv_Type])
@@ -100,29 +100,29 @@ EndFunc
 ;==================================================================================
 Func _MemoryRead($iv_Address, $ah_Handle, $sv_Type = 'dword')
 
-        If Not IsArray($ah_Handle) Then
-                SetError(1)
-        Return 0
-        EndIf
+	If Not IsArray($ah_Handle) Then
+		SetError(1)
+		Return 0
+	EndIf
 
-        Local $v_Buffer = DllStructCreate($sv_Type)
+	Local $v_Buffer = DllStructCreate($sv_Type)
 
-        If @Error Then
-                SetError(@Error + 1)
-                Return 0
-        EndIf
+	If @error Then
+		SetError(@error + 1)
+		Return 0
+	EndIf
 
-        DllCall($ah_Handle[0], 'int', 'ReadProcessMemory', 'int', $ah_Handle[1], 'int', $iv_Address, 'ptr', DllStructGetPtr($v_Buffer), 'int', DllStructGetSize($v_Buffer), 'int', '')
+	DllCall($ah_Handle[0], 'int', 'ReadProcessMemory', 'int', $ah_Handle[1], 'int', $iv_Address, 'ptr', DllStructGetPtr($v_Buffer), 'int', DllStructGetSize($v_Buffer), 'int', '')
 
-        If Not @Error Then
-                Local $v_Value = DllStructGetData($v_Buffer, 1)
-                Return $v_Value
-        Else
-                SetError(6)
-        Return 0
-        EndIf
+	If Not @error Then
+		Local $v_Value = DllStructGetData($v_Buffer, 1)
+		Return $v_Value
+	Else
+		SetError(6)
+		Return 0
+	EndIf
 
-EndFunc
+EndFunc   ;==>_MemoryRead
 
 
 ;==================================================================================
@@ -140,22 +140,22 @@ EndFunc
 ;==================================================================================
 Func _MemoryClose($ah_Handle)
 
-        If Not IsArray($ah_Handle) Then
-                SetError(1)
-        Return 0
-        EndIf
+	If Not IsArray($ah_Handle) Then
+		SetError(1)
+		Return 0
+	EndIf
 
-        DllCall($ah_Handle[0], 'int', 'CloseHandle', 'int', $ah_Handle[1])
-        If Not @Error Then
-                DllClose($ah_Handle[0])
-                Return 1
-        Else
-                DllClose($ah_Handle[0])
-                SetError(2)
-        Return 0
-        EndIf
+	DllCall($ah_Handle[0], 'int', 'CloseHandle', 'int', $ah_Handle[1])
+	If Not @error Then
+		DllClose($ah_Handle[0])
+		Return 1
+	Else
+		DllClose($ah_Handle[0])
+		SetError(2)
+		Return 0
+	EndIf
 
-EndFunc
+EndFunc   ;==>_MemoryClose
 
 ;==================================================================================
 ; Function:                     SetPrivilege( $privilege, $bEnable )
@@ -167,57 +167,57 @@ EndFunc
 ; http://www.autoitscript.com/forum/index.php?s=&showtopic=31248&view=findpost&p=223999
 ;==================================================================================
 
-Func SetPrivilege( $privilege, $bEnable )
+Func SetPrivilege($privilege, $bEnable)
 
-    Const $TOKEN_ADJUST_PRIVILEGES = 0x0020
-    Const $TOKEN_QUERY = 0x0008
-    Const $SE_PRIVILEGE_ENABLED = 0x0002
-    Local $hToken, $SP_auxret, $SP_ret, $hCurrProcess, $nTokens, $nTokenIndex, $priv
-    $nTokens = 1
-    $LUID = DLLStructCreate("dword;int")
-    If IsArray($privilege) Then    $nTokens = UBound($privilege)
-    $TOKEN_PRIVILEGES = DLLStructCreate("dword;dword[" & (3 * $nTokens) & "]")
-    $NEWTOKEN_PRIVILEGES = DLLStructCreate("dword;dword[" & (3 * $nTokens) & "]")
-    $hCurrProcess = DLLCall("kernel32.dll","hwnd","GetCurrentProcess")
-    $SP_auxret = DLLCall("advapi32.dll","int","OpenProcessToken","hwnd",$hCurrProcess[0],   _
-            "int",BitOR($TOKEN_ADJUST_PRIVILEGES,$TOKEN_QUERY),"int_ptr",0)
-    If $SP_auxret[0] Then
-        $hToken = $SP_auxret[3]
-        DLLStructSetData($TOKEN_PRIVILEGES,1,1)
-        $nTokenIndex = 1
-        While $nTokenIndex <= $nTokens
-            If IsArray($privilege) Then
-                $priv = $privilege[$nTokenIndex-1]
-            Else
-                $priv = $privilege
-            EndIf
-            $ret = DLLCall("advapi32.dll","int","LookupPrivilegeValue","str","","str",$priv,   _
-                    "ptr",DLLStructGetPtr($LUID))
-            If $ret[0] Then
-                If $bEnable Then
-                    DLLStructSetData($TOKEN_PRIVILEGES,2,$SE_PRIVILEGE_ENABLED,(3 * $nTokenIndex))
-                Else
-                    DLLStructSetData($TOKEN_PRIVILEGES,2,0,(3 * $nTokenIndex))
-                EndIf
-                DLLStructSetData($TOKEN_PRIVILEGES,2,DllStructGetData($LUID,1),(3 * ($nTokenIndex-1)) + 1)
-                DLLStructSetData($TOKEN_PRIVILEGES,2,DllStructGetData($LUID,2),(3 * ($nTokenIndex-1)) + 2)
-                DLLStructSetData($LUID,1,0)
-                DLLStructSetData($LUID,2,0)
-            EndIf
-            $nTokenIndex += 1
-        WEnd
-        $ret = DLLCall("advapi32.dll","int","AdjustTokenPrivileges","hwnd",$hToken,"int",0,   _
-                "ptr",DllStructGetPtr($TOKEN_PRIVILEGES),"int",DllStructGetSize($NEWTOKEN_PRIVILEGES),   _
-                "ptr",DllStructGetPtr($NEWTOKEN_PRIVILEGES),"int_ptr",0)
-        $f = DLLCall("kernel32.dll","int","GetLastError")
-    EndIf
-    $NEWTOKEN_PRIVILEGES=0
-    $TOKEN_PRIVILEGES=0
-    $LUID=0
-    If $SP_auxret[0] = 0 Then Return 0
-    $SP_auxret = DLLCall("kernel32.dll","int","CloseHandle","hwnd",$hToken)
-    If Not $ret[0] And Not $SP_auxret[0] Then Return 0
-    return $ret[0]
+	Const $TOKEN_ADJUST_PRIVILEGES = 0x0020
+	Const $TOKEN_QUERY = 0x0008
+	Const $SE_PRIVILEGE_ENABLED = 0x0002
+	Local $hToken, $SP_auxret, $SP_ret, $hCurrProcess, $nTokens, $nTokenIndex, $priv
+	$nTokens = 1
+	$LUID = DllStructCreate("dword;int")
+	If IsArray($privilege) Then $nTokens = UBound($privilege)
+	$TOKEN_PRIVILEGES = DllStructCreate("dword;dword[" & (3 * $nTokens) & "]")
+	$NEWTOKEN_PRIVILEGES = DllStructCreate("dword;dword[" & (3 * $nTokens) & "]")
+	$hCurrProcess = DllCall("kernel32.dll", "hwnd", "GetCurrentProcess")
+	$SP_auxret = DllCall("advapi32.dll", "int", "OpenProcessToken", "hwnd", $hCurrProcess[0], _
+			"int", BitOR($TOKEN_ADJUST_PRIVILEGES, $TOKEN_QUERY), "int_ptr", 0)
+	If $SP_auxret[0] Then
+		$hToken = $SP_auxret[3]
+		DllStructSetData($TOKEN_PRIVILEGES, 1, 1)
+		$nTokenIndex = 1
+		While $nTokenIndex <= $nTokens
+			If IsArray($privilege) Then
+				$priv = $privilege[$nTokenIndex - 1]
+			Else
+				$priv = $privilege
+			EndIf
+			$ret = DllCall("advapi32.dll", "int", "LookupPrivilegeValue", "str", "", "str", $priv, _
+					"ptr", DllStructGetPtr($LUID))
+			If $ret[0] Then
+				If $bEnable Then
+					DllStructSetData($TOKEN_PRIVILEGES, 2, $SE_PRIVILEGE_ENABLED, (3 * $nTokenIndex))
+				Else
+					DllStructSetData($TOKEN_PRIVILEGES, 2, 0, (3 * $nTokenIndex))
+				EndIf
+				DllStructSetData($TOKEN_PRIVILEGES, 2, DllStructGetData($LUID, 1), (3 * ($nTokenIndex - 1)) + 1)
+				DllStructSetData($TOKEN_PRIVILEGES, 2, DllStructGetData($LUID, 2), (3 * ($nTokenIndex - 1)) + 2)
+				DllStructSetData($LUID, 1, 0)
+				DllStructSetData($LUID, 2, 0)
+			EndIf
+			$nTokenIndex += 1
+		WEnd
+		$ret = DllCall("advapi32.dll", "int", "AdjustTokenPrivileges", "hwnd", $hToken, "int", 0, _
+				"ptr", DllStructGetPtr($TOKEN_PRIVILEGES), "int", DllStructGetSize($NEWTOKEN_PRIVILEGES), _
+				"ptr", DllStructGetPtr($NEWTOKEN_PRIVILEGES), "int_ptr", 0)
+		$f = DllCall("kernel32.dll", "int", "GetLastError")
+	EndIf
+	$NEWTOKEN_PRIVILEGES = 0
+	$TOKEN_PRIVILEGES = 0
+	$LUID = 0
+	If $SP_auxret[0] = 0 Then Return 0
+	$SP_auxret = DllCall("kernel32.dll", "int", "CloseHandle", "hwnd", $hToken)
+	If Not $ret[0] And Not $SP_auxret[0] Then Return 0
+	Return $ret[0]
 EndFunc   ;==>SetPrivilege
 
-#endregion
+#endregion _Memory

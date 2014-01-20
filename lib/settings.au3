@@ -1,11 +1,11 @@
 #AutoIt3Wrapper_UseX64=n
 #cs ----------------------------------------------------------------------------
-
+	
 	AutoIt Version: 3.3.8.1
-
+	
 	Script Function:
 	Setup the settings file if it don't exist, overwise, setup de globals
-
+	
 #ce ----------------------------------------------------------------------------
 Global $Skill1[11]
 Global $Skill2[11]
@@ -35,8 +35,8 @@ Global $Identified = "true"
 Global $BreakTime = 360
 Global $Breakafterxxgames = Round(Random(4, 8))
 Global $TakeABreak = "false"
-Global $PauseRepas="false"
-Global $PartieSolo="true"
+Global $PauseRepas = "false"
+Global $PartieSolo = "true"
 
 Global $profilFile = "settings.ini"
 Global $a_range = Round(Random(55, 60))
@@ -86,10 +86,10 @@ Global $Res_compt = 0
 Global $nb_die_t = 0
 Global $rdn_die_t = 0
 
-Global $ftpserver=""
-Global $ftpusername=""
-Global $ftppass=""
-Global $ftpfilename=""
+Global $ftpserver = ""
+Global $ftpusername = ""
+Global $ftppass = ""
+Global $ftpfilename = ""
 
 Global $File_Sequence = "sequence\sequence.txt"
 
@@ -102,63 +102,63 @@ Global $InventoryCheck = "False"
 
 
 
-global $tab_aff[60][2]=[ _
-                                                [-5,-5],[-5,5],[5,-5],[5,5], _
-                                                [-10,-10],[-10,10],[10,-10],[10,10], _
-                                                [-15,-10],[-15,10],[15,-10],[15,10], _
-                                                [-10,-20],[-10,20],[10,-20],[10,20], _
-                                                [-20,-10],[-20,10],[20,-10],[20,10], _
-                                                [-10,-15],[-10,15],[10,-15],[10,15], _
-                                                [-15,-15],[-15,15],[15,-15],[15,15], _
-                                                [-20,-20],[-20,20],[20,-20],[20,20], _
-                                                [-25,-25],[-25,25],[25,-25],[25,25], _
-                                                [-30,-30],[-30,30],[30,-30],[30,30], _
-                                                [-40,-40],[-40,40],[40,-40],[40,40], _
-                                                [-50,-50],[-50,50],[50,-50],[50,50], _
-                                                [-60,-60],[-60,60],[60,-60],[60,60], _
-                                                [-70,-70],[-70,70],[70,-70],[70,70], _
-                                                [-80,-80],[-80,80],[80,-80],[80,80] _
-                                                ]
-global $tab_aff2[15][2]=[ _
-                                                [5,5], [10,10], [15,10], [10,20], _
-                                                [20,10], [10,15], [15,15] , [20,20], _
-                                                [25,25], [30,30], [40,40],[50,50], _
-                                                [60,60], [70,70], [80,80] _
-                                                ]
-	global $gestion_affixe="false"
-	global $gestion_affixe_loot="false"
-	global $range_arcane=25
-	global $range_peste=18
-	global $range_profa=13
-	global $range_lave=13
-	global $range_arm=15
-	global $range_mine=13
-	global $range_explosion=18
-	global $range_ice=20
-	Global $life_arcane=100
-	Global $life_peste=100
-	Global $life_profa=100
-	Global $life_ice=100
-	Global $life_poison=100
-	Global $life_explo=100
-	Global $life_lave=100
-	Global $life_proj=100
-	Global $life_mine=100
-	Global $life_arm=100
-	Global $life_spore=100
-	Global $maff_timer=timerinit()
-	global $timer_ignore_reset=timerinit()
-	global $energy_mini=0
-	global $BanAffixList=""
-    dim $ignore_affix[1][2]
+Global $tab_aff[60][2] = [ _
+		[-5, -5],[-5, 5],[5, -5],[5, 5], _
+		[-10, -10],[-10, 10],[10, -10],[10, 10], _
+		[-15, -10],[-15, 10],[15, -10],[15, 10], _
+		[-10, -20],[-10, 20],[10, -20],[10, 20], _
+		[-20, -10],[-20, 10],[20, -10],[20, 10], _
+		[-10, -15],[-10, 15],[10, -15],[10, 15], _
+		[-15, -15],[-15, 15],[15, -15],[15, 15], _
+		[-20, -20],[-20, 20],[20, -20],[20, 20], _
+		[-25, -25],[-25, 25],[25, -25],[25, 25], _
+		[-30, -30],[-30, 30],[30, -30],[30, 30], _
+		[-40, -40],[-40, 40],[40, -40],[40, 40], _
+		[-50, -50],[-50, 50],[50, -50],[50, 50], _
+		[-60, -60],[-60, 60],[60, -60],[60, 60], _
+		[-70, -70],[-70, 70],[70, -70],[70, 70], _
+		[-80, -80],[-80, 80],[80, -80],[80, 80] _
+		]
+Global $tab_aff2[15][2] = [ _
+		[5, 5],[10, 10],[15, 10],[10, 20], _
+		[20, 10],[10, 15],[15, 15],[20, 20], _
+		[25, 25],[30, 30],[40, 40],[50, 50], _
+		[60, 60],[70, 70],[80, 80] _
+		]
+Global $gestion_affixe = "false"
+Global $gestion_affixe_loot = "false"
+Global $range_arcane = 25
+Global $range_peste = 18
+Global $range_profa = 13
+Global $range_lave = 13
+Global $range_arm = 15
+Global $range_mine = 13
+Global $range_explosion = 18
+Global $range_ice = 20
+Global $life_arcane = 100
+Global $life_peste = 100
+Global $life_profa = 100
+Global $life_ice = 100
+Global $life_poison = 100
+Global $life_explo = 100
+Global $life_lave = 100
+Global $life_proj = 100
+Global $life_mine = 100
+Global $life_arm = 100
+Global $life_spore = 100
+Global $maff_timer = TimerInit()
+Global $timer_ignore_reset = TimerInit()
+Global $energy_mini = 0
+Global $BanAffixList = ""
+Dim $ignore_affix[1][2]
 
-	Global $Gest_affixe_ByClass = "false"
-global $key_cana=""
-global $cana_statut=""
+Global $Gest_affixe_ByClass = "false"
+Global $key_cana = ""
+Global $cana_statut = ""
 
 ; <<<<<<<<<<< Recyclage item >>>>>>>>>>>>>>>>>>>
-Global $Recycle="false"
-Global $QualityRecycle= 9
+Global $Recycle = "false"
+Global $QualityRecycle = 9
 
 If Not FileExists($profilFile) Then
 	writeConfigs()
@@ -210,10 +210,10 @@ Func writeConfigs($profilFile = "settings.ini", $creation = 0)
 	IniWrite($profilFile, "Run info", "Unidentified", $Unidentified)
 	IniWrite($profilFile, "Run info", "Identified", $Identified)
 
-	IniWrite($profilFile,"Account info","ftpserver", $ftpserver)
-	IniWrite($profilFile,"Account info","ftpusername", $ftpusername)
-	IniWrite($profilFile,"Account info","ftppass", $ftppass)
-	IniWrite($profilFile,"Account info","ftpfilename", $ftpfilename)
+	IniWrite($profilFile, "Account info", "ftpserver", $ftpserver)
+	IniWrite($profilFile, "Account info", "ftpusername", $ftpusername)
+	IniWrite($profilFile, "Account info", "ftppass", $ftppass)
+	IniWrite($profilFile, "Account info", "ftpfilename", $ftpfilename)
 
 ;~ 	IniWrite($profilFile, "Run info", "MaximumHatred", $MaximumHatred)
 ;~ 	IniWrite($profilFile, "Run info", "MaximumDiscipline", $MaximumDiscipline)
@@ -272,22 +272,22 @@ Func writeConfigs($profilFile = "settings.ini", $creation = 0)
 
 	IniWrite($profilFile, "Run info", "InventoryCheck", $InventoryCheck)
 
-	iniwrite($profilFile,"Run info","gestion_affixe",$gestion_affixe)
-    iniwrite($profilFile,"Run info","gestion_affixe_loot",$gestion_affixe_loot)
-    iniwrite($profilFile,"Run info","BanAffixList",$BanAffixList)
-    iniwrite($profilFile,"Run info","Life_Arcane",$Life_Arcane)
-    iniwrite($profilFile,"Run info","Life_Peste",$Life_Peste)
-    iniwrite($profilFile,"Run info","Life_Profa",$Life_Profa)
-    iniwrite($profilFile,"Run info","Life_Mine",$Life_Mine)
-    iniwrite($profilFile,"Run info","Life_Spore",$Life_Spore)
-    iniwrite($profilFile,"Run info","Life_Arm",$Life_Arm)
-    iniwrite($profilFile,"Run info","Life_Lave",$Life_Lave)
-	iniwrite($profilFile,"Run info","Life_Proj",$Life_Proj)
-    iniwrite($profilFile,"Run info","Life_Ice",$Life_Ice)
-    iniwrite($profilFile,"Run info","Life_Poison",$Life_Poison)
-    iniwrite($profilFile,"Run info","Life_Explo",$Life_Explo)
+	IniWrite($profilFile, "Run info", "gestion_affixe", $gestion_affixe)
+	IniWrite($profilFile, "Run info", "gestion_affixe_loot", $gestion_affixe_loot)
+	IniWrite($profilFile, "Run info", "BanAffixList", $BanAffixList)
+	IniWrite($profilFile, "Run info", "Life_Arcane", $Life_Arcane)
+	IniWrite($profilFile, "Run info", "Life_Peste", $Life_Peste)
+	IniWrite($profilFile, "Run info", "Life_Profa", $Life_Profa)
+	IniWrite($profilFile, "Run info", "Life_Mine", $Life_Mine)
+	IniWrite($profilFile, "Run info", "Life_Spore", $Life_Spore)
+	IniWrite($profilFile, "Run info", "Life_Arm", $Life_Arm)
+	IniWrite($profilFile, "Run info", "Life_Lave", $Life_Lave)
+	IniWrite($profilFile, "Run info", "Life_Proj", $Life_Proj)
+	IniWrite($profilFile, "Run info", "Life_Ice", $Life_Ice)
+	IniWrite($profilFile, "Run info", "Life_Poison", $Life_Poison)
+	IniWrite($profilFile, "Run info", "Life_Explo", $Life_Explo)
 
-	iniWrite($profilFile,"Run info","Gest_affixe_ByClass", $Gest_affixe_ByClass)
+	IniWrite($profilFile, "Run info", "Gest_affixe_ByClass", $Gest_affixe_ByClass)
 	;IniWrite($profilFile,"Run info","Act", $Act)
 	IniWrite($profilFile, "Run info", "Devmode", $Devmode)
 
@@ -315,47 +315,47 @@ Func loadConfigs($profilFile = "settings.ini", $creation = 0)
 
 
 	;; Ajout config run
-	$Choix_Act_Run=IniRead($profilFile,"Run info","Choix_Act_Run",$Choix_Act_Run)
+	$Choix_Act_Run = IniRead($profilFile, "Run info", "Choix_Act_Run", $Choix_Act_Run)
 	Switch $Choix_Act_Run
-	case 0
-		$Hero_Axe_Z = IniRead($profilFile, "Run info", "Hero_Axe_Z", $Hero_Axe_Z)
-		$File_Sequence = IniRead($profilFile, "Run info", "SequenceFile", $File_Sequence)
-	Case 1
-		$Act1_Hero_Axe_Z = IniRead($profilFile, "Run info", "Act1_Hero_Axe_Z", $Act1_Hero_Axe_Z)
-		$SequenceFileAct1 = IniRead($profilFile, "Run info", "SequenceFileAct1", $SequenceFileAct1)
-	Case 2
-		$Act2_Hero_Axe_Z = IniRead($profilFile, "Run info", "Act2_Hero_Axe_Z", $Act2_Hero_Axe_Z)
-		$SequenceFileAct2 = IniRead($profilFile, "Run info", "SequenceFileAct2", $SequenceFileAct2)
-	Case 3
-		$Act3_Hero_Axe_Z = IniRead($profilFile, "Run info", "Act3_Hero_Axe_Z", $Act3_Hero_Axe_Z)
-		$SequenceFileAct3 = IniRead($profilFile, "Run info", "SequenceFileAct3", $SequenceFileAct3)
-		$SequenceFileAct3PtSauve = IniRead($profilFile, "Run info", "SequenceFileAct3PtSauve", $SequenceFileAct3PtSauve)
-	case 333 ; Act 3 quête 3 sous quête 3 --> tuez Ghom
-        $Act3_Hero_Axe_Z = IniRead($profilFile, "Run info", "Act3_Hero_Axe_Z", $Act3_Hero_Axe_Z)
-        $SequenceFileAct333= IniRead($profilFile, "Run info", "SequenceFileAct333", $SequenceFileAct333)
-    case 362 ; Act 3 quête 6 sous quête 2 --> Tuez le briseur de siège
-        $Act3_Hero_Axe_Z = IniRead($profilFile, "Run info", "Act3_Hero_Axe_Z", $Act3_Hero_Axe_Z)
-        $SequenceFileAct362= IniRead($profilFile, "Run info", "SequenceFileAct362", $SequenceFileAct362)
-    case 373 ; Act 3 quête 7 sous quête 3 --> Terrasez Asmodam
-        $Act3_Hero_Axe_Z = IniRead($profilFile, "Run info", "Act3_Hero_Axe_Z", $Act3_Hero_Axe_Z)
-        $SequenceFileAct373= IniRead($profilFile, "Run info", "SequenceFileAct373", $SequenceFileAct373)
- 	Case -1
-		$SequenceFileAct1=IniRead($profilFile, "Run info", "SequenceFileAct1", $SequenceFileAct1)
-		$SequenceFileAct2=IniRead($profilFile, "Run info", "SequenceFileAct2", $SequenceFileAct2)
-		$SequenceFileAct3=IniRead($profilFile, "Run info", "SequenceFileAct3", $SequenceFileAct3)
-		$SequenceFileAct3PtSauve = IniRead($profilFile, "Run info", "SequenceFileAct3PtSauve", $SequenceFileAct3PtSauve)
-		$Act1_Hero_Axe_Z= IniRead($profilFile, "Run info", "Act1_Hero_Axe_Z", $Act1_Hero_Axe_Z)
-		$Act2_Hero_Axe_Z= IniRead($profilFile, "Run info", "Act2_Hero_Axe_Z", $Act2_Hero_Axe_Z)
-		$Act3_Hero_Axe_Z= IniRead($profilFile, "Run info", "Act3_Hero_Axe_Z", $Act3_Hero_Axe_Z)
-		$Sequence_Aleatoire=IniRead($profilFile, "Run info", "Sequence_Aleatoire", $Sequence_Aleatoire)
-		$NbreRunChangSeqAlea=IniRead($profilFile, "Run info", "NbreRunChangSeqAlea", $NbreRunChangSeqAlea)
-		$Nombre_de_Run=IniRead($profilFile, "Run info", "Nombre_de_Run", $Nombre_de_Run)
-		$NombreMiniAct1=IniRead($profilFile, "Run info", "NombreMiniAct1", $NombreMiniAct1)
-		$NombreMiniAct2=IniRead($profilFile, "Run info", "NombreMiniAct2", $NombreMiniAct2)
-		$NombreMiniAct3=IniRead($profilFile, "Run info", "NombreMiniAct3", $NombreMiniAct3)
-		$NombreMaxiAct1=IniRead($profilFile, "Run info", "NombreMaxiAct1", $NombreMaxiAct1)
-		$NombreMaxiAct2=IniRead($profilFile, "Run info", "NombreMaxiAct2", $NombreMaxiAct2)
-		$NombreMaxiAct3=IniRead($profilFile, "Run info", "NombreMaxiAct3", $NombreMaxiAct3)
+		Case 0
+			$Hero_Axe_Z = IniRead($profilFile, "Run info", "Hero_Axe_Z", $Hero_Axe_Z)
+			$File_Sequence = IniRead($profilFile, "Run info", "SequenceFile", $File_Sequence)
+		Case 1
+			$Act1_Hero_Axe_Z = IniRead($profilFile, "Run info", "Act1_Hero_Axe_Z", $Act1_Hero_Axe_Z)
+			$SequenceFileAct1 = IniRead($profilFile, "Run info", "SequenceFileAct1", $SequenceFileAct1)
+		Case 2
+			$Act2_Hero_Axe_Z = IniRead($profilFile, "Run info", "Act2_Hero_Axe_Z", $Act2_Hero_Axe_Z)
+			$SequenceFileAct2 = IniRead($profilFile, "Run info", "SequenceFileAct2", $SequenceFileAct2)
+		Case 3
+			$Act3_Hero_Axe_Z = IniRead($profilFile, "Run info", "Act3_Hero_Axe_Z", $Act3_Hero_Axe_Z)
+			$SequenceFileAct3 = IniRead($profilFile, "Run info", "SequenceFileAct3", $SequenceFileAct3)
+			$SequenceFileAct3PtSauve = IniRead($profilFile, "Run info", "SequenceFileAct3PtSauve", $SequenceFileAct3PtSauve)
+		Case 333 ; Act 3 quête 3 sous quête 3 --> tuez Ghom
+			$Act3_Hero_Axe_Z = IniRead($profilFile, "Run info", "Act3_Hero_Axe_Z", $Act3_Hero_Axe_Z)
+			$SequenceFileAct333 = IniRead($profilFile, "Run info", "SequenceFileAct333", $SequenceFileAct333)
+		Case 362 ; Act 3 quête 6 sous quête 2 --> Tuez le briseur de siège
+			$Act3_Hero_Axe_Z = IniRead($profilFile, "Run info", "Act3_Hero_Axe_Z", $Act3_Hero_Axe_Z)
+			$SequenceFileAct362 = IniRead($profilFile, "Run info", "SequenceFileAct362", $SequenceFileAct362)
+		Case 373 ; Act 3 quête 7 sous quête 3 --> Terrasez Asmodam
+			$Act3_Hero_Axe_Z = IniRead($profilFile, "Run info", "Act3_Hero_Axe_Z", $Act3_Hero_Axe_Z)
+			$SequenceFileAct373 = IniRead($profilFile, "Run info", "SequenceFileAct373", $SequenceFileAct373)
+		Case -1
+			$SequenceFileAct1 = IniRead($profilFile, "Run info", "SequenceFileAct1", $SequenceFileAct1)
+			$SequenceFileAct2 = IniRead($profilFile, "Run info", "SequenceFileAct2", $SequenceFileAct2)
+			$SequenceFileAct3 = IniRead($profilFile, "Run info", "SequenceFileAct3", $SequenceFileAct3)
+			$SequenceFileAct3PtSauve = IniRead($profilFile, "Run info", "SequenceFileAct3PtSauve", $SequenceFileAct3PtSauve)
+			$Act1_Hero_Axe_Z = IniRead($profilFile, "Run info", "Act1_Hero_Axe_Z", $Act1_Hero_Axe_Z)
+			$Act2_Hero_Axe_Z = IniRead($profilFile, "Run info", "Act2_Hero_Axe_Z", $Act2_Hero_Axe_Z)
+			$Act3_Hero_Axe_Z = IniRead($profilFile, "Run info", "Act3_Hero_Axe_Z", $Act3_Hero_Axe_Z)
+			$Sequence_Aleatoire = IniRead($profilFile, "Run info", "Sequence_Aleatoire", $Sequence_Aleatoire)
+			$NbreRunChangSeqAlea = IniRead($profilFile, "Run info", "NbreRunChangSeqAlea", $NbreRunChangSeqAlea)
+			$Nombre_de_Run = IniRead($profilFile, "Run info", "Nombre_de_Run", $Nombre_de_Run)
+			$NombreMiniAct1 = IniRead($profilFile, "Run info", "NombreMiniAct1", $NombreMiniAct1)
+			$NombreMiniAct2 = IniRead($profilFile, "Run info", "NombreMiniAct2", $NombreMiniAct2)
+			$NombreMiniAct3 = IniRead($profilFile, "Run info", "NombreMiniAct3", $NombreMiniAct3)
+			$NombreMaxiAct1 = IniRead($profilFile, "Run info", "NombreMaxiAct1", $NombreMaxiAct1)
+			$NombreMaxiAct2 = IniRead($profilFile, "Run info", "NombreMaxiAct2", $NombreMaxiAct2)
+			$NombreMaxiAct3 = IniRead($profilFile, "Run info", "NombreMaxiAct3", $NombreMaxiAct3)
 	EndSwitch
 	;; Fin d'ajout config run
 
@@ -369,7 +369,7 @@ Func loadConfigs($profilFile = "settings.ini", $creation = 0)
 
 
 	;Selection du type de graliste pour le mode arma
-	$TypeDeGrabList= IniRead($profilFile, "Run info", "TypeDeGrabList", $TypeDeGrabList)
+	$TypeDeGrabList = IniRead($profilFile, "Run info", "TypeDeGrabList", $TypeDeGrabList)
 
 
 	;Selection de la GrabListe suivant la difficulté
@@ -382,14 +382,14 @@ Func loadConfigs($profilFile = "settings.ini", $creation = 0)
 			$grabListFile = IniRead($profilFile, "Run info", "grablistEnfer", $grabListFile)
 		Case 4
 			Switch $TypeDeGrabList
-                           case 1
-                               $grabListFile = IniRead($profilFile, "Run info", "grabListArma", $grabListFile)
-                           case 2
-                               $grabListFile = IniRead($profilFile, "Run info", "grabListArmaXP", $grabListFile)
-                           case 3
-                               $grabListFile = IniRead($profilFile, "Run info", "grabListArmaUnid", $grabListFile)
-                           case 4
-                               $grabListFile = IniRead($profilFile, "Run info", "grabListArmaRecycle", $grabListFile)
+				Case 1
+					$grabListFile = IniRead($profilFile, "Run info", "grabListArma", $grabListFile)
+				Case 2
+					$grabListFile = IniRead($profilFile, "Run info", "grabListArmaXP", $grabListFile)
+				Case 3
+					$grabListFile = IniRead($profilFile, "Run info", "grabListArmaUnid", $grabListFile)
+				Case 4
+					$grabListFile = IniRead($profilFile, "Run info", "grabListArmaRecycle", $grabListFile)
 			EndSwitch
 	EndSwitch
 
@@ -405,7 +405,7 @@ Func loadConfigs($profilFile = "settings.ini", $creation = 0)
 
 	$BreakTime = IniRead($profilFile, "Run info", "BreakTime", $BreakTime)
 	$Breakafterxxgames = IniRead($profilFile, "Run info", "Breakafterxxgames", $Breakafterxxgames)
-    $TakeABreak = IniRead($profilFile, "Run info", "TakeABreak", $TakeABreak)
+	$TakeABreak = IniRead($profilFile, "Run info", "TakeABreak", $TakeABreak)
 	$PauseRepas = IniRead($profilFile, "Run info", "PauseRepas", $PauseRepas)
 
 	;Fonction Iniatialisation du Skill suivant le Héros
@@ -413,25 +413,25 @@ Func loadConfigs($profilFile = "settings.ini", $creation = 0)
 	;fin Fonction Iniatialisation du Skill suivant le Héros
 
 	Switch $Heros
-		case 1
+		Case 1
 			InitSkillHeros("settingsHero1.ini")
-		case 2
+		Case 2
 			InitSkillHeros("settingsHero2.ini")
-		case 3
+		Case 3
 			InitSkillHeros("settingsHero3.ini")
-		case 4
+		Case 4
 			InitSkillHeros("settingsHero4.ini")
-		case 5
+		Case 5
 			InitSkillHeros("settingsHero5.ini")
-		case 6
+		Case 6
 			InitSkillHeros("settingsHero6.ini")
-		case 7
+		Case 7
 			InitSkillHeros("settingsHero7.ini")
-		case 8
+		Case 8
 			InitSkillHeros("settingsHero8.ini")
-		case 9
+		Case 9
 			InitSkillHeros("settingsHero9.ini")
-		case 10
+		Case 10
 			InitSkillHeros("settingsHero10.ini")
 	EndSwitch
 
@@ -448,9 +448,9 @@ Func InitSkillHeros($skillHeros)
 	$Potions = IniRead($skillHeros, "Run info", "Potions", $Potions)
 
 	#cs
-	#
- 	# PREF-BUFF
-	#
+		#
+		# PREF-BUFF
+		#
 	#ce
 
 	$Key1 = IniRead($skillHeros, "Run info", "Key1", $Key1)
@@ -482,9 +482,9 @@ Func InitSkillHeros($skillHeros)
 ;~ 	$MaximumMana = IniRead($skillHeros, "Run info", "MaximumMana", $MaximumMana)
 
 	#cs
-	#
- 	# SPELL
-	#
+		#
+		# SPELL
+		#
 	#ce
 
 	$Skill_conf1[0] = IniRead($skillHeros, "Run info", "SpellOnLeft", $Skill_conf1[0])
@@ -538,9 +538,9 @@ Func InitSkillHeros($skillHeros)
 
 
 	#cs
-	#
-	# Routines
-	#
+		#
+		# Routines
+		#
 	#ce
 
 	$LifeForPotion = IniRead($skillHeros, "Run info", "LifeForPotion", $LifeForPotion)
@@ -564,51 +564,51 @@ Func InitSkillHeros($skillHeros)
 	$g_time = IniRead($skillHeros, "Run info", "grabtimeout", $g_time)
 
 
-    $gestion_affixe=iniread($skillHeros,"Run info","gestion_affixe",$gestion_affixe)
-    $gestion_affixe_loot=iniread($skillHeros,"Run info","gestion_affixe_loot",$gestion_affixe_loot)
-	$BanAffixList=iniread($skillHeros,"Run info","BanAffixList",$BanAffixList)
-	$Gest_affixe_ByClass=iniread($skillHeros,"Run info","Gest_affixe_ByClass",$Gest_affixe_ByClass)
+	$gestion_affixe = IniRead($skillHeros, "Run info", "gestion_affixe", $gestion_affixe)
+	$gestion_affixe_loot = IniRead($skillHeros, "Run info", "gestion_affixe_loot", $gestion_affixe_loot)
+	$BanAffixList = IniRead($skillHeros, "Run info", "BanAffixList", $BanAffixList)
+	$Gest_affixe_ByClass = IniRead($skillHeros, "Run info", "Gest_affixe_ByClass", $Gest_affixe_ByClass)
 
-    $Life_Arcane=iniread($skillHeros,"Run info","Life_Arcane",$Life_Arcane)
-	$Life_Peste=iniread($skillHeros,"Run info","Life_Peste",$Life_Peste)
-	$Life_Profa=iniread($skillHeros,"Run info","Life_Profa",$Life_Profa)
-	$Life_Proj=iniread($skillHeros,"Run info","Life_Proj",$Life_Proj)
-    $Life_Ice=iniread($skillHeros,"Run info","Life_Ice",$Life_Ice)
-    $Life_Poison=iniread($skillHeros,"Run info","Life_Poison",$Life_Poison)
-    $Life_Explo=iniread($skillHeros,"Run info","Life_Explo",$Life_Explo)
-	$Life_Lave=iniread($skillHeros,"Run info","Life_Lave",$Life_Lave)
-	$Life_Mine=iniread($skillHeros,"Run info","Life_Mine",$Life_Mine)
-    $Life_Arm=iniread($skillHeros,"Run info","Life_Arm",$Life_Arm)
-    $Life_Spore=iniread($skillHeros,"Run info","Life_Spore",$Life_Spore)
+	$Life_Arcane = IniRead($skillHeros, "Run info", "Life_Arcane", $Life_Arcane)
+	$Life_Peste = IniRead($skillHeros, "Run info", "Life_Peste", $Life_Peste)
+	$Life_Profa = IniRead($skillHeros, "Run info", "Life_Profa", $Life_Profa)
+	$Life_Proj = IniRead($skillHeros, "Run info", "Life_Proj", $Life_Proj)
+	$Life_Ice = IniRead($skillHeros, "Run info", "Life_Ice", $Life_Ice)
+	$Life_Poison = IniRead($skillHeros, "Run info", "Life_Poison", $Life_Poison)
+	$Life_Explo = IniRead($skillHeros, "Run info", "Life_Explo", $Life_Explo)
+	$Life_Lave = IniRead($skillHeros, "Run info", "Life_Lave", $Life_Lave)
+	$Life_Mine = IniRead($skillHeros, "Run info", "Life_Mine", $Life_Mine)
+	$Life_Arm = IniRead($skillHeros, "Run info", "Life_Arm", $Life_Arm)
+	$Life_Spore = IniRead($skillHeros, "Run info", "Life_Spore", $Life_Spore)
 
 	$UsePath = StringLower(IniRead($skillHeros, "Run info", "UsePath", $UsePath))
 	$ResActivated = StringLower(IniRead($skillHeros, "Run info", "ResActivated", $ResActivated))
 	$ResLife = IniRead($skillHeros, "Run info", "ResLife", $ResLife)
 
 	#cs
-	If $RightClickSpellEnergy <> "" And $RightClickSpellEnergy <> "discipline" And $RightClickSpellEnergy <> "hatred" And $RightClickSpellEnergy <> "spirit" And $RightClickSpellEnergy <> "arcane" And $RightClickSpellEnergy <> "mana" And $RightClickSpellEnergy <> "fury" Then
+		If $RightClickSpellEnergy <> "" And $RightClickSpellEnergy <> "discipline" And $RightClickSpellEnergy <> "hatred" And $RightClickSpellEnergy <> "spirit" And $RightClickSpellEnergy <> "arcane" And $RightClickSpellEnergy <> "mana" And $RightClickSpellEnergy <> "fury" Then
 		MsgBox(0, "Erreur non de variable", "La variable '$RightClickSpellEnergy' initialisé dans le setting.ini est mal écrite")
 		Terminate()
-	EndIf
-	If $EnergySpell1 <> "" And $EnergySpell1 <> "discipline" And $EnergySpell1 <> "hatred" And $EnergySpell1 <> "spirit" And $EnergySpell1 <> "arcane" And $EnergySpell1 <> "mana" And $EnergySpell1 <> "fury" Then
+		EndIf
+		If $EnergySpell1 <> "" And $EnergySpell1 <> "discipline" And $EnergySpell1 <> "hatred" And $EnergySpell1 <> "spirit" And $EnergySpell1 <> "arcane" And $EnergySpell1 <> "mana" And $EnergySpell1 <> "fury" Then
 		MsgBox(0, "Erreur non de variable", "La variable '$EnergySpell1' initialisé dans le setting.ini est mal écrite")
 		Terminate()
-	EndIf
-	If $EnergySpell2 <> "" And $EnergySpell2 <> "discipline" And $EnergySpell2 <> "hatred" And $EnergySpell2 <> "spirit" And $EnergySpell2 <> "arcane" And $EnergySpell2 <> "mana" And $EnergySpell2 <> "fury" Then
+		EndIf
+		If $EnergySpell2 <> "" And $EnergySpell2 <> "discipline" And $EnergySpell2 <> "hatred" And $EnergySpell2 <> "spirit" And $EnergySpell2 <> "arcane" And $EnergySpell2 <> "mana" And $EnergySpell2 <> "fury" Then
 		MsgBox(0, "Erreur non de variable", "La variable '$EnergySpell2' initialisé dans le setting.ini est mal écrite")
 		Terminate()
-	EndIf
-	If $EnergySpell3 <> "" And $EnergySpell3 <> "discipline" And $EnergySpell3 <> "hatred" And $EnergySpell3 <> "spirit" And $EnergySpell3 <> "arcane" And $EnergySpell3 <> "mana" And $EnergySpell3 <> "fury" Then
+		EndIf
+		If $EnergySpell3 <> "" And $EnergySpell3 <> "discipline" And $EnergySpell3 <> "hatred" And $EnergySpell3 <> "spirit" And $EnergySpell3 <> "arcane" And $EnergySpell3 <> "mana" And $EnergySpell3 <> "fury" Then
 		MsgBox(0, "Erreur non de variable", "La variable '$EnergySpell3' initialisé dans le setting.ini est mal écrite")
 		Terminate()
-	EndIf
-	If $EnergySpell4 <> "" And $EnergySpell4 <> "discipline" And $EnergySpell4 <> "hatred" And $EnergySpell4 <> "spirit" And $EnergySpell4 <> "arcane" And $EnergySpell4 <> "mana" And $EnergySpell4 <> "fury" Then
+		EndIf
+		If $EnergySpell4 <> "" And $EnergySpell4 <> "discipline" And $EnergySpell4 <> "hatred" And $EnergySpell4 <> "spirit" And $EnergySpell4 <> "arcane" And $EnergySpell4 <> "mana" And $EnergySpell4 <> "fury" Then
 		MsgBox(0, "Erreur non de variable", "La variable '$EnergySpell4' initialisé dans le setting.ini est mal écrite")
 		Terminate()
-	EndIf
+		EndIf
 	#ce
 
-EndFunc
+EndFunc   ;==>InitSkillHeros
 
 
 

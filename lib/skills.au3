@@ -247,141 +247,141 @@ Global $Monk_WayOfTheHundredFists = 0x17b56
 
 
 Global $Monk_skill_Table[26][8] = [ _
-								[0x216fa, "Monk_BlindingFlash", 15000, "attack&elite", 10, "spirit", "", ""], _
-								[0x10e0a, "Monk_BreathOfHeaven", 14000, "buff|life", 25, "spirit", 60, ""], _
-								[0x17837, "Monk_CripplingWave", "", "physical", "", "", "", ""], _
-								[0x368f1, "Monk_CycloneStrike", 2000, "attack", 50, "spirit", "", 20], _
-								[0x177cb, "Monk_DashingStrike", 2000, "attack", 25, "spirit", "", 10], _
-								[0x17713, "Monk_DeadlyReach", "", "physical", "", "", "", ""], _
-								[0x17c30, "Monk_ExplodingPalm", 2000, "attack&elite", 40, "spirit", "", 10], _
-								[0x176c4, "Monk_FistsofThunder", "", "physical", "", "", "", ""], _
-								[0x17bc6, "Monk_InnerSanctuary", 20000, "life", 30, "spirit", 40, ""], _
-								[0x1b43c, "Monk_LashingTailKick", 2000, "attack", 30, "spirit", "", 10], _
-								[0x17554, "Monk_MantraOfConviction", 30000, "buff", 50, "spirit", "", ""], _
-								[0x2ef95, "Monk_MantraOfEvasion", 30000, "buff", 50, "spirit", "", ""], _
-								[0x10f72, "Monk_MantraOfHealing", 30000, "buff", 50, "spirit", "", ""], _
-								[0x10f6c, "Monk_MantraOfRetribution", 30000, "buff", 50, "spirit", "", ""], _
-								[0x1e148, "Monk_MysticAlly", "", "buff", 25, "spirit", "", ""], _
-								[0x294c3, "Monk_MysticAlly_Pet_RuneA_Kick", "", "buff", 25, "spirit", "", ""], _
-								[0x2956d, "Monk_MysticAlly_Pet_RuneB_WaveAttack", "", "buff", 25, "spirit", "", ""], _
-								[0x296f3, "Monk_MysticAlly_Pet_RuneC_GroundPunch", "", "buff", 25, "spirit", "", ""], _
-								[0x29700, "Monk_MysticAlly_Pet_RuneD_AOEAttack", "", "buff", 25, "spirit", "", ""], _
-								[0x29479, "Monk_MysticAlly_Pet_Weapon_Melee_Instant", "", "buff", 25, "spirit", "", ""], _
-								[0x177d7, "Monk_Serenity", 20000, "life", 10, "spirit", 20, ""], _
-								[0x179b6, "Monk_SevenSidedStrike", 29000, "attack&elite", 50, "spirit", "", 20], _
-								[0x1775a, "Monk_SweepingWind", 2000, "buff&attack", 40, "spirit", "", 30], _
-								[0x1da62, "Monk_TempestRush", "", "move", 25, "spirit", "", ""], _
-								[0x17721, "Monk_WaveOfLight", 2000, "attack&elite", 75, "spirit", "", 15], _
-								[0x17b56, "WayOfTheHundredFists", "", "physical", "", "", "", ""] _
-							]
+		[0x216fa, "Monk_BlindingFlash", 15000, "attack&elite", 10, "spirit", "", ""], _
+		[0x10e0a, "Monk_BreathOfHeaven", 14000, "buff|life", 25, "spirit", 60, ""], _
+		[0x17837, "Monk_CripplingWave", "", "physical", "", "", "", ""], _
+		[0x368f1, "Monk_CycloneStrike", 2000, "attack", 50, "spirit", "", 20], _
+		[0x177cb, "Monk_DashingStrike", 2000, "attack", 25, "spirit", "", 10], _
+		[0x17713, "Monk_DeadlyReach", "", "physical", "", "", "", ""], _
+		[0x17c30, "Monk_ExplodingPalm", 2000, "attack&elite", 40, "spirit", "", 10], _
+		[0x176c4, "Monk_FistsofThunder", "", "physical", "", "", "", ""], _
+		[0x17bc6, "Monk_InnerSanctuary", 20000, "life", 30, "spirit", 40, ""], _
+		[0x1b43c, "Monk_LashingTailKick", 2000, "attack", 30, "spirit", "", 10], _
+		[0x17554, "Monk_MantraOfConviction", 30000, "buff", 50, "spirit", "", ""], _
+		[0x2ef95, "Monk_MantraOfEvasion", 30000, "buff", 50, "spirit", "", ""], _
+		[0x10f72, "Monk_MantraOfHealing", 30000, "buff", 50, "spirit", "", ""], _
+		[0x10f6c, "Monk_MantraOfRetribution", 30000, "buff", 50, "spirit", "", ""], _
+		[0x1e148, "Monk_MysticAlly", "", "buff", 25, "spirit", "", ""], _
+		[0x294c3, "Monk_MysticAlly_Pet_RuneA_Kick", "", "buff", 25, "spirit", "", ""], _
+		[0x2956d, "Monk_MysticAlly_Pet_RuneB_WaveAttack", "", "buff", 25, "spirit", "", ""], _
+		[0x296f3, "Monk_MysticAlly_Pet_RuneC_GroundPunch", "", "buff", 25, "spirit", "", ""], _
+		[0x29700, "Monk_MysticAlly_Pet_RuneD_AOEAttack", "", "buff", 25, "spirit", "", ""], _
+		[0x29479, "Monk_MysticAlly_Pet_Weapon_Melee_Instant", "", "buff", 25, "spirit", "", ""], _
+		[0x177d7, "Monk_Serenity", 20000, "life", 10, "spirit", 20, ""], _
+		[0x179b6, "Monk_SevenSidedStrike", 29000, "attack&elite", 50, "spirit", "", 20], _
+		[0x1775a, "Monk_SweepingWind", 2000, "buff&attack", 40, "spirit", "", 30], _
+		[0x1da62, "Monk_TempestRush", "", "move", 25, "spirit", "", ""], _
+		[0x17721, "Monk_WaveOfLight", 2000, "attack&elite", 75, "spirit", "", 15], _
+		[0x17b56, "WayOfTheHundredFists", "", "physical", "", "", "", ""] _
+		]
 
 
 
 
 
-Global $WitchDoctor_skill_Table[22][8] =	[ _
-						[0x11337, "Witchdoctor_AcidCloud", 1500, "attack", 172, "mana", "", 45], _
-						[0x1ca9a, "Witchdoctor_BigBadVoodoo", 120000, "buff", 0, "mana", "", ""], _
-						[0x110ea, "Witchdoctor_CorpseSpider", 0, "physical", 5, "mana", "", 45], _
-						[0x11c51, "Witchdoctor_FetishArmy", 120000, "buff", 0, "mana", "", ""], _
-						[0x19deb, "Witchdoctor_Firebats", 0, "attack", 98, "mana", "", 10], _
-						[0x107ef, "Witchdoctor_Firebomb", 0, "physical", 10, "mana", "", 45], _
-						[0x77a0, "Witchdoctor_Gargantuan", 60000, "move", 147, "mana", "", ""], _
-						[0x10e3e, "Witchdoctor_GraspOfTheDead", 8000, "attack", 122, "mana", "", 10], _
-						[0x14692, "Witchdoctor_Haunt", 10000, "attack", 98, "mana", "", 10], _
-						[0x77a7, "Witchdoctor_Hex", 15000, "buff", 49, "mana", "", ""], _
-						[0x10854, "Witchdoctor_Horrify", 16000, "attack", 37, "mana", "", 12], _
-						[0x110eb, "Witchdoctor_Locust_Swarm", 0, "attack", 196, "mana", "", 10], _
-						[0x10810, "Witchdoctor_MassConfusion", 60000, "attack", 74, "mana", "", 20], _
-						[0x19fe1, "Witchdoctor_PlagueOfToads", 0 , "physical", 12, "mana", "", 35], _
-						[0x1930d, "Witchdoctor_PoisonDart", 0, "physical", 10, "mana", "", 45], _
-						[0x190ac, "Witchdoctor_Sacrifice", 0, "attack&elite", 0, "mana", "", 10], _
-						[0x10820, "Witchdoctor_SoulHarvest", 16000, "zone", 59, "mana", "", 16], _
-                        [0x1a7da, "Witchdoctor_SpiritBarrage", 20000, "buff_permanent", 108, "mana", "", 45], _
-						[0x19efd, "Witchdoctor_SpiritWalk", 2000, "buff_permanent", 49, "mana", 80, ""], _
-						[0x190ad, "Witchdoctor_SummonZombieDog", 45000, "move", 49, "mana", "", ""], _
-						[0x20eb5, "Witchdoctor_WallOfZombies", 20000, "attack&elite", 130, "mana", "", 45], _
-						[0x12113, "Witchdoctor_ZombieCharger", 0, "attack&elite", 140, "mana", "", 20] _
-							]
+Global $WitchDoctor_skill_Table[22][8] = [ _
+		[0x11337, "Witchdoctor_AcidCloud", 1500, "attack", 172, "mana", "", 45], _
+		[0x1ca9a, "Witchdoctor_BigBadVoodoo", 120000, "buff", 0, "mana", "", ""], _
+		[0x110ea, "Witchdoctor_CorpseSpider", 0, "physical", 5, "mana", "", 45], _
+		[0x11c51, "Witchdoctor_FetishArmy", 120000, "buff", 0, "mana", "", ""], _
+		[0x19deb, "Witchdoctor_Firebats", 0, "attack", 98, "mana", "", 10], _
+		[0x107ef, "Witchdoctor_Firebomb", 0, "physical", 10, "mana", "", 45], _
+		[0x77a0, "Witchdoctor_Gargantuan", 60000, "move", 147, "mana", "", ""], _
+		[0x10e3e, "Witchdoctor_GraspOfTheDead", 8000, "attack", 122, "mana", "", 10], _
+		[0x14692, "Witchdoctor_Haunt", 10000, "attack", 98, "mana", "", 10], _
+		[0x77a7, "Witchdoctor_Hex", 15000, "buff", 49, "mana", "", ""], _
+		[0x10854, "Witchdoctor_Horrify", 16000, "attack", 37, "mana", "", 12], _
+		[0x110eb, "Witchdoctor_Locust_Swarm", 0, "attack", 196, "mana", "", 10], _
+		[0x10810, "Witchdoctor_MassConfusion", 60000, "attack", 74, "mana", "", 20], _
+		[0x19fe1, "Witchdoctor_PlagueOfToads", 0, "physical", 12, "mana", "", 35], _
+		[0x1930d, "Witchdoctor_PoisonDart", 0, "physical", 10, "mana", "", 45], _
+		[0x190ac, "Witchdoctor_Sacrifice", 0, "attack&elite", 0, "mana", "", 10], _
+		[0x10820, "Witchdoctor_SoulHarvest", 16000, "zone", 59, "mana", "", 16], _
+		[0x1a7da, "Witchdoctor_SpiritBarrage", 20000, "buff_permanent", 108, "mana", "", 45], _
+		[0x19efd, "Witchdoctor_SpiritWalk", 2000, "buff_permanent", 49, "mana", 80, ""], _
+		[0x190ad, "Witchdoctor_SummonZombieDog", 45000, "move", 49, "mana", "", ""], _
+		[0x20eb5, "Witchdoctor_WallOfZombies", 20000, "attack&elite", 130, "mana", "", 45], _
+		[0x12113, "Witchdoctor_ZombieCharger", 0, "attack&elite", 140, "mana", "", 20] _
+		]
 
 
 Global $Barbarian_Skill_Table[22][8] = [ _
-						[0x1358a,"Barbarian_Bash",0,"physical","","","",""], _
-						[0x1389c,"Barbarian_HammerOfTheAncients",0,"attack",20,"fury","",""], _
-						[0x13987,"Barbarian_Cleave",0,"physical","","","",""], _
-						[0x13656,"Barbarian_GroundStomp",12000,"physical","","","",""], _
-						[0x11348,"Barbarian_Rend",4000,"attack",20,"fury","",10], _
-						[0x16ce1,"Barbarian_Leap",10000,"physical","","","",""], _
-						[0x1115b,"Barbarian_AncientSpear",10000,"physical","","","",50], _
-						[0x132d4,"Barbarian_Frenzy",0,"physical","","","",""], _
-						[0x153cd,"Barbarian_SeismicSlam",0,"attack",30,"fury","",""], _
-						[0x1ab1e,"Barbarian_Revenge",0,"attack","","",80,15], _
-						[0x16ebd,"Barbarian_WeaponThrow",0,"attack",10,"fury","",""], _
-						[0x132d7,"Barbarian_Sprint",2000,"move",20,"fury","",""], _
-						[0x134e5,"Barbarian_ThreateningShout",10000,"attack","","","",25], _
-						[0x1823e,"Barbarian_Earthquake",120000,"attack&elite",50,"fury","",18], _
-						[0x17828,"Barbarian_Whirlwind",0,"attack",10,"fury","",30], _
-						[0x17c9b,"Barbarian_FuriousCharge",10000,"attack","","","",""], _
-						[0x136a8,"Barbarian_IgnorePain",30000,"life","","",60,""], _
-						[0x134e4,"Barbarian_BattleRage",40000,"buff",20,"fury","",""], _
-						[0x138b1,"Barbarian_CallOfTheAncients",120000,"attack&elite",50,"fury","",50], _
-						[0x26dc1,"Barbarian_Overpower",12000,"attack","0","fury","",9], _
-						[0x13ecc,"Barbarian_WarCry",21000,"buff_permanent","","","",""], _
-						[0x136f7,"Barbarian_WrathOfTheBerserker",120000,"attack&elite","","fury","",40] _
-							]
+		[0x1358a, "Barbarian_Bash", 0, "physical", "", "", "", ""], _
+		[0x1389c, "Barbarian_HammerOfTheAncients", 0, "attack", 20, "fury", "", ""], _
+		[0x13987, "Barbarian_Cleave", 0, "physical", "", "", "", ""], _
+		[0x13656, "Barbarian_GroundStomp", 12000, "physical", "", "", "", ""], _
+		[0x11348, "Barbarian_Rend", 4000, "attack", 20, "fury", "", 10], _
+		[0x16ce1, "Barbarian_Leap", 10000, "physical", "", "", "", ""], _
+		[0x1115b, "Barbarian_AncientSpear", 10000, "physical", "", "", "", 50], _
+		[0x132d4, "Barbarian_Frenzy", 0, "physical", "", "", "", ""], _
+		[0x153cd, "Barbarian_SeismicSlam", 0, "attack", 30, "fury", "", ""], _
+		[0x1ab1e, "Barbarian_Revenge", 0, "attack", "", "", 80, 15], _
+		[0x16ebd, "Barbarian_WeaponThrow", 0, "attack", 10, "fury", "", ""], _
+		[0x132d7, "Barbarian_Sprint", 2000, "move", 20, "fury", "", ""], _
+		[0x134e5, "Barbarian_ThreateningShout", 10000, "attack", "", "", "", 25], _
+		[0x1823e, "Barbarian_Earthquake", 120000, "attack&elite", 50, "fury", "", 18], _
+		[0x17828, "Barbarian_Whirlwind", 0, "attack", 10, "fury", "", 30], _
+		[0x17c9b, "Barbarian_FuriousCharge", 10000, "attack", "", "", "", ""], _
+		[0x136a8, "Barbarian_IgnorePain", 30000, "life", "", "", 60, ""], _
+		[0x134e4, "Barbarian_BattleRage", 40000, "buff", 20, "fury", "", ""], _
+		[0x138b1, "Barbarian_CallOfTheAncients", 120000, "attack&elite", 50, "fury", "", 50], _
+		[0x26dc1, "Barbarian_Overpower", 12000, "attack", "0", "fury", "", 9], _
+		[0x13ecc, "Barbarian_WarCry", 21000, "buff_permanent", "", "", "", ""], _
+		[0x136f7, "Barbarian_WrathOfTheBerserker", 120000, "attack&elite", "", "fury", "", 40] _
+		]
 
 Global $DemonHunter_skill_Table[23][8] = [ _
-						[0x12ef0, "DemonHunter_BolaShot", 0, "attack&elite", "", "", "", ""], _
-						[0x1f8c0, "DemonHunter_Caltrops", 3000, "life&elite", 6, "discipline", 80, 50], _
-						[0x1f8bd, "DemonHunter_Chakram", 0, "physical", "", "", "", ""], _
-						[0x1f8be, "DemonHunter_ClusterArrow", 0, "attack&life", 50, "hatred", 80, 50], _
-						[0x20a3f, "DemonHunter_Companion", 30000, "buff", 10, "discipline", "", ""], _
-						[0x200fd, "DemonHunter_ElementalArrow", 0, "physical", "", "", "", ""], _
-						[0x12861, "DemonHunter_EntanglingShot", 0, "physical", "", "", "", ""], _
-						[0x20c41, "DemonHunter_EvasiveFire", 3000, "life&attack", 4, "discipline", 80, 30], _
-						[0x12eea, "DemonHunter_FanOfKnives", 10000, "life&attack", 20, "hatred", 80, 10], _
-						[0x15252, "DemonHunter_Grenades" , 0, "attack", "", "", "", 40], _
-						[0x1f8bf, "DemonHunter_HungeringArrow", 0, "physical", "", "", "", ""], _
-						[0x20126, "DemonHunter_Impale", 0, "elite", 25, "hatred", "", ""], _
-						[0x1feb2, "DemonHunter_MarkedForDeath", 15000, "elite", 4, "discipline", "", ""], _
-						[0x12f51, "DemonHunter_Multishot", 0, "attack", 30, "hatred", "", 30], _
-						[0x1f8bc, "DemonHunter_Preparation", 45000, "buff", "", "", "", ""], _
-						[0x1ff0f, "DemonHunter_RainOfVengeance", 10000, "buff", "", "", "", 50], _
-						[0x20078, "DemonHunter_RapidFire", 0, "elite", "", "", "", ""], _
-						[0x1f8c1, "DemonHunter_Sentry", 8000, "life", 30, "hatred", 80, ""], _
-						[0x1ff0e, "DemonHunter_ShadowPower", 5000, "life", 14, "discipline", 75, ""], _
-						[0x1fe87, "DemonHunter_SmokeScreen", 3000, "life", 14, "discipline", 50, ""], _
-						[0x12625, "DemonHunter_SpikeTrap", 5000, "attack&life", 30, "hatred", 90, 50], _
-						[0x20b8e, "DemonHunter_Strafe", 0, "physical", 12, "hatred",  "", ""], _
-						[0x1b26f, "DemonHunter_Vault", 3000, "life", 8, "discipline", 85, ""] _
-							]
+		[0x12ef0, "DemonHunter_BolaShot", 0, "attack&elite", "", "", "", ""], _
+		[0x1f8c0, "DemonHunter_Caltrops", 3000, "life&elite", 6, "discipline", 80, 50], _
+		[0x1f8bd, "DemonHunter_Chakram", 0, "physical", "", "", "", ""], _
+		[0x1f8be, "DemonHunter_ClusterArrow", 0, "attack&life", 50, "hatred", 80, 50], _
+		[0x20a3f, "DemonHunter_Companion", 30000, "buff", 10, "discipline", "", ""], _
+		[0x200fd, "DemonHunter_ElementalArrow", 0, "physical", "", "", "", ""], _
+		[0x12861, "DemonHunter_EntanglingShot", 0, "physical", "", "", "", ""], _
+		[0x20c41, "DemonHunter_EvasiveFire", 3000, "life&attack", 4, "discipline", 80, 30], _
+		[0x12eea, "DemonHunter_FanOfKnives", 10000, "life&attack", 20, "hatred", 80, 10], _
+		[0x15252, "DemonHunter_Grenades", 0, "attack", "", "", "", 40], _
+		[0x1f8bf, "DemonHunter_HungeringArrow", 0, "physical", "", "", "", ""], _
+		[0x20126, "DemonHunter_Impale", 0, "elite", 25, "hatred", "", ""], _
+		[0x1feb2, "DemonHunter_MarkedForDeath", 15000, "elite", 4, "discipline", "", ""], _
+		[0x12f51, "DemonHunter_Multishot", 0, "attack", 30, "hatred", "", 30], _
+		[0x1f8bc, "DemonHunter_Preparation", 45000, "buff", "", "", "", ""], _
+		[0x1ff0f, "DemonHunter_RainOfVengeance", 10000, "buff", "", "", "", 50], _
+		[0x20078, "DemonHunter_RapidFire", 0, "elite", "", "", "", ""], _
+		[0x1f8c1, "DemonHunter_Sentry", 8000, "life", 30, "hatred", 80, ""], _
+		[0x1ff0e, "DemonHunter_ShadowPower", 5000, "life", 14, "discipline", 75, ""], _
+		[0x1fe87, "DemonHunter_SmokeScreen", 3000, "life", 14, "discipline", 50, ""], _
+		[0x12625, "DemonHunter_SpikeTrap", 5000, "attack&life", 30, "hatred", 90, 50], _
+		[0x20b8e, "DemonHunter_Strafe", 0, "physical", 12, "hatred", "", ""], _
+		[0x1b26f, "DemonHunter_Vault", 3000, "life", 8, "discipline", 85, ""] _
+		]
 
 Global $Wizard_skill_Table[27][8] = [ _
-						[0x77d8, "Wizard_Blizzard", 2500, "attack", 40, "arcane", 100, 45], _
-						[0x1274f, "Wizard_DiamondSkin", 15000, "life", "", "", 35, ""], _
-						[0x153cf, "Wizard_EnergyArmor", 110000, "buff", 25, "arcane", "", ""], _
-						[0x18330, "Wizard_Familiar", 300000, "buff", 20, "arcane", "", ""], _
-						[0x1294c, "Wizard_MagicWeapon", 280000, "buff", 25, "arcane", "", ""], _
-						[0x1177c, "Wizard_SpectralBlade", "", "physical", "", "", 100, 45], _
-						[0x77cc, "Wizard_ArcaneOrb", "", "attack", 35, "arcane", 100, 45], _
-						[0x20d38, "Wizard_ArcaneTorrent", "", "attack", 16, "arcane", 100, 45], _
-						[0x21046, "Wizard_Archon_DisintegrationWave", "", "attack", 18, "arcane", 100, 45], _
-						[0x211ef, "Wizard_Archon_SlowTime", 15000, "life", "", "", 60, ""], _
-						[0x28ee0, "Wizard_Archon_Teleport", 15000, "life", "", "", 35, ""], _
-						[0x1659d, "Wizard_Disintegrate", "", "attack", 18, "arcane", 100, 45], _
-						[0x6e5, "Wizard_Electrocute", "", "physical", "", "", "100", 45], _
-						[0x12d39, "Wizard_EnergyTwister", 6000, "attack", 35, "arcane", 100, 20], _
-						[0x155e5, "Wizard_ExplosiveBlast", 6000, "life", 20, "arcane", 50, ""], _
-						[0x77fe, "Wizard_FrostNova", 12000, "life", "", "", "45", 10], _
-						[0x7805, "Wizard_Hydra", 5000, "buff", 15, "arcane", "", ""], _
-						[0x11e07, "Wizard_IceArmor", 110000, "buff", 25, "arcane", "", ""], _
-						[0x7818, "Wizard_MagicMissile", "", "physical", "", "", 100, 45], _
-						[0x10e46, "Wizard_Meteor", 2500, "attack", 50, "arcane", 100, 45], _
-						[0x17eeb, "Wizard_MirrorImage", 14000, "attack", "", "arcane", 100, 45], _
-						[0x16cd3, "Wizard_RayOfFrost", "", "attack", 16, "arcane", 100, 45], _
-						[0x783f, "Wizard_ShockPulse", "", "physical", "", "", 100, 45], _
-						[0x6e9, "Wizard_SlowTime", 15000, "life", "", "", 60, ""], _
-						[0x12303, "Wizard_StormArmor", 110000, "buff", 25, "arcane", "", ""], _
-						[0x29198, "Wizard_Teleport", 15000, "life", "", "", 35, ""], _
-						[0x784c, "Wizard_WaveOfForce", 12000, "life", 25, "arcane", 35, ""] _
-							]
+		[0x77d8, "Wizard_Blizzard", 2500, "attack", 40, "arcane", 100, 45], _
+		[0x1274f, "Wizard_DiamondSkin", 15000, "life", "", "", 35, ""], _
+		[0x153cf, "Wizard_EnergyArmor", 110000, "buff", 25, "arcane", "", ""], _
+		[0x18330, "Wizard_Familiar", 300000, "buff", 20, "arcane", "", ""], _
+		[0x1294c, "Wizard_MagicWeapon", 280000, "buff", 25, "arcane", "", ""], _
+		[0x1177c, "Wizard_SpectralBlade", "", "physical", "", "", 100, 45], _
+		[0x77cc, "Wizard_ArcaneOrb", "", "attack", 35, "arcane", 100, 45], _
+		[0x20d38, "Wizard_ArcaneTorrent", "", "attack", 16, "arcane", 100, 45], _
+		[0x21046, "Wizard_Archon_DisintegrationWave", "", "attack", 18, "arcane", 100, 45], _
+		[0x211ef, "Wizard_Archon_SlowTime", 15000, "life", "", "", 60, ""], _
+		[0x28ee0, "Wizard_Archon_Teleport", 15000, "life", "", "", 35, ""], _
+		[0x1659d, "Wizard_Disintegrate", "", "attack", 18, "arcane", 100, 45], _
+		[0x6e5, "Wizard_Electrocute", "", "physical", "", "", "100", 45], _
+		[0x12d39, "Wizard_EnergyTwister", 6000, "attack", 35, "arcane", 100, 20], _
+		[0x155e5, "Wizard_ExplosiveBlast", 6000, "life", 20, "arcane", 50, ""], _
+		[0x77fe, "Wizard_FrostNova", 12000, "life", "", "", "45", 10], _
+		[0x7805, "Wizard_Hydra", 5000, "buff", 15, "arcane", "", ""], _
+		[0x11e07, "Wizard_IceArmor", 110000, "buff", 25, "arcane", "", ""], _
+		[0x7818, "Wizard_MagicMissile", "", "physical", "", "", 100, 45], _
+		[0x10e46, "Wizard_Meteor", 2500, "attack", 50, "arcane", 100, 45], _
+		[0x17eeb, "Wizard_MirrorImage", 14000, "attack", "", "arcane", 100, 45], _
+		[0x16cd3, "Wizard_RayOfFrost", "", "attack", 16, "arcane", 100, 45], _
+		[0x783f, "Wizard_ShockPulse", "", "physical", "", "", 100, 45], _
+		[0x6e9, "Wizard_SlowTime", 15000, "life", "", "", 60, ""], _
+		[0x12303, "Wizard_StormArmor", 110000, "buff", 25, "arcane", "", ""], _
+		[0x29198, "Wizard_Teleport", 15000, "life", "", "", 35, ""], _
+		[0x784c, "Wizard_WaveOfForce", 12000, "life", 25, "arcane", 35, ""] _
+		]

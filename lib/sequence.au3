@@ -35,8 +35,8 @@ Func TraitementSequence(ByRef $arr_sequence, $index, $mvtp = 0)
 		ElseIf $arr_sequence[$index][1] = "takewp" Then
 			TakeWp($arr_sequence[$index][2], $arr_sequence[$index][3], $arr_sequence[$index][4], $arr_sequence[$index][5])
 		ElseIf $arr_sequence[$index][1] = "_townportal" Then
-			if Not _TownPortalnew() Then
-				$GameFailed=1
+			If Not _TownPortalnew() Then
+				$GameFailed = 1
 				Return False
 			EndIf
 		ElseIf $arr_sequence[$index][1] = "offsetlist" Then
@@ -73,13 +73,13 @@ Func revive(ByRef $path)
 		_log("You are dead, max :" & $rdn_die_t - $nb_die_t & " more death allowed")
 
 		;TCHAT
-		if($PartieSolo='false')Then
-			Switch Random(1,3,1)
+		If ($PartieSolo = 'false') Then
+			Switch Random(1, 3, 1)
 				Case 1
 					dialTchat("Je me suis fait avoir comme un bleu")
 				Case 2
 					dialTchat("Ils font mal")
-				case 3
+				Case 3
 					dialTchat("ça pique fort")
 			EndSwitch
 		EndIf
@@ -138,7 +138,7 @@ Func bloc_sequence(ByRef $arr_MTP, $revive = 0)
 	If _checkRepair() Then
 
 		unbuff()
-			tpRepairAndBack()
+		tpRepairAndBack()
 		buffinit()
 	EndIf
 
@@ -220,25 +220,25 @@ Func Trim($String)
 EndFunc   ;==>Trim
 ;<<<<<<<<<<<<<<<<<<<<<<<< Début function ajouter >>>>>>>>>>>>>>>>>>>>>>>>>>>
 Func setHerosAxeZ($String)
-    If Not $String = "" Then
-        $Hero_Axe_Z =Number($String)
-        _log("Modification de la valeur Z du heros : " & $Hero_Axe_Z)
-    EndIf
-EndFunc ;==>valeur z du heros
+	If Not $String = "" Then
+		$Hero_Axe_Z = Number($String)
+		_log("Modification de la valeur Z du heros : " & $Hero_Axe_Z)
+	EndIf
+EndFunc   ;==>setHerosAxeZ
 
 Func attackRange($String)
-    If Not $String = "" Then
-        $a_range =Round($String)
-        _log("Modification de la valeur attackRange : " & $a_range)
-    EndIf
-EndFunc ;==>valeur attackRange
+	If Not $String = "" Then
+		$a_range = Round($String)
+		_log("Modification de la valeur attackRange : " & $a_range)
+	EndIf
+EndFunc   ;==>attackRange
 
 Func SpecialML($String)
 	If Not $String = "" Then
 		$SpecialmonsterList = $String
 		_log("Ajout d'une nouvelle SpecialMonsterlist : " & $SpecialmonsterList)
 	EndIf
-EndFunc   ;==>SpecialMonsterList
+EndFunc   ;==>SpecialML
 ;<<<<<<<<<<<<<<<<<<<<<<<< Fin function ajouter >>>>>>>>>>>>>>>>>>>>>>>>>>>
 Func MonsterList($String)
 	If Not $String = "" Then
@@ -338,7 +338,7 @@ Func sequence()
 		Dim $txttoarray[1]
 
 		If StringInStr($filetoarray[$z], "[CMD]", 2) = 1 Then ;Detection d'une commande
-			$txttoarray[0] = trim(StringLower(StringReplace($filetoarray[$z], "[CMD]", "", 0, 2)))
+			$txttoarray[0] = Trim(StringLower(StringReplace($filetoarray[$z], "[CMD]", "", 0, 2)))
 		Else
 
 			$load_file = "sequence\" & $filetoarray[$z] & ".txt"
@@ -356,7 +356,7 @@ Func sequence()
 				If @error = -1 Then ExitLoop
 
 				If $line <> "" Then
-					$line = trim(StringLower($line))
+					$line = Trim(StringLower($line))
 					ReDim $txttoarray[$compt_line + 1]
 					$txttoarray[$compt_line] = $line
 					$compt_line += 1
@@ -394,15 +394,15 @@ Func sequence()
 
 				;***************************************CMD BLOQUANTE*****************************************
 				If StringInStr($line, "takewp=", 2) Then; TakeWP detected
-;TCHAT
-if($PartieSolo='false')Then
-	Switch Random(1,2,1)
-		Case 1
-			dialTchat("TP sur moi je suis dans une autre zone")
-		Case 2
-			dialTchat("TP sur mon drapeau")
-	EndSwitch
-EndIf
+					;TCHAT
+					If ($PartieSolo = 'false') Then
+						Switch Random(1, 2, 1)
+							Case 1
+								dialTchat("TP sur moi je suis dans une autre zone")
+							Case 2
+								dialTchat("TP sur mon drapeau")
+						EndSwitch
+					EndIf
 
 					$line = StringReplace($line, "takewp=", "", 0, 2)
 					$table_wp = StringSplit($line, ",", 2)
@@ -438,8 +438,8 @@ EndIf
 						SendSequence($array_sequence)
 						$array_sequence = ArrayInit($array_sequence)
 						_log("Enclenchement d'un _townportal() line : " & $i + 1)
-						if Not _TownPortalnew() Then
-							$GameFailed=1
+						If Not _TownPortalnew() Then
+							$GameFailed = 1
 							Return False
 						EndIf
 
@@ -481,13 +481,13 @@ EndIf
 					SpecialML($line)
 					$line = ""
 					$definition = 1
-			    ElseIf StringInStr($line, "setherosaxez=", 2) Then; Définition l'axe Z détecté
-                    $line = StringReplace($line,"setherosaxez=", "", 0, 2)
-                    _log("Detection de la modification de l'axe Z du heros" & $i + 1)
-				    setHerosAxeZ($line)
+				ElseIf StringInStr($line, "setherosaxez=", 2) Then; Définition l'axe Z détecté
+					$line = StringReplace($line, "setherosaxez=", "", 0, 2)
+					_log("Detection de la modification de l'axe Z du heros" & $i + 1)
+					setHerosAxeZ($line)
 					$line = ""
 					$definition = 1
-			    ElseIf StringInStr($line, "attackrange=", 2) Then; Définition l'attackRange
+				ElseIf StringInStr($line, "attackrange=", 2) Then; Définition l'attackRange
 					$line = StringReplace($line, "attackrange=", "", 0, 2)
 					_log("Detection de la modification de attackRange line : " & $i + 1)
 					attackRange($line)
