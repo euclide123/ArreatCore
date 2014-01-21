@@ -25,15 +25,6 @@ If $Admin <> 1 Then
 	Exit
 EndIf
 
-Global $hDll = DllOpen("ntdll.dll")
-
-Func _HighPrecisionSleep($iMicroSeconds)
-	Local $hStruct
-	$hStruct = DllStructCreate("int64 time;")
-	DllStructSetData($hStruct, "time", -1 * ($iMicroSeconds * 10))
-	DllCall($hDll, "dword", "ZwDelayExecution", "int", 0, "ptr", DllStructGetPtr($hStruct))
-EndFunc   ;==>_HighPrecisionSleep
-
 ;;--------------------------------------------------------------------------------
 ;;      Includes
 ;;--------------------------------------------------------------------------------
@@ -5456,17 +5447,6 @@ Func StashAndRepair()
 				InventoryMove($items[$ToStash[$i]][0], $items[$ToStash[$i]][1])
 				Sleep(Random(100, 500))
 
-				If $items[$ToStash[$i]][3] >= 6 Then
-					#cs $item_name = fastCheckuiValue("Root.TopLayer.item 2.stack.top_wrapper.stack.name", 1, 354)
-						$item_stats = fastCheckuiValue("Root.TopLayer.item 2.stack.frame body.stack.stats", 1, 827)
-						$item_to_stash += 1
-						;_log("name file -> " & $ftpfilename)
-						
-						Xml_To_Str(xml_to_item($item_name, $item_stats), $ftpfilename)
-					#ce
-
-				EndIf
-
 				MouseClick('Right')
 				Sleep(Random(50, 200))
 				If Detect_UI_error(1) Then
@@ -5490,10 +5470,6 @@ Func StashAndRepair()
 					$ItemToStash = $ItemToStash + 1
 				EndIf
 			Next
-
-			;If $item_to_stash > 0 Then
-			;Ftp_Upload_To_Xml($ftpfilename)
-			;EndIf
 
 			Sleep(Random(50, 100))
 			Send("{SPACE}")
@@ -5563,17 +5539,6 @@ Func StashAndRepair()
 				InventoryMove($items[$ToStash[$i]][0], $items[$ToStash[$i]][1])
 				Sleep(Random(100, 500))
 
-				If $items[$ToStash[$i]][3] >= 6 Then
-					#cs $item_name = fastCheckuiValue("Root.TopLayer.item 2.stack.top_wrapper.stack.name", 1, 354)
-						$item_stats = fastCheckuiValue("Root.TopLayer.item 2.stack.frame body.stack.stats", 1, 827)
-						$item_to_stash += 1
-						;_log("name file -> " & $ftpfilename)
-						
-						Xml_To_Str(xml_to_item($item_name, $item_stats), $ftpfilename)
-					#ce
-
-				EndIf
-
 				MouseClick('Right')
 				Sleep(Random(50, 200))
 				If Detect_UI_error(1) Then
@@ -5597,10 +5562,6 @@ Func StashAndRepair()
 					$ItemToStash = $ItemToStash + 1
 				EndIf
 			Next
-
-			;If $item_to_stash > 0 Then
-			;Ftp_Upload_To_Xml($ftpfilename)
-			;EndIf
 
 			Sleep(Random(50, 100))
 			Send("{SPACE}")
@@ -5679,10 +5640,6 @@ Func StashAndRepair()
 			EndIf
 
 		Next
-
-		;If $item_to_stash > 0 Then
-		;Ftp_Upload_To_Xml($ftpfilename)
-		;EndIf
 
 		Sleep(Random(50, 100))
 		Send("{SPACE}")
@@ -6151,52 +6108,6 @@ Func SafePortBack()
 		_log('We failed to teleport back')
 	EndIf
 EndFunc   ;==>SafePortBack
-
-Func xml_to_item($name, $stats)
-	$rules_name = "(?i){c:[a-z0-9]*}([a-z0-9יטךכמןלגאהûüשצפעÿ" & @CRLF & " \+ \% \- \’ \' ]*){/c}"
-	$rules_stats = "(?i){c:[a-z0-9]*}([a-z0-9יטךכמןלגאהûüשצפעÿ" & @CRLF & " \+ \% \- \’ \' ]*){/c}"
-	;$rules_stat = "(?i){c:[a-z1-9]*}(.*){/c}"
-	$str = "<item>" & @CRLF
-	If StringRegExp($name, $rules_name) = 1 Then ;patern declaration ilvl
-		$name_item = StringRegExp($name, $rules_name, 2)
-		;MsgBox(1, "", $name_item[1])
-		$name = "<name>" & $name_item[1] & "</name>" & @CRLF
-	EndIf
-
-	If StringRegExp($stats, $rules_stats) = 1 Then
-		$stats_item = StringRegExp($stats, $rules_stats, 3)
-		;_ArrayDisplay($stats_item)
-		$temp_stats = ""
-		For $i = 0 To UBound($stats_item) - 1
-			$temp_stats = $temp_stats & "<stats>- " & $stats_item[$i] & "</stats>" & @CRLF
-
-		Next
-	EndIf
-	$str = $str & $name & $temp_stats & "</item>" & @CRLF & @CRLF
-	Return $str
-EndFunc   ;==>xml_to_item
-
-Func Xml_To_Str($str, $load_file)
-	Local $file = FileOpen($load_file, 1)
-	If $file = -1 Then
-		MsgBox(0, "Error", "Unable to open xml file : " & $load_file)
-		Exit
-
-	EndIf
-	FileWrite($file, $str)
-	FileClose($file)
-EndFunc   ;==>Xml_To_Str
-
-
-Func Ftp_Upload_To_Xml($file)
-	If Not $ftpserver = "" And Not $ftpusername = "" And Not $ftppass = "" Then
-		$Open = _FTPOpen('MyFTP Control')
-		$Conn = _FTPConnect($Open, $ftpserver, $ftpusername, $ftppass)
-		$Ftpp = _FtpPutFile($Conn, $file, "statistique_D3/" & $file)
-		$Ftpc = _FTPClose($Open)
-	EndIf
-EndFunc   ;==>Ftp_Upload_To_Xml
-
 
 Func fastcheckuiitemvisiblesize($valuetocheckfor, $visibility, $bucket)
 	Global $itemsize[4]
