@@ -17,8 +17,6 @@
 ;;      Make sure you are running as admin
 ;;--------------------------------------------------------------------------------
 
-
-
 $_debug = 1
 #RequireAdmin
 $Admin = IsAdmin()
@@ -47,17 +45,20 @@ EndFunc   ;==>_HighPrecisionSleep
 #include "lib\FTP.au3"
 
 ;;--------------------------------------------------------------------------------
-;;      Initialize MouseCoords
+;;      Initialize Options
 ;;--------------------------------------------------------------------------------
+
+; mouse coords
 Opt("MouseCoordMode", 2) ;1=absolute, 0=relative, 2=client
 Opt("MouseClickDownDelay", Random(10, 20))
 Opt("SendKeyDownDelay", Random(10, 20))
 
-
-;;--------------------------------------------------------------------------------
-;;      Open the process
-;;--------------------------------------------------------------------------------
+; windows
 Opt("WinTitleMatchMode", -1)
+
+
+#region openprocess
+;;--------------------------------------------------------------------------------
 SetPrivilege("SeDebugPrivilege", 1)
 Global $ProcessID = WinGetProcess("[CLASS:D3 Main Window Class]", "")
 Local $d3 = _MemoryOpen($ProcessID)
@@ -66,8 +67,136 @@ If @error Then
 	MsgBox(4096, "ERROR", "Failed to open memory for process;" & $ProcessID)
 	Exit
 EndIf
+;;--------------------------------------------------------------------------------
+#endregion
 
-;OffsetList()
+;;--------------------------------------------------------------------------------
+;;	OffsetList()
+;;--------------------------------------------------------------------------------
+Func offsetlist()
+	_log("offsetlist")
+	;//FILE DEFS
+	Global $ofs_MonsterDef = 0x18EC4C0 ; 0x18CBE70 ;1.0.6 0x15DBE00 ;0x015DCE00 ;0x15DBE00
+	Global $ofs_StringListDef = 0x18DD188;0x18DC188;0x18A2558 ; 0x0158C240 ;0x015E8808 ;0x015E9808
+	Global $ofs_ActorDef = 0x18E73F0 ; 0x18C6AD8 ;1.0.6 0x15EC108 ;0x015ED108 ;0x15EC108
+	Global $_defptr = 0x10
+	Global $_defcount = 0x108
+	Global $_deflink = 0x148
+	Global $_ofs_FileMonster_StrucSize = 0x50
+	Global $_ofs_FileActor_LinkToMonster = 0x6C
+	Global $_ofs_FileMonster_MonsterType = 0x18
+	Global $_ofs_FileMonster_MonsterRace = 0x1C
+	Global $_ofs_FileMonster_LevelNormal = 0x44
+	Global $_ofs_FileMonster_LevelNightmare = 0x48
+	Global $_ofs_FileMonster_LevelHell = 0x4c
+	Global $_ofs_FileMonster_LevelInferno = 0x50
+
+	;//GET ACTORATRIB
+	Global $ofs_ActorAtrib_Base = 0x0196644C ;0x1544E54 ;0x15A1EA4 ;0x015A2EA4;0x015A1EA4
+	Global $ofs_ActorAtrib_ofs1 = 0x390
+	Global $ofs_ActorAtrib_ofs2 = 0x2E8
+	Global $ofs_ActorAtrib_ofs3 = 0x148
+	Global $ofs_ActorAtrib_Count = 0x108 ; 0x0 0x0
+	Global $ofs_ActorAtrib_Indexing_ofs1 = 0x10
+	Global $ofs_ActorAtrib_Indexing_ofs2 = 0x8
+	Global $ofs_ActorAtrib_Indexing_ofs3 = 0x250
+	Global $ofs_ActorAtrib_StrucSize = 0x180
+	Global $ofs_LocalPlayer_HPBARB = 0x34
+	Global $ofs_LocalPlayer_HPWIZ = 0x38
+
+
+	;//GET LOCAL ACTOR STRUC
+	Global $ofs_LocalActor_ofs1 = 0x378 ;instead of $ofs_ActorAtrib_ofs2
+	Global $ofs_LocalActor_ofs2 = 0x148
+	Global $ofs_LocalActor_Count = 0x108
+	Global $ofs_LocalActor_atribGUID = 0x120
+	Global $ofs_LocalActor_StrucSize = 0x2D0 ; 0x0 0x0
+
+
+	;//OBJECT MANAGER
+	Global $ofs_objectmanager = 0x18CE394;0x018CD394 ;0x18939C4 ;0x1873414 ;0x0186FA3C ;0x1543B9C ;0x15A0BEC ;0x015A1BEC;0x15A0BEC
+	Global $ofs__ObjmanagerActorOffsetA = 0x900 ;0x8C8 ;0x8b0
+	Global $ofs__ObjmanagerActorCount = 0x108
+	Global $ofs__ObjmanagerActorOffsetB = 0x148 ;0x148
+	Global $ofs__ObjmanagerActorLinkToCTM = 0x384
+	Global $_ObjmanagerStrucSize = 0x42C ;0x42C ;0x428
+
+
+	;//CameraDef
+	Global $VIewStatic = 0x015A0BEC
+	Global $DebugFlags = $VIewStatic + 0x20
+	Global $vftableSubA = _MemoryRead($VIewStatic, $d3, 'ptr')
+	Global $vftableSubA = _MemoryRead($vftableSubA + 0x928, $d3, 'ptr')
+	Global $ViewOffset = $vftableSubA
+	Global $Ofs_CameraRotationA = $ViewOffset + 0x4
+	Global $Ofs_CameraRotationB = $ViewOffset + 0x8
+	Global $Ofs_CameraRotationC = $ViewOffset + 0xC
+	Global $Ofs_CameraRotationD = $ViewOffset + 0x10
+	Global $Ofs_CameraPosX = $ViewOffset + 0x14
+	Global $Ofs_CameraPosY = $ViewOffset + 0x18
+	Global $Ofs_CameraPosZ = $ViewOffset + 0x1C
+	Global $Ofs_CameraFOV = $ViewOffset + 0x30
+	Global $Ofs_CameraFOVB = $ViewOffset + 0x30
+	Global $ofs_InteractBase = 0x18CD364 ;0x1543B84 ;0x15A0BD4 ;0x015A1BD4;0x15A0BD4
+	Global $ofs__InteractOffsetA = 0xC4 ;0xA8
+	Global $ofs__InteractOffsetB = 0x58
+	Global $ofs__InteractOffsetUNK1 = 0x7F20 ;Set to 777c
+	Global $ofs__InteractOffsetUNK2 = 0x7F44 ;Set to 1 for NPC interaction
+	Global $ofs__InteractOffsetUNK3 = 0x7F7C ;Set to 7546 for NPC interaction, 7545 for loot interaction
+	Global $ofs__InteractOffsetUNK4 = 0x7F80 ;Set to 7546 for NPC interaction, 7545 for loot interaction
+	Global $ofs__InteractOffsetMousestate = 0x7F84 ;Mouse state 1 = clicked, 2 = mouse down
+	Global $ofs__InteractOffsetGUID = 0x7F88 ;Set to the GUID of the actor you want to interact with
+	$FixSpeed = 0x20 ;69736
+	$ToggleMove = 0x34
+	$MoveToXoffset = 0x40
+	$MoveToYoffset = 0x44
+	$MoveToZoffset = 0x48
+	$CurrentX = 0xA8
+	$CurrentY = 0xAc
+	$CurrentZ = 0xb0
+	$RotationOffset = 0x174
+	Global $_ActorAtrib_Base = _MemoryRead($ofs_ActorAtrib_Base, $d3, 'ptr')
+	Global $_ActorAtrib_1 = _MemoryRead($_ActorAtrib_Base + $ofs_ActorAtrib_ofs1, $d3, 'ptr')
+	Global $_ActorAtrib_2 = _MemoryRead($_ActorAtrib_1 + $ofs_ActorAtrib_ofs2, $d3, 'ptr')
+	Global $_ActorAtrib_3 = _MemoryRead($_ActorAtrib_2 + $ofs_ActorAtrib_ofs3, $d3, 'ptr')
+	Global $_ActorAtrib_4 = _MemoryRead($_ActorAtrib_3, $d3, 'ptr')
+	Global $_ActorAtrib_Count = $_ActorAtrib_2 + $ofs_ActorAtrib_Count
+	Global $_LocalActor_1 = _MemoryRead($_ActorAtrib_1 + $ofs_LocalActor_ofs1, $d3, 'ptr')
+	Global $_LocalActor_2 = _MemoryRead($_LocalActor_1 + $ofs_LocalActor_ofs2, $d3, 'ptr')
+	Global $_LocalActor_3 = _MemoryRead($_LocalActor_2, $d3, 'ptr')
+	Global $_LocalActor_Count = $_LocalActor_1 + $ofs_LocalActor_Count
+	Global $_itrObjectManagerA = _MemoryRead($ofs_objectmanager, $d3, 'ptr')
+	Global $_itrObjectManagerB = _MemoryRead($_itrObjectManagerA + $ofs__ObjmanagerActorOffsetA, $d3, 'ptr')
+	Global $_itrObjectManagerCount = $_itrObjectManagerB + $ofs__ObjmanagerActorCount
+	Global $_itrObjectManagerC = _MemoryRead($_itrObjectManagerB + $ofs__ObjmanagerActorOffsetB, $d3, 'ptr')
+	Global $_itrObjectManagerD = _MemoryRead($_itrObjectManagerC, $d3, 'ptr')
+	Global $_itrObjectManagerE = _MemoryRead($_itrObjectManagerD, $d3, 'ptr')
+	Global $_itrInteractA = _MemoryRead($ofs_InteractBase, $d3, 'ptr')
+	Global $_itrInteractB = _MemoryRead($_itrInteractA, $d3, 'ptr')
+	Global $_itrInteractC = _MemoryRead($_itrInteractB, $d3, 'ptr')
+	Global $_itrInteractD = _MemoryRead($_itrInteractC + $ofs__InteractOffsetA, $d3, 'ptr')
+	Global $_itrInteractE = $_itrInteractD + $ofs__InteractOffsetB
+
+
+	If LocateMyToon() Then
+		Global $ClickToMoveMain = _MemoryRead($_Myoffset + $ofs__ObjmanagerActorLinkToCTM, $d3, 'ptr')
+		Global $ClickToMoveRotation = $ClickToMoveMain + $RotationOffset
+		Global $ClickToMoveCurX = $ClickToMoveMain + $CurrentX
+		Global $ClickToMoveCurY = $ClickToMoveMain + $CurrentY
+		Global $ClickToMoveCurZ = $ClickToMoveMain + $CurrentZ
+		Global $ClickToMoveToX = $ClickToMoveMain + $MoveToXoffset
+		Global $ClickToMoveToY = $ClickToMoveMain + $MoveToYoffset
+		Global $ClickToMoveToZ = $ClickToMoveMain + $MoveToZoffset
+		Global $ClickToMoveToggle = $ClickToMoveMain + $ToggleMove
+		Global $ClickToMoveFix = $ClickToMoveMain + $FixSpeed
+		If $_debug Then _log("My toon located at: " & $_Myoffset & ", GUID: " & $_MyGuid & ", NAME: " & $_MyCharType & @CRLF)
+		Return True
+	Else
+		Return False
+	EndIf
+
+EndFunc   ;==>offsetlist
+
 
 ;;================================================================================
 ;; FUNCTIONS
@@ -140,12 +269,15 @@ Func checkuiitemvisible($valuetocheckfor, $visibility)
 	$ptr1 = _memoryread($ofs_objectmanager, $d3, "ptr")
 	$ptr2 = _memoryread($ptr1 + 2420, $d3, "ptr")
 	$ptr3 = _memoryread($ptr2 + 0, $d3, "ptr")
+	
 	$ofs_uielements = _memoryread($ptr3 + 8, $d3, "ptr")
 	$uielementcount = _memoryread($ptr3 + 64, $d3, "int")
 	$counter = 0
+	
 	While ($counter < $uielementcount)
 		$counter += 1
 		$uielemepointer = _memoryread($ofs_uielements + $counter * 4, $d3, "ptr")
+		
 		While ($uielemepointer <> 0)
 			$npnt = _memoryread($uielemepointer + 528, $d3, "ptr")
 			$name = BinaryToString(_memoryread($npnt + 56, $d3, "byte[256]"), 4)
@@ -158,7 +290,9 @@ Func checkuiitemvisible($valuetocheckfor, $visibility)
 			EndIf
 			$uielemepointer = _memoryread($uielemepointer, $d3, "ptr")
 		WEnd
+		
 	WEnd
+	
 	Return False
 EndFunc   ;==>checkuiitemvisible
 
@@ -1805,133 +1939,6 @@ Func IndexStringList($_offset, $_displayInfo = 0)
 EndFunc   ;==>IndexStringList
 
 
-
-;;--------------------------------------------------------------------------------
-;;	OffsetList()
-;;--------------------------------------------------------------------------------
-Func offsetlist()
-	_log("offsetlist")
-	;//FILE DEFS
-	Global $ofs_MonsterDef = 0x18EC4C0 ; 0x18CBE70 ;1.0.6 0x15DBE00 ;0x015DCE00 ;0x15DBE00
-	Global $ofs_StringListDef = 0x18DD188;0x18DC188;0x18A2558 ; 0x0158C240 ;0x015E8808 ;0x015E9808
-	Global $ofs_ActorDef = 0x18E73F0 ; 0x18C6AD8 ;1.0.6 0x15EC108 ;0x015ED108 ;0x15EC108
-	Global $_defptr = 0x10
-	Global $_defcount = 0x108
-	Global $_deflink = 0x148
-	Global $_ofs_FileMonster_StrucSize = 0x50
-	Global $_ofs_FileActor_LinkToMonster = 0x6C
-	Global $_ofs_FileMonster_MonsterType = 0x18
-	Global $_ofs_FileMonster_MonsterRace = 0x1C
-	Global $_ofs_FileMonster_LevelNormal = 0x44
-	Global $_ofs_FileMonster_LevelNightmare = 0x48
-	Global $_ofs_FileMonster_LevelHell = 0x4c
-	Global $_ofs_FileMonster_LevelInferno = 0x50
-
-	;//GET ACTORATRIB
-	Global $ofs_ActorAtrib_Base = 0x0196644C ;0x1544E54 ;0x15A1EA4 ;0x015A2EA4;0x015A1EA4
-	Global $ofs_ActorAtrib_ofs1 = 0x390
-	Global $ofs_ActorAtrib_ofs2 = 0x2E8
-	Global $ofs_ActorAtrib_ofs3 = 0x148
-	Global $ofs_ActorAtrib_Count = 0x108 ; 0x0 0x0
-	Global $ofs_ActorAtrib_Indexing_ofs1 = 0x10
-	Global $ofs_ActorAtrib_Indexing_ofs2 = 0x8
-	Global $ofs_ActorAtrib_Indexing_ofs3 = 0x250
-	Global $ofs_ActorAtrib_StrucSize = 0x180
-	Global $ofs_LocalPlayer_HPBARB = 0x34
-	Global $ofs_LocalPlayer_HPWIZ = 0x38
-
-
-	;//GET LOCAL ACTOR STRUC
-	Global $ofs_LocalActor_ofs1 = 0x378 ;instead of $ofs_ActorAtrib_ofs2
-	Global $ofs_LocalActor_ofs2 = 0x148
-	Global $ofs_LocalActor_Count = 0x108
-	Global $ofs_LocalActor_atribGUID = 0x120
-	Global $ofs_LocalActor_StrucSize = 0x2D0 ; 0x0 0x0
-
-
-	;//OBJECT MANAGER
-	Global $ofs_objectmanager = 0x18CE394;0x018CD394 ;0x18939C4 ;0x1873414 ;0x0186FA3C ;0x1543B9C ;0x15A0BEC ;0x015A1BEC;0x15A0BEC
-	Global $ofs__ObjmanagerActorOffsetA = 0x900 ;0x8C8 ;0x8b0
-	Global $ofs__ObjmanagerActorCount = 0x108
-	Global $ofs__ObjmanagerActorOffsetB = 0x148 ;0x148
-	Global $ofs__ObjmanagerActorLinkToCTM = 0x384
-	Global $_ObjmanagerStrucSize = 0x42C ;0x42C ;0x428
-
-
-	;//CameraDef
-	Global $VIewStatic = 0x015A0BEC
-	Global $DebugFlags = $VIewStatic + 0x20
-	Global $vftableSubA = _MemoryRead($VIewStatic, $d3, 'ptr')
-	Global $vftableSubA = _MemoryRead($vftableSubA + 0x928, $d3, 'ptr')
-	Global $ViewOffset = $vftableSubA
-	Global $Ofs_CameraRotationA = $ViewOffset + 0x4
-	Global $Ofs_CameraRotationB = $ViewOffset + 0x8
-	Global $Ofs_CameraRotationC = $ViewOffset + 0xC
-	Global $Ofs_CameraRotationD = $ViewOffset + 0x10
-	Global $Ofs_CameraPosX = $ViewOffset + 0x14
-	Global $Ofs_CameraPosY = $ViewOffset + 0x18
-	Global $Ofs_CameraPosZ = $ViewOffset + 0x1C
-	Global $Ofs_CameraFOV = $ViewOffset + 0x30
-	Global $Ofs_CameraFOVB = $ViewOffset + 0x30
-	Global $ofs_InteractBase = 0x18CD364 ;0x1543B84 ;0x15A0BD4 ;0x015A1BD4;0x15A0BD4
-	Global $ofs__InteractOffsetA = 0xC4 ;0xA8
-	Global $ofs__InteractOffsetB = 0x58
-	Global $ofs__InteractOffsetUNK1 = 0x7F20 ;Set to 777c
-	Global $ofs__InteractOffsetUNK2 = 0x7F44 ;Set to 1 for NPC interaction
-	Global $ofs__InteractOffsetUNK3 = 0x7F7C ;Set to 7546 for NPC interaction, 7545 for loot interaction
-	Global $ofs__InteractOffsetUNK4 = 0x7F80 ;Set to 7546 for NPC interaction, 7545 for loot interaction
-	Global $ofs__InteractOffsetMousestate = 0x7F84 ;Mouse state 1 = clicked, 2 = mouse down
-	Global $ofs__InteractOffsetGUID = 0x7F88 ;Set to the GUID of the actor you want to interact with
-	$FixSpeed = 0x20 ;69736
-	$ToggleMove = 0x34
-	$MoveToXoffset = 0x40
-	$MoveToYoffset = 0x44
-	$MoveToZoffset = 0x48
-	$CurrentX = 0xA8
-	$CurrentY = 0xAc
-	$CurrentZ = 0xb0
-	$RotationOffset = 0x174
-	Global $_ActorAtrib_Base = _MemoryRead($ofs_ActorAtrib_Base, $d3, 'ptr')
-	Global $_ActorAtrib_1 = _MemoryRead($_ActorAtrib_Base + $ofs_ActorAtrib_ofs1, $d3, 'ptr')
-	Global $_ActorAtrib_2 = _MemoryRead($_ActorAtrib_1 + $ofs_ActorAtrib_ofs2, $d3, 'ptr')
-	Global $_ActorAtrib_3 = _MemoryRead($_ActorAtrib_2 + $ofs_ActorAtrib_ofs3, $d3, 'ptr')
-	Global $_ActorAtrib_4 = _MemoryRead($_ActorAtrib_3, $d3, 'ptr')
-	Global $_ActorAtrib_Count = $_ActorAtrib_2 + $ofs_ActorAtrib_Count
-	Global $_LocalActor_1 = _MemoryRead($_ActorAtrib_1 + $ofs_LocalActor_ofs1, $d3, 'ptr')
-	Global $_LocalActor_2 = _MemoryRead($_LocalActor_1 + $ofs_LocalActor_ofs2, $d3, 'ptr')
-	Global $_LocalActor_3 = _MemoryRead($_LocalActor_2, $d3, 'ptr')
-	Global $_LocalActor_Count = $_LocalActor_1 + $ofs_LocalActor_Count
-	Global $_itrObjectManagerA = _MemoryRead($ofs_objectmanager, $d3, 'ptr')
-	Global $_itrObjectManagerB = _MemoryRead($_itrObjectManagerA + $ofs__ObjmanagerActorOffsetA, $d3, 'ptr')
-	Global $_itrObjectManagerCount = $_itrObjectManagerB + $ofs__ObjmanagerActorCount
-	Global $_itrObjectManagerC = _MemoryRead($_itrObjectManagerB + $ofs__ObjmanagerActorOffsetB, $d3, 'ptr')
-	Global $_itrObjectManagerD = _MemoryRead($_itrObjectManagerC, $d3, 'ptr')
-	Global $_itrObjectManagerE = _MemoryRead($_itrObjectManagerD, $d3, 'ptr')
-	Global $_itrInteractA = _MemoryRead($ofs_InteractBase, $d3, 'ptr')
-	Global $_itrInteractB = _MemoryRead($_itrInteractA, $d3, 'ptr')
-	Global $_itrInteractC = _MemoryRead($_itrInteractB, $d3, 'ptr')
-	Global $_itrInteractD = _MemoryRead($_itrInteractC + $ofs__InteractOffsetA, $d3, 'ptr')
-	Global $_itrInteractE = $_itrInteractD + $ofs__InteractOffsetB
-
-
-	If LocateMyToon() Then
-		Global $ClickToMoveMain = _MemoryRead($_Myoffset + $ofs__ObjmanagerActorLinkToCTM, $d3, 'ptr')
-		Global $ClickToMoveRotation = $ClickToMoveMain + $RotationOffset
-		Global $ClickToMoveCurX = $ClickToMoveMain + $CurrentX
-		Global $ClickToMoveCurY = $ClickToMoveMain + $CurrentY
-		Global $ClickToMoveCurZ = $ClickToMoveMain + $CurrentZ
-		Global $ClickToMoveToX = $ClickToMoveMain + $MoveToXoffset
-		Global $ClickToMoveToY = $ClickToMoveMain + $MoveToYoffset
-		Global $ClickToMoveToZ = $ClickToMoveMain + $MoveToZoffset
-		Global $ClickToMoveToggle = $ClickToMoveMain + $ToggleMove
-		Global $ClickToMoveFix = $ClickToMoveMain + $FixSpeed
-		If $_debug Then _log("My toon located at: " & $_Myoffset & ", GUID: " & $_MyGuid & ", NAME: " & $_MyCharType & @CRLF)
-		Return True
-	Else
-		Return False
-	EndIf
-
-EndFunc   ;==>offsetlist
 
 ;;--------------------------------------------------------------------------------
 ;;      IterateAllObjectList()
