@@ -52,9 +52,7 @@ Func _playerdead_revive()
 		If $nb_die_t > $rdn_die_t Then ;Si on a deja depassé le nombre de revive autorisé, on renvoie forcement false, pour donner la main au reste du code
 			Return False
 		EndIf
-		$playerdeadlookfor = "NormalLayer.deathmenu_dialog"
-		$return = fastcheckuiitemvisible($playerdeadlookfor, 1, 969)
-		Return $return
+		Return fastcheckuiitemvisible($uiPlayerDead, 1, 969)
 	EndIf
 	Return False
 EndFunc   ;==>_playerdead_revive

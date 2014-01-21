@@ -23,21 +23,6 @@ Func UsePath(ByRef $path)
 	Sleep(10)
 	While 1
 
-		;               If _playerdead_revive() Then
-		;                       $nb_die_t = $nb_die_t + 1
-		;                       $Res_compt = $Res_compt + 1
-		;                       _log("You are dead, max :" & $rdn_die_t - $nb_die_t & " more death allowed")
-		;                       If $nb_die_t <= $rdn_die_t Then
-		;                                       Sleep(Random(5000, 6000))
-		;                                       MouseClick("left", 400, 470, 1, 6)
-		;                                       Sleep(Random(750, 1000))
-		;                                       bloc_sequence($path)
-		;                                       return
-		;                       Else
-		;                                       _log("You have reached the max number of revive : " & $rdn_die_t)
-		;                       EndIf
-		;               EndIf
-
 		If revive($path) Then
 			Return
 		EndIf
@@ -69,7 +54,7 @@ Func UsePath(ByRef $path)
 			$grabtimeout = 0
 			$killtimeout = 0
 		EndIf
-		;If _MemoryRead($ClickToMoveToggle, $d3, 'float') = 0 Then ExitLoop
+
 		Local $angle = 1
 		Local $Radius = 25
 		;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -130,7 +115,7 @@ Func UsePath(ByRef $path)
 			EndIf
 			Sleep(10)
 		WEnd
-		;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 		Sleep(10)
 
 

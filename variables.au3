@@ -200,3 +200,13 @@ Global $Expencours              = 0
 Global $ExperienceNextLevel     = 0
 Global $NiveauParagon           = 0
 Global $Xp_Total                = 0
+
+; GUID / UI items
+Global $uiPlayerDead	= "NormalLayer.deathmenu_dialog"
+
+; Actor
+Global $actorStash = "Player_Shared_Stash"
+
+; decor
+Global $decorlist = ""
+Global $bandecorlist = ""

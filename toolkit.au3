@@ -376,9 +376,7 @@ EndFunc   ;==>fastCheckuiValue
 
 
 Func _playerdead()
-
-	$playerdeadlookfor = "NormalLayer.deathmenu_dialog"
-	$return = fastcheckuiitemvisible($playerdeadlookfor, 1, 969)
+	$return = fastcheckuiitemvisible($uiPlayerDead, 1, 969)
 	If ($return And $DeathCountToggle) Then
 		$Death += 1
 		$Die2FastCount += 1
@@ -386,45 +384,55 @@ Func _playerdead()
 	EndIf
 	Return $return
 EndFunc   ;==>_playerdead
+
 Func _inmenu()
-	$lobbylookfor = "Menu.PlayGameButton"
-	Return fastcheckuiitemvisible($lobbylookfor, 1, 654)
+	Local $uiLobby = "Menu.PlayGameButton"
+	Return fastcheckuiitemvisible($uiLobby, 1, 654)
 EndFunc   ;==>_inmenu
+
 Func _checkdisconnect()
-	$disclookfor = "Root.TopLayer.BattleNetModalNotifications_main.ModalNotification.Buttons.ButtonList.OkButton"
-	Return fastcheckuiitemvisible($disclookfor, 1, 1073)
+	Local $uiDisconnect	= "Root.TopLayer.BattleNetModalNotifications_main.ModalNotification.Buttons.ButtonList.OkButton"
+	Return fastcheckuiitemvisible($uiDisconnect, 1, 1073)
 EndFunc   ;==>_checkdisconnect
+
 Func _checkRepair()
-	$replookfor = "Root.NormalLayer.DurabilityIndicator"
-	Return fastcheckuiitemvisible($replookfor, 1, 239)
+	Local $uiRepair	= "Root.NormalLayer.DurabilityIndicator"
+	Return fastcheckuiitemvisible($uiRepair, 1, 239)
 EndFunc   ;==>_checkRepair
+
 Func _onloginscreen()
-	$loginlookfor = "Root.NormalLayer.BattleNetLogin_main.LayoutRoot"
-	Return fastcheckuiitemvisible($loginlookfor, 1, 174)
+	Local $uiLogin	= "Root.NormalLayer.BattleNetLogin_main.LayoutRoot"
+	Return fastcheckuiitemvisible($uiLogin, 1, 174)
 EndFunc   ;==>_onloginscreen
+
 Func _escmenu()
-	$escmenuelookfor = "Root.TopLayer.gamemenu_dialog.gamemenu_bkgrnd.ButtonStackContainer.button_leaveGame"
-	Return fastcheckuiitemvisible($escmenuelookfor, 1, 1447)
+	Local $uiEscapeMenu	= "Root.TopLayer.gamemenu_dialog.gamemenu_bkgrnd.ButtonStackContainer.button_leaveGame"
+	Return fastcheckuiitemvisible($uiEscapeMenu, 1, 1447)
 EndFunc   ;==>_escmenu
+
 Func _ingame()
-	$gamelookfor = "Root.NormalLayer.minimap_dialog_backgroundScreen.minimap_dialog_pve.area_name"
-	Return fastcheckuiitemvisible($gamelookfor, 1, 1403)
+	Local $uiInGame = "Root.NormalLayer.minimap_dialog_backgroundScreen.minimap_dialog_pve.area_name"
+	Return fastcheckuiitemvisible($uiInGame, 1, 1403)
 EndFunc   ;==>_ingame
+
 Func _checkWPopen()
-	$checkWPopenlookfor = "Root.NormalLayer.waypoints_dialog_mainPage"
-	Return fastcheckuiitemvisible($checkWPopenlookfor, 1, 1398)
+	Local $uiWaypointSelection = "Root.NormalLayer.waypoints_dialog_mainPage"
+	Return fastcheckuiitemvisible($uiWaypointSelection, 1, 1398)
 EndFunc   ;==>_checkWPopen
+
 Func _checkVendoropen()
-	$checkVendorOpenlookfor = "Root.NormalLayer.shop_dialog_mainPage"
-	Return fastcheckuiitemvisible($checkVendorOpenlookfor, 1, 1814)
+	Local $uiVendorWindow = "Root.NormalLayer.shop_dialog_mainPage"
+	Return fastcheckuiitemvisible($uiVendorWindow, 1, 1814)
 EndFunc   ;==>_checkVendoropen
+
 Func _checkStashopen()
-	$_checkStashopenlookfor = "Root.NormalLayer.stash_dialog_mainPage"
-	Return fastcheckuiitemvisible($_checkStashopenlookfor, 1, 1291)
+	Local $uiStashWindow = "Root.NormalLayer.stash_dialog_mainPage"
+	Return fastcheckuiitemvisible($uiStashWindow, 1, 1291)
 EndFunc   ;==>_checkStashopen
+
 Func _checkInventoryopen()
-	$_checkInventoryopenlookfor = "Root.NormalLayer.inventory_dialog_mainPage"
-	Return fastcheckuiitemvisible($_checkInventoryopenlookfor, 1, 1622)
+	Local $uiInventoryWindow   = "Root.NormalLayer.inventory_dialog_mainPage"
+	Return fastcheckuiitemvisible($uiInventoryWindow, 1, 1622)
 EndFunc   ;==>_checkInventoryopen
 
 
@@ -785,18 +793,6 @@ Func GetRepairTab()
 
 EndFunc   ;==>GetRepairTab
 
-
-;;--------------------------------------------------------------------------------
-;;     Find MP MF handicap
-;;	   Get MF handicap and deduce game MP from it
-;;
-;;--------------------------------------------------------------------------------
-Func GetMonsterPow()
-	$MfCap = (IterateActorAtribs($_MyGuid, $Atrib_Magic_Find_Handicap) * 10)
-	$MP = Round($MfCap, 0)
-	_log("Power monster : " & $MP)
-EndFunc   ;==>GetMonsterPow
-
 ;;--------------------------------------------------------------------------------
 ;;     Find MonsterPower
 ;;	   Get it Via UI element
@@ -852,7 +848,7 @@ EndFunc   ;==>GetDifficulty
 ;;--------------------------------------------------------------------------------
 Func _intown()
 	If $_debug Then _log("-----Checking if In Town------")
-	$town = FindActor('Player_Shared_Stash', 448)
+	$town = FindActor($actorStash, 448)
 	If $town = 1 Then
 		_log("We are in town ")
 		Return True
@@ -1089,100 +1085,6 @@ Func antiidle()
 	WEnd
 
 EndFunc   ;==>antiidle
-;;--------------------------------------------------------------------------------
-; Function:			GetPackItemLevel($ACD, $_REQ)
-;;--------------------------------------------------------------------------------
-Func GetPackItemLevel($ACD, $_REQ)
-	;IterateLocalActor()
-	;$ACDIndex = _ArraySearch($__ACTOR, "0x" & Hex($_guid), 0, 0, 0, 1, 1, 1) ;this bitch is slow as hell
-	If $ACD = -1 Then Return False
-	$_Count = _MemoryRead($_ActorAtrib_Count, $d3, 'int')
-	If $_Count > 500 Then
-		_log("Attention la valeur de Count était de " & $_Count)
-		$_Count = 500
-	EndIf
-
-	$CurrentOffset = $_ActorAtrib_4
-	Dim $ACTORatrib
-	For $i = 0 To $_Count
-		$ACTORatrib = _MemoryRead($CurrentOffset, $d3, 'ptr')
-		If $ACTORatrib = $ACD Then
-			$test = _MemoryRead($CurrentOffset + 0x10, $d3, 'ptr')
-			$CurretOffset = $test
-			For $i = 0 To 825
-				$data = _MemoryRead($CurretOffset, $d3, 'ptr')
-				$CurretOffset = $CurretOffset + 0x4
-				If $data <> 0x0 Then
-					$AtribData = _MemoryRead($data + 0x4, $d3, 'ptr')
-					If StringLeft($AtribData, 7) = "0x0003B" Then
-						;ConsoleWrite("Debug :" &$data+0x4 & " : " & _MemoryRead($data+0x4, $d3, 'int') &@crlf) ;FOR DEBUGGING
-						If "0x" & StringRight($AtribData, 3) = $_REQ[0] Then
-							Return _MemoryRead($data + 0x8, $d3, $_REQ[1])
-						EndIf
-					EndIf
-					If StringLeft($AtribData, 7) = "0xFFFFF" Then
-						;ConsoleWrite("Debug :" &$data+0x4 & " : " & _MemoryRead($data+0x4, $d3, 'int') &@crlf) ;FOR DEBUGGING
-						If "0x" & StringRight($AtribData, 3) = $_REQ[0] Then
-							Return _MemoryRead($data + 0x8, $d3, $_REQ[1])
-						EndIf
-					EndIf
-				EndIf
-			Next
-			Return False
-		EndIf
-		$CurrentOffset = $CurrentOffset + $ofs_ActorAtrib_StrucSize
-	Next
-	Return False
-EndFunc   ;==>GetPackItemLevel
-;;--------------------------------------------------------------------------------
-;;	Getting Backpack Item Info, extended to show some more info
-;;  $bag = 0 for backpack and 15 for stash
-;;--------------------------------------------------------------------------------
-Func IterateBackpackExtendedWithLvl($bag = 0)
-	$list = IndexSNO($gameBalance)
-	$armorOffs = 0
-	$weaponOffs = 0
-	$otherOffs = 0
-	For $j = 0 To UBound($list) - 1
-		;19750 = armor, 19754 = weapon, 1953 = other
-		If ($list[$j][1] = 19750) Then
-			$armorOffs = $list[$j][0]
-		EndIf
-		If ($list[$j][1] = 19754) Then
-			$weaponOffs = $list[$j][0]
-		EndIf
-		If ($list[$j][1] = 19753) Then
-			$otherOffs = $list[$j][0]
-		EndIf
-	Next
-	Local $armorItems = GetLevels($armorOffs)
-	Local $weaponItems = GetLevels($weaponOffs)
-	Local $otherItems = GetLevels($otherOffs)
-	Local $data = IterateBackpack($bag)
-	Local $armorItemsWithLvl = MapItemWithLvl($data, $armorItems, 8)
-	Local $weaponItemsWithLvl = MapItemWithLvl($data, $weaponItems, 8)
-	Local $otherItemsWithLvl = MapItemWithLvl($data, $otherItems, 8)
-	Local $allItems[UBound($armorItemsWithLvl, 1)][UBound($armorItemsWithLvl, 2)]
-	For $i = 0 To UBound($allItems) - 1 Step 1
-		If $armorItemsWithLvl[$i][9] <> "" Then
-			;copy from $armorItemsWithLvl to all items
-			For $j = 0 To UBound($armorItemsWithLvl, 2) - 1 Step 1
-				$allItems[$i][$j] = $armorItemsWithLvl[$i][$j]
-			Next
-		ElseIf $weaponItemsWithLvl[$i][9] <> "" Then
-			;copy from $weaponItemsWithLvl to all items
-			For $j = 0 To UBound($weaponItemsWithLvl, 2) - 1 Step 1
-				$allItems[$i][$j] = $weaponItemsWithLvl[$i][$j]
-			Next
-		ElseIf $otherItemsWithLvl[$i][9] <> "" Then
-			;copy from $otherItemsWithLvl to all items
-			For $j = 0 To UBound($otherItemsWithLvl, 2) - 1 Step 1
-				$allItems[$i][$j] = $otherItemsWithLvl[$i][$j]
-			Next
-		EndIf
-	Next
-	Return $allItems
-EndFunc   ;==>IterateBackpackExtendedWithLvl
 
 ;;--------------------------------------------------------------------------------
 ;;	Maps snos containg a lvl to the item with that snoid
@@ -1633,14 +1535,6 @@ Func _filter2attrib($CurrentIdAttrib, $filter2read)
 	EndIf
 EndFunc   ;==>_filter2attrib
 
-;;--------------------------------------------------------------------------------
-;;      Stop()
-;;--------------------------------------------------------------------------------
-Func Stop()
-	Exit
-EndFunc   ;==>Stop
-
-
 
 ;;================================================================================
 ; Function:                     LocateMyToon
@@ -1805,50 +1699,6 @@ Func IterateActorAtribs($_GUID, $_REQ)
 EndFunc   ;==>IterateActorAtribs
 
 ;;================================================================================
-; Function:			LinkActors
-; Description:		Read and index data from the specified offset
-; Parameter(s):		$_offset - The offset linking to the file def
-;								be in hex format (0x00000000).
-;					$_displayInfo - Setting this to 1 will make the function spit
-;								out the results while running
-; Note(s):			This function is used to index data from the MPQ files that
-;					that have been loaded into memory.
-;					Im not sure why the count doesnt go beyond 256.
-;					So for the time being if the count goes beyond 256 the size
-;					is set to a specified count and then the array will be scaled
-;					after when data will stop being available.
-;==================================================================================
-Func LinkActors($OBject, $_displayInfo = 0)
-	Global $OBject_Mem_Actor = $OBject
-	Global $Object_File_Actor = IndexSNO($ofs_ActorDef, 0)
-	Global $Object_File_Monster = IndexSNO($ofs_MonsterDef, 0)
-	Dim $__outputdata[UBound($OBject_Mem_Actor, 1) - 1][2]
-	For $i = 0 To UBound($OBject_Mem_Actor, 1) - 1
-		If $OBject_Mem_Actor[$i][9] <> -1 Then
-			$ItemIndex = _ArraySearch($Object_File_Actor, $OBject_Mem_Actor[$i][9], 0, 0, 0, 1, 1, 1)
-			If $ItemIndex > 0 Then
-				$MonsterID = _MemoryRead($Object_File_Actor[$ItemIndex][0] + 0x6c, $d3, 'ptr')
-				$ItemIndex = _ArraySearch($Object_File_Monster, $MonsterID, 0, 0, 0, 1, 1, 1)
-				If $ItemIndex > 0 Then
-					$Type = _MemoryRead($Object_File_Monster[$ItemIndex][0] + $_ofs_FileMonster_MonsterType, $d3, 'int')
-					$MonsterType = $_Const_MonsterType[$Type + 1]
-					$Race = _MemoryRead($Object_File_Monster[$ItemIndex][0] + $_ofs_FileMonster_MonsterRace, $d3, 'int')
-					$MonsterRace = $_Const_MonsterRace[$Race + 1]
-					$LevelNormal = _MemoryRead($Object_File_Monster[$ItemIndex][0] + $_ofs_FileMonster_LevelNormal, $d3, 'int') ;//Here are some data you can use if you want,
-					$LevelNightmare = _MemoryRead($Object_File_Monster[$ItemIndex][0] + $_ofs_FileMonster_LevelNightmare, $d3, 'int') ;//...it gives info about levels based on dificulty
-					$LevelHell = _MemoryRead($Object_File_Monster[$ItemIndex][0] + $_ofs_FileMonster_LevelHell, $d3, 'int')
-					$LevelInferno = _MemoryRead($Object_File_Monster[$ItemIndex][0] + $_ofs_FileMonster_LevelInferno, $d3, 'int')
-					$OBject_Mem_Actor[$i][11] = $Type
-					$OBject_Mem_Actor[$i][12] = $Race
-					;if $_displayInfo = 1 Then ConsoleWrite($i & " " & $Object_File_Actor[$ItemIndex][0] & @tab & " " &$MonsterType &@tab & " " & $MonsterRace &@tab & " Level Normal:" & $LevelNormal &@tab & " " & $StringListDB[$Name][1] &" " & @TAB  &$OBject_Mem_Actor[$i][2] &@crlf)
-				EndIf
-			EndIf
-		EndIf
-	Next
-	Return $OBject_Mem_Actor
-EndFunc   ;==>LinkActors
-
-;;================================================================================
 ; Function:			IndexSNO($_offset[,$_displayInfo = 0])
 ; Description:		Read and index data from the specified offset
 ; Parameter(s):		$_offset - The offset linking to the file def
@@ -1896,83 +1746,6 @@ Func IndexSNO($_offset, $_displayInfo = 0)
 
 	Return $_OutPut
 EndFunc   ;==>IndexSNO
-
-;;================================================================================
-; Function:			IndexStringList($_offset)
-; Description:		Read and index data from the specified offset
-; Parameter(s):		$_offset - The offset linking to the file def
-;								  be in hex format (0x00000000).
-;					$_displayInfo - Setting this to 1 will make the function spit
-;								out the results while running
-;
-; Note(s):			This function is made specificly to index string lists.
-;					This is usefull for getting real localized names from the
-;					proxy names you get from the objectmanager strucs.
-;					i have only test this on monster names but it should work for all.
-;==================================================================================
-Func IndexStringList($_offset, $_displayInfo = 0)
-
-	$_offset_FileMonster_StrucSize = 0x50
-	$_StringCount = _MemoryRead($_offset + 0xc, $d3, 'int')
-	$_CurrentOffset = $_offset + 0x28
-	Dim $_OutPut[$_StringCount][2]
-
-	For $i = 0 To $_StringCount - 1
-		$_OutPut[$i][0] = _MemoryRead(_MemoryRead($_CurrentOffset, $d3, 'int'), $d3, 'char[32]') ;Proxy Name, like "Priest_Male_B_NoLook"
-		$_OutPut[$i][1] = _MemoryRead(_MemoryRead($_CurrentOffset + 0x10, $d3, 'int'), $d3, 'char[34]') ;Localized name, like "Brother Malachi the Healer"
-		Assign("__" & $_OutPut[$i][0], $_OutPut[$i][1], 2)
-
-		$_CurrentOffset = $_CurrentOffset + $_offset_FileMonster_StrucSize
-		If $_displayInfo = 1 Then ConsoleWrite($_CurrentOffset & " ProxyName: " & $_OutPut[$i][0] & @TAB & " LocalizedName: " & $_OutPut[$i][1] & @CRLF)
-	Next
-
-	Return $_OutPut
-EndFunc   ;==>IndexStringList
-
-
-
-;;--------------------------------------------------------------------------------
-;;      IterateAllObjectList()
-;; 		Description:		Iterate object even if they dont have guid, also provide true names
-;;--------------------------------------------------------------------------------
-Func IterateAllObjectList($_displayInfo)
-	If $_displayInfo = 1 Then ConsoleWrite("-----Iterating through Actors------" & @CRLF)
-	If $_displayInfo = 1 Then ConsoleWrite("First Actor located at: " & $_itrObjectManagerD & @CRLF)
-	$_CurOffset = $_itrObjectManagerD
-	$_Count = _MemoryRead($_itrObjectManagerCount, $d3, 'int')
-	Dim $OBJ[$_Count + 1][10]
-	If $_displayInfo = 1 Then ConsoleWrite("Number of Actors : " & $_Count & @CRLF)
-	For $i = 0 To $_Count Step +1
-		$_GUID = _MemoryRead($_CurOffset + 0x4, $d3, 'ptr')
-		$_NAME = _MemoryRead($_CurOffset + 0x8, $d3, 'char[64]')
-		$_POS_X = _MemoryRead($_CurOffset + 0xB0, $d3, 'float')
-		$_POS_Y = _MemoryRead($_CurOffset + 0xB4, $d3, 'float')
-		$_POS_Z = _MemoryRead($_CurOffset + 0xB8, $d3, 'float')
-		$_DATA = _MemoryRead($_CurOffset + 0x200, $d3, 'int')
-		$_DATA2 = _MemoryRead($_CurOffset + 0x1D0, $d3, 'int')
-		$_DATA3 = _MemoryRead($_CurOffset + 0x1C4, $d3, 'int')
-		$CurrentLoc = GetCurrentPos()
-		$xd = $_POS_X - $CurrentLoc[0]
-		$yd = $_POS_Y - $CurrentLoc[1]
-		$zd = $_POS_Z - $CurrentLoc[2]
-		$Distance = Sqrt($xd * $xd + $yd * $yd + $zd * $zd)
-		$OBJ[$i][0] = $i
-		$OBJ[$i][1] = $_GUID
-		$OBJ[$i][2] = $_NAME
-		$OBJ[$i][3] = $_POS_X
-		$OBJ[$i][4] = $_POS_Y
-		$OBJ[$i][5] = $_POS_Z
-		$OBJ[$i][6] = $_DATA
-		$OBJ[$i][7] = $_DATA2
-		$OBJ[$i][8] = $Distance
-		$OBJ[$i][9] = $_CurOffset
-		If $_displayInfo = 1 Then ConsoleWrite($i & @TAB & " : " & $_CurOffset & " " & $_GUID & " : " & $_DATA & " " & $_DATA2 & " " & @TAB & $_POS_X & " " & $_POS_Y & " " & $_POS_Z & " Dist: " & $Distance & @TAB & $_NAME & " data3: " & $_DATA3 & @CRLF)
-		;if $_displayINFO = 1 then ConsoleWrite($i & @TAB&" : " & $_POS_X & @TAB& $_POS_Y & @TAB & $_POS_Z & @TAB& $_NAME & @crlf)
-		$_CurOffset = $_CurOffset + $_ObjmanagerStrucSize
-	Next
-	Return $OBJ
-EndFunc   ;==>IterateAllObjectList
-
 
 ;;--------------------------------------------------------------------------------
 ;;	IterateObjectList()
@@ -5416,7 +5189,7 @@ Func StashAndRepair()
 		If $ToStash <> -1 Then
 			Send("{SPACE}")
 			Sleep(500)
-			InteractByActorName('Player_Shared_Stash')
+			InteractByActorName($actorStash)
 			Sleep(700)
 			Local $stashtry = 0
 
@@ -5424,7 +5197,7 @@ Func StashAndRepair()
 				If $stashtry <= 4 Then
 					_log('Fail to open Stash')
 					$stashtry += 1
-					InteractByActorName("Player_Shared_Stash")
+					InteractByActorName($actorStash)
 					Sleep(Random(100, 200))
 
 				Else
@@ -5508,7 +5281,7 @@ Func StashAndRepair()
 		If $ToStash <> -1 Then
 			Send("{SPACE}")
 			Sleep(500)
-			InteractByActorName('Player_Shared_Stash')
+			InteractByActorName($actorStash)
 			Sleep(700)
 			Local $stashtry = 0
 
@@ -5516,7 +5289,7 @@ Func StashAndRepair()
 				If $stashtry <= 4 Then
 					_log('Fail to open Stash')
 					$stashtry += 1
-					InteractByActorName("Player_Shared_Stash")
+					InteractByActorName($actorStash)
 					Sleep(Random(100, 200))
 
 				Else
