@@ -1,10 +1,12 @@
+#include <Maths.au3>
+
 ;;--------------------------------------------------------------------------------
 ; Function:                     UsePath(ByRef $path)
 ; Description:
 ;;--------------------------------------------------------------------------------
 Func UsePath(ByRef $path)
 
-	Local $posIndex = getNextIndex($path, 0)
+	Local $posIndex = GetNextIndex($path, 0)
 
 	Local $lastIndexPos = 0
 	For $i = 0 To UBound($path, 1) - 1
@@ -16,39 +18,39 @@ Func UsePath(ByRef $path)
 	$grabtimeout = 0
 	$killtimeout = 0
 
-	$Coords = FromD3toScreenCoords($path[$posIndex][1], $path[$posIndex][2], $path[$posIndex][3])
+	$Coords = FromD3ToScreenCoords($path[$posIndex][1], $path[$posIndex][2], $path[$posIndex][3])
 	MouseMove($Coords[0], $Coords[1], 3)
 	$LastCP = GetCurrentPos()
 	MouseDown("middle")
 	Sleep(10)
 	While 1
 
-		If revive($path) Then
+		If Revive($path) Then
 			Return
 		EndIf
 
-		GestSpellcast(0, 0, 0)
+		ManageSpellCasting(0, 0, 0)
 
-		If _playerdead() Or $GameOverTime = True Or $GameFailed = 1 Or $SkippedMove > 6 Then
+		If IsPlayerDead() Or $CheckGameLength = True Or $GameFailed = 1 Or $SkippedMove > 6 Then
 			$GameFailed = 1
 			ExitLoop
 		EndIf
 		If TimerDiff($TimeOut) > 175000 Then
-			_log("UsePath Timed out ! ! ! ")
+			_Log("UsePath Timed out ! ! ! ")
 			$GameFailed = 1
 			ExitLoop
 		EndIf
 
-		GameOverTime()
+		CheckGameLength()
 
-		If $GameOverTime = True Then
+		If $CheckGameLength = True Then
 			ExitLoop
 		EndIf
 
 		$Distance = GetDistance($path[$posIndex][1], $path[$posIndex][2], $path[$posIndex][3])
 		If $Distance < $path[$posIndex][5] Then
 			If ($posIndex = $lastIndexPos) Then ExitLoop
-			$posIndex = getNextIndex($path, $posIndex + 1)
+			$posIndex = GetNextIndex($path, $posIndex + 1)
 			$TimeOut = TimerInit()
 			$toggletry = 0
 			$grabtimeout = 0
@@ -59,13 +61,13 @@ Func UsePath(ByRef $path)
 		Local $Radius = 25
 		;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 		While _MemoryRead($ClickToMoveToggle, $d3, 'float') = 0
-			;_log("Togglemove : " & _MemoryRead($ClickToMoveToggle, $d3, 'float'))
+			;_Log("Togglemove : " & _MemoryRead($ClickToMoveToggle, $d3, 'float'))
 
 			MouseUp("middle")
 			Attack()
 			MouseDown("middle")
 
-			$Coords = FromD3toScreenCoords($path[$posIndex][1], $path[$posIndex][2], $path[$posIndex][3])
+			$Coords = FromD3ToScreenCoords($path[$posIndex][1], $path[$posIndex][2], $path[$posIndex][3])
 			$angle += $Step
 			$Radius += 45
 
@@ -73,10 +75,10 @@ Func UsePath(ByRef $path)
 			; ci desssous du dirty code pour eviter de cliquer n'importe ou hos de la fenetre du jeu
 			$Coords[0] = $Coords[0] - (Cos($angle) * $Radius)
 			$Coords[1] = $Coords[1] - (Sin($angle) * $Radius)
-			$Coords[0] = min($Coords[0], 790)
-			$Coords[0] = max($Coords[0], 40) ;car on a pas l'envie de cliquer dans les icone du chat
-			$Coords[1] = min($Coords[1], 540);car on a pas l'envie de cliquer dans la bare des skills
-			$Coords[1] = max($Coords[1], 10)
+			$Coords[0] = _Min($Coords[0], 790)
+			$Coords[0] = _Max($Coords[0], 40) ;car on a pas l'envie de cliquer dans les icone du chat
+			$Coords[1] = _Min($Coords[1], 540);car on a pas l'envie de cliquer dans la bare des skills
+			$Coords[1] = _Max($Coords[1], 10)
 
 			$Coords_RndX = Random($Coords[0] - 20, $Coords[0] + 20)
 			$Coords_RndY = Random($Coords[1] - 20, $Coords[1] + 20)
@@ -95,15 +97,15 @@ Func UsePath(ByRef $path)
 			MouseMove($Coords_RndX, $Coords_RndY, 3) ;little randomisation
 
 			$toggletry += 1
-			;_log("Tryin move :" & " x:" & $_x & " y:" & $_y & "coords: " & $Coords[0] & "-" & $Coords[1] & " angle: " & $angle & " Toggle try: " & $toggletry)
-			If $angle >= 2.0 * $PI Or $toggletry > 9 Or _playerdead() Then
+			;_Log("Tryin move :" & " x:" & $_x & " y:" & $_y & "coords: " & $Coords[0] & "-" & $Coords[1] & " angle: " & $angle & " Toggle try: " & $toggletry)
+			If $angle >= 2.0 * $PI Or $toggletry > 9 Or IsPlayerDead() Then
 				$SkippedMove += 1
-				_log("Toggle try: " & $toggletry & " Movement Skipped : " & $SkippedMove & " Pos Skipped : " & $posIndex)
+				_Log("Toggle try: " & $toggletry & " Movement Skipped : " & $SkippedMove & " Pos Skipped : " & $posIndex)
 
 				If ($posIndex = $lastIndexPos) Then ExitLoop 2
-				$newIndex = getNextPosIndex($path, $posIndex + 1)
+				$newIndex = GetNextPosIndex($path, $posIndex + 1)
 				If ($newIndex <> $posIndex) Then
-					_log("MoveToPos pos " & $posIndex & " to pos " & $newIndex)
+					_Log("MoveToPos pos " & $posIndex & " to pos " & $newIndex)
 					$posIndex = $newIndex
 					$TimeOut = TimerInit()
 					$toggletry = 0
@@ -119,25 +121,25 @@ Func UsePath(ByRef $path)
 		Sleep(10)
 
 
-		;ConsoleWrite("currentloc: " & $_Myoffset & " - "&$CurrentLoc[0] & " : " & $CurrentLoc[1] & " : " & $CurrentLoc[2] &@CRLF)
-		;ConsoleWrite("distance/m range: " & $Distance & " : " & $pos[4] & @CRLF)
+		;_Log("currentloc: " & $_Myoffset & " - "&$CurrentLoc[0] & " : " & $CurrentLoc[1] & " : " & $CurrentLoc[2] &@CRLF)
+		;_Log("distance/m range: " & $Distance & " : " & $pos[4] & @CRLF)
 		If $path[$posIndex][4] = 1 And GetDistance($LastCP[0], $LastCP[1], $LastCP[2]) >= $a_range / 2 Then
 			MouseUp("middle")
 			$LastCP = GetCurrentPos()
 			Attack()
 			MouseDown("middle")
-			;ConsoleWrite("Last check: " & $Distance & @CRLF)
+			;_Log("Last check: " & $Distance & @CRLF)
 		EndIf
-		$newIndex = getNextIndex($path, $posIndex)
+		$newIndex = GetNextIndex($path, $posIndex)
 		If ($newIndex <> $posIndex) Then
-			_log("MoveToPos pos " & $posIndex & " to pos " & $newIndex)
+			_Log("MoveToPos pos " & $posIndex & " to pos " & $newIndex)
 			$posIndex = $newIndex
 			$TimeOut = TimerInit()
 			$toggletry = 0
 			$grabtimeout = 0
 			$killtimeout = 0
 		EndIf
-		$Coords = FromD3toScreenCoords($path[$posIndex][1], $path[$posIndex][2], $path[$posIndex][3])
+		$Coords = FromD3ToScreenCoords($path[$posIndex][1], $path[$posIndex][2], $path[$posIndex][3])
 
 		$Coords_RndX = Random($Coords[0] - 20, $Coords[0] + 20)
 		$Coords_RndY = Random($Coords[1] - 20, $Coords[1] + 20)
@@ -167,21 +169,21 @@ Func UsePath(ByRef $path)
 EndFunc   ;==>UsePath
 
 
-Func getNextIndex(ByRef $arr, $index)
-	Local $resultIndexPoint = getNextPosIndex($arr, $index)
+Func GetNextIndex(ByRef $arr, $index)
+	Local $resultIndexPoint = GetNextPosIndex($arr, $index)
 	For $i = $index To $resultIndexPoint
 		TraitementSequence($arr, $i)
 	Next
 	Return $resultIndexPoint
-EndFunc   ;==>getNextIndex
+EndFunc   ;==>GetNextIndex
 
 ;;--------------------------------------------------------------------------------
-; Function:                     getNextPosIndex(ByRef $arr, $index)
+; Function:                     GetNextPosIndex(ByRef $arr, $index)
 ; Description:          Return the nearest point with the good direction
 ;
 ; Note(s):              http://www.exaflop.org/docs/cgafaq/cga1.html
 ;;--------------------------------------------------------------------------------
-Func getNextPosIndex(ByRef $arr, $index)
+Func GetNextPosIndex(ByRef $arr, $index)
 	Local $size = UBound($arr, 1)
 	If $index >= $size - 1 Then Return $index
 	While ($index < $size And $arr[$index][0] <> 2)
@@ -220,15 +222,4 @@ Func getNextPosIndex(ByRef $arr, $index)
 		$indexPoint += 1
 	WEnd
 	Return $resultIndexPoint
-EndFunc   ;==>getNextPosIndex
-
-
-Func max($val1, $val2)
-	If ($val1 > $val2) Then Return $val1
-	Return $val2
-EndFunc   ;==>max
-
-Func min($val1, $val2)
-	If ($val1 < $val2) Then Return $val1
-	Return $val2
-EndFunc   ;==>min
+EndFunc   ;==>GetNextPosIndex

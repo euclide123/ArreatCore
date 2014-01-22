@@ -1,5 +1,5 @@
 #region ;**** Directives created by AutoIt3Wrapper_GUI ****
-#ConsoleWrite('@@ Debug('   & @ScriptLineNumber & ') : #Region = ' & #Region & @crlf & '>Error code: ' & @error & @crlf) ;### Debug Console
+#_Log('@@ Debug('       & @ScriptLineNumber & ') : #Region = ' & #Region & @crlf & '>Error code: ' & @error & @crlf) ;### Debug Console
 #AutoIt3Wrapper_Icon=lib\ico\icon.ico
 #AutoIt3Wrapper_Compression=0
 #AutoIt3Wrapper_UseUpx=n
@@ -23,19 +23,22 @@ TraySetIcon($icon)
 ;;--------------------------------------------------------------------------------"
 Opt("MouseCoordMode", 2) ;1=absolute, 0=relative, 2=client
 
-#include "variables.au3"
-
-CheckWindowD3()
-;;--------------------------------------------------------------------------------
-;;      Include some files
-;;--------------------------------------------------------------------------------
-#include "lib\sequence.au3"
-#include "lib\settings.au3"
-#include "lib\skills.au3"
-#include "toolkit.au3"
+;; non related bot includes
 #include "GDI_scene.au3"
 #include <WinAPI.au3>
 
+;; file with variables
+#include "variables.au3"
+#include "lib\settings.au3"
+#include "lib\skills.au3"
+
+;;--------------------------------------------------------------------------------
+;;      Include some files
+;;--------------------------------------------------------------------------------
+#include "toolkit.au3"
+#include "lib\sequence.au3"
+
+CheckWindowD3()
 
 ; Automatisation des séquences
 #include <File.au3>
@@ -52,12 +55,12 @@ HotKeySet("{F3}", "TogglePause")
 ;;--------------------------------------------------------------------------------
 ;;      Initialize the offsets
 ;;--------------------------------------------------------------------------------
-AdlibRegister("Die2Fast", 1200000)
-offsetlist()
+AdlibRegister("DieTooFast", 1200000)
+OffsetList()
 LoadingSNOExtended()
 Func _dorun()
-	_log("======== new run ==========")
-	While Not offsetlist()
+	_Log("======== new run ==========")
+	While Not OffsetList()
 		Sleep(40)
 	WEnd
 
@@ -75,49 +78,49 @@ Func _dorun()
 
 	If $hotkeycheck = 0 Then
 		CheckHotkeys()
-		Auto_spell_init()
-		GestSpellInit()
-		Load_Attrib_GlobalStuff()
+		AutoModeInitSpells()
+		ManageSpellInit()
+		LoadAttributeGlobalStuff()
 		$maxhp = GetAttribute($_MyGuid, $Atrib_Hitpoints_Max_Total) ; dirty placement
-		_log("Max HP : " & $maxhp)
+		_Log("Max HP : " & $maxhp)
 		GetMaxResource($_MyGuid, $namecharacter)
 		Send("t")
 		Sleep(500)
-		Detect_Str_full_inventory()
+		DetectStrInventoryFull()
 	EndIf
 
 	GetAct()
-	Global $shrinebanlist = ""
+	Global $CheckTakeShrinebanlist = ""
 	EmergencyStopCheck()
 
-	If _checkRepair() Then
-		NeedRepair()
+	If IsItemDamaged() Then
+		TpRepairAndBack()
 	Else
 		$NeedRepairCount = 0
 	EndIf
 
 	Sleep(100)
 
-	enoughtPotions()
+	CheckEnoughPotions()
 
-	init_sequence()
-	sequence()
+	InitSequence()
+	Sequence()
 
-	Global $shrinebanlist = ""
-	_log("End Run" & " gamefailled: " & $GameFailed)
+	Global $CheckTakeShrinebanlist = ""
+	_Log("End Run" & " gamefailled: " & $GameFailed)
 	Return True
 EndFunc   ;==>_dorun
 
 Func _botting()
-	_log("Start Botting")
+	_Log("Start Botting")
 	$bottingtime = TimerInit()
 	While 1
-		_log("new main loop")
-		offsetlist()
+		_Log("new main loop")
+		OffsetList()
 
-		If _onloginscreen() Then
-			_log("LOGIN")
-			_logind3()
+		If IsOnLoginScreen() Then
+			_Log("LOGIN")
+			LoginD3()
 			Sleep(Random(60000, 120000))
 		EndIf
 
@@ -125,10 +128,10 @@ Func _botting()
 
 		; Si Choix_Act_Run <> 0 le bot passe en mode automatique
 		If $Choix_Act_Run <> 0 Then
-			_gestionDesQuete()
+			_SelectQuest()
 		EndIf
 
-		If _inmenu() And _onloginscreen() = False Then
+		If IsInMenu() And IsOnLoginScreen() = False Then
 			RandSleep()
 			$DeathCountToggle = True
 		EndIf
@@ -137,22 +140,22 @@ Func _botting()
 		If ($PartieSolo = 'false') Then
 			Switch Random(1, 2, 1)
 				Case 1
-					dialTchat("Bonjour c'est partie pour un run")
+					WriteInChat("Bonjour c'est partie pour un run")
 				Case 2
-					dialTchat("Je vous souhaite LA bienvenuE")
+					WriteInChat("Je vous souhaite LA bienvenuE")
 			EndSwitch
 		EndIf
-		_resumegame()
+		ResumeGame()
 
-		While _onloginscreen() = False And _ingame() = False
-			_log("Ingame False")
-			If _checkdisconnect() Then
+		While IsOnLoginScreen() = False And IsInGame() = False
+			_Log("Ingame False")
+			If IsDisconnected() Then
 				$disconnectcount += 1
-				_log("Disconnected dc4")
+				_Log("Disconnected dc4")
 				Sleep(1000)
-				_randomclick(398, 349)
+				RandomMouseClick(398, 349)
 				Sleep(1000)
-				While Not (_onloginscreen() Or _inmenu())
+				While Not (IsOnLoginScreen() Or IsInMenu())
 					Sleep(Random(10000, 15000))
 				WEnd
 				ContinueLoop 2
@@ -161,23 +164,23 @@ Func _botting()
 			If ($PartieSolo = 'false') Then
 				Switch Random(1, 2, 1)
 					Case 1
-						dialTchat("En avant l'aventure")
+						WriteInChat("En avant l'aventure")
 					Case 2
-						dialTchat("La chasse au montres est ouverte")
+						WriteInChat("La chasse au montres est ouverte")
 				EndSwitch
 			EndIf
-			_resumegame()
+			ResumeGame()
 		WEnd
 
-		If _onloginscreen() = False And _playerdead() = False And _ingame() = True Then
+		If IsOnLoginScreen() = False And IsPlayerDead() = False And IsInGame() = True Then
 			Global $timermaxgamelength = TimerInit()
-			Global $GameOverTime = False
+			Global $CheckGameLength = False
 			If _dorun() = True Then
-				$handle_banlist1 = ""
-				$handle_banlist2 = ""
-				$handle_banlistdef = ""
-				$Try_ResumeGame = 0
-				$Try_Logind3 = 0
+				$HandleBanList1 = ""
+				$HandleBanList2 = ""
+				$HandleBanListdef = ""
+				$TryResumeGame = 0
+				$TryLoginD3 = 0
 				$BreakCounter += 1;on ce met a compter les games avant la pause
 				$games += 1
 				$gamecounter += 1
@@ -185,36 +188,36 @@ Func _botting()
 		EndIf
 
 
-		If _onloginscreen() = False And _intown() = False And _playerdead() = False Then
+		If IsOnLoginScreen() = False And IsInTown() = False And IsPlayerDead() = False Then
 			GoToTown()
 		EndIf
 
-		_log("start GoToTown from main 2")
-		If _intown() Or _playerdead() And _onloginscreen() = False Then
-			If _playerdead() = False And $games >= ($repairafterxxgames + Random(-2, 2, 1)) Then
+		_Log("start GoToTown from main 2")
+		If IsInTown() Or IsPlayerDead() And IsOnLoginScreen() = False Then
+			If IsPlayerDead() = False And $games >= ($repairafterxxgames + Random(-2, 2, 1)) Then
 				StashAndRepair()
 				$games = 0
 			EndIf
 
-			If Not _checkdisconnect() Then
-				_leavegame()
+			If Not IsDisconnected() Then
+				LeaveGame()
 			Else
-				_log("Disconnected dc2")
+				_Log("Disconnected dc2")
 				$disconnectcount += 1
 				Sleep(1000)
-				_randomclick(398, 349)
-				_randomclick(398, 349)
+				RandomMouseClick(398, 349)
+				RandomMouseClick(398, 349)
 			EndIf
 
-			If _playerdead() Then
+			If IsPlayerDead() Then
 				Sleep(Random(11000, 13000))
 			EndIf
 		EndIf
 
 		Sleep(1000)
-		_log('loop _inmenu() = False And _onloginscreen()')
+		_Log('loop IsInMenu() = False And IsOnLoginScreen()')
 
-		While _inmenu() = False And _onloginscreen() = False
+		While IsInMenu() = False And IsOnLoginScreen() = False
 			Sleep(10)
 		WEnd
 
@@ -223,7 +226,7 @@ EndFunc   ;==>_botting
 
 Func MarkPos()
 	$currentloc = GetCurrentPos()
-	ConsoleWrite($currentloc[0] & ", " & $currentloc[1] & ", " & $currentloc[2] & ",1,25" & @CRLF);
+	_Log($currentloc[0] & ", " & $currentloc[1] & ", " & $currentloc[2] & ",1,25" & @CRLF);
 EndFunc   ;==>MarkPos
 
 HotKeySet("{ù}", "MarkPos")
@@ -231,12 +234,12 @@ HotKeySet("{ù}", "MarkPos")
 Func MonsterListing()
 	$Object = IterateObjectList(0)
 	$foundtarget = 0
-	ConsoleWrite("monster listing ===========================" & @CRLF)
+	_Log("monster listing ===========================" & @CRLF)
 	For $i = 0 To UBound($Object, 1) - 1
 		_ArraySort($Object, 0, 0, 0, 8)
-		ConsoleWrite($Object[$i][2] & @CRLF)
+		_Log($Object[$i][2] & @CRLF)
 		If $Object[$i][1] <> 0xFFFFFFFF And $Object[$i][7] <> -1 And $Object[$i][8] < 100 Then
-			ConsoleWrite($Object[$i][2] & @CRLF)
+			_Log($Object[$i][2] & @CRLF)
 		EndIf
 	Next
 EndFunc   ;==>MonsterListing
@@ -246,21 +249,21 @@ HotKeySet("{µ}", "MonsterListing")
 Func Testing_IterateObjetcsList()
 
 	Local $index, $offset, $count, $item[10]
-	startIterateObjectsList($index, $offset, $count)
+	StartIterateObjectsList($index, $offset, $count)
 
-	While iterateObjectsList($index, $offset, $count, $item)
+	While IterateObjectsList($index, $offset, $count, $item)
 
 		For $i = 0 To UBound($item) - 1
-			_log($item[$i])
+			_Log($item[$i])
 		Next
 
 		$ACD = GetACDOffsetByACDGUID($item[0])
 		$CurrentIdAttrib = _memoryread($ACD + 0x120, $d3, "ptr");
 		$quality = GetAttribute($CurrentIdAttrib, $Atrib_Item_Quality_Level)
 
-		_log('quality : ' & $quality)
-		_log("--------")
-		_log("--------")
+		_Log('quality : ' & $quality)
+		_Log("--------")
+		_Log("--------")
 	WEnd
 EndFunc   ;==>Testing_IterateObjetcsList
 
@@ -268,7 +271,7 @@ EndFunc   ;==>Testing_IterateObjetcsList
 
 Func Testing()
 
-	offsetlist()
+	OffsetList()
 	GetRepairTab()
 	StashAndRepair()
 
@@ -453,7 +456,7 @@ Func Read_Scene()
 			EndIf
 		Next
 
-		_log("fin Iteration")
+		_Log("fin Iteration")
 		Sleep(500)
 	WEnd
 
@@ -461,8 +464,8 @@ EndFunc   ;==>Read_Scene
 
 
 Func Drawn()
-	_log("taille du tab Scene-> " & UBound($Scene_table_totale))
-	_log("taille du tab NavCell-> " & UBound($NavCell_Table_Totale))
+	_Log("taille du tab Scene-> " & UBound($Scene_table_totale))
+	_Log("taille du tab NavCell-> " & UBound($NavCell_Table_Totale))
 	;_ArrayDisplay($Scene_table_id_scene)
 	Dim $buffMax[2] = [0, 0]
 	Dim $buffMin[2] = [999999999, 99999999]
@@ -492,7 +495,7 @@ Func Drawn()
 		EndIf
 	Next
 
-	Initiate_GDIpicture($Scene_table_totale[$indexMax[1]][8] - $Scene_table_totale[$indexMin[1]][5], $Scene_table_totale[$indexMax[0]][7] - $Scene_table_totale[$indexMin[0]][4])
+	InitiateGDIPicture($Scene_table_totale[$indexMax[1]][8] - $Scene_table_totale[$indexMin[1]][5], $Scene_table_totale[$indexMax[0]][7] - $Scene_table_totale[$indexMin[0]][4])
 
 
 
@@ -506,25 +509,25 @@ Func Drawn()
 				$vx = ($Scene_table_totale[$i][4] - $Scene_table_totale[$indexMin[0]][4]) + $NavCell_Table_Totale[$y][0]
 				$vy = ($Scene_table_totale[$i][5] - $Scene_table_totale[$indexMin[1]][5]) + $NavCell_Table_Totale[$y][1]
 
-				;_log($i & "-" &  $y)
+				;_Log($i & "-" &  $y)
 				;_arraydisplay($NavCell_Table_Totale)
 				$tx = $NavCell_Table_Totale[$y][3] - $NavCell_Table_Totale[$y][0]
 				$ty = $NavCell_Table_Totale[$y][4] - $NavCell_Table_Totale[$y][1]
 				$flag = $NavCell_Table_Totale[$y][6]
 
-				;_log($vx & " - " & $vy)
-				;_log($tx & " - " & $ty)
+				;_Log($vx & " - " & $vy)
+				;_Log($tx & " - " & $ty)
 
-				Draw_Nav($vy, $vx, $flag, $ty, $tx)
+				DrawNav($vy, $vx, $flag, $ty, $tx)
 
 			EndIf
 		Next
 
-		;Draw_Nav(($Scene_table_totale[$i][5] - $Scene_table_totale[$indexMin[1]][5]), ($Scene_table_totale[$i][4] - $Scene_table_totale[$indexMin[0]][4]), 3, $Scene_table_totale[$i][8] - $Scene_table_totale[$i][5], $Scene_table_totale[$i][7] - $Scene_table_totale[$i][4])
+		;DrawNav(($Scene_table_totale[$i][5] - $Scene_table_totale[$indexMin[1]][5]), ($Scene_table_totale[$i][4] - $Scene_table_totale[$indexMin[0]][4]), 3, $Scene_table_totale[$i][8] - $Scene_table_totale[$i][5], $Scene_table_totale[$i][7] - $Scene_table_totale[$i][4])
 	Next
 
-	Save_GDIpicture()
-	Load_GDIpicture()
+	SaveGDIPicture()
+	LoadGDIPicture()
 EndFunc   ;==>Drawn
 
 HotKeySet("{F1}", "Testing")
@@ -547,7 +550,7 @@ Func CheckHotkeys()
 	Sleep(2000)
 	Send("i")
 	Sleep(500)
-	If _checkInventoryopen() = False Then
+	If IsInventoryOpened() = False Then
 		WinSetOnTop("Diablo III", "", 0)
 		MsgBox(0, "Mauvais Hotkey", "La touche pour ouvrir l'inventaire doit être i" & @CRLF)
 		Terminate()
@@ -555,12 +558,12 @@ Func CheckHotkeys()
 	Sleep(185)
 	Send("{SPACE}") ; make sure we close everything
 	Sleep(170)
-	If _checkInventoryopen() = True Then
+	If IsInventoryOpened() = True Then
 		WinSetOnTop("Diablo III", "", 0)
 		MsgBox(0, "Mauvais Hotkey", "La touche pour fermer les fenêtres doit être ESPACE" & @CRLF)
 		Terminate()
 	EndIf
-	ConsoleWrite("Check des touches OK" & @CRLF)
+	_Log("Check des touches OK" & @CRLF)
 	$hotkeycheck = 1
 EndFunc   ;==>CheckHotkeys
 

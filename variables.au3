@@ -1,10 +1,21 @@
 ;--------------------------------------------------------------------
 ;	NE PAS TIDY CE FICHIER ! (CTRL + T)
 ;--------------------------------------------------------------------
+#include-once
 
+; const
+Global Const $PI = 3.141593
+
+; check ui error
+Global Const $MODE_INVENTORY_FULL 		= 0
+Global Const $MODE_STASH_FULL	  		= 1
+Global Const $MODE_BOSS_TP_DENIED 		= 2
+Global Const $MODE_NO_IDENTIFIED_ITEM 	= 3
+
+; ?
 Global $ClickToMoveToggle
 Global $GameFailed
-Global $GameOverTime
+Global $CheckGameLength
 Global $ResActivated
 Global $Step
 Global $a_range
@@ -14,7 +25,7 @@ Global $BanmonsterList
 Global $File_Sequence
 Global $ResLife
 Global $Res_compt
-Global $TakeShrines
+Global $TakeCheckTakeShrines
 Global $UsePath
 Global $nb_die_t
 Global $rdn_die_t
@@ -31,6 +42,10 @@ Global $Byte_Full_Inventory[2]
 Global $Byte_Full_Stash[2]
 Global $GrabListTab
 Global $_ActorAtrib_4
+Global $_MyACDWorld
+Global $_MyCharType
+Global $_MyGuid
+Global $_Myoffset
 Global $_defcount
 Global $_deflink
 Global $_defptr
@@ -46,6 +61,7 @@ Global $ofs_ActorAtrib_StrucSize
 Global $ofs_ActorDef
 Global $ofs_LocalActor_atribGUID
 Global $ofs_MonsterDef
+
 
 ; Variable global pour Automatisation des séquences
 Global $Act1_Hero_Axe_Z
@@ -103,7 +119,7 @@ Global $GoldByRepaire           = 0;global pour récupèré l'or
 Global $GoldBySale              = 0
 Global $ItemToRecycle           = 0
 Global $PauseRepasCounter       = 0
-Global $ShrineTaken             = 0;global pour compter elite,item recyclé et Shrine
+Global $CheckTakeShrineTaken             = 0;global pour compter elite,item recyclé et CheckTakeShrine
 Global $Xp_Moy_HrsPerte         = 0;globale pour xp et gold /heure temps de jeu
 Global $Xp_Moy_Hrsgame          = 0
 Global $dif_timer_stat_game     = 0;global de temps de pause et temps de jeu
@@ -115,6 +131,11 @@ Global $tempsPauseGame          = 0
 Global $tempsPauserepas         = 0;global pour récupèré temps de pause
 ;fin global ajouter
 
+; global sur la fenetre d3
+Global $posd3                   = WinGetPos("Diablo III")
+Global $DebugX                  = $posd3[0] + $posd3[2] + 10
+Global $DebugY                  = $posd3[1]
+
 Global $Ban_ItemACDCheckList    = "a1_|a3_|a2_|a4_|Lore_Book_Flippy|Topaz_|Emeraude_|Rubis_|Amethyste_|healthPotion_Mythic|GoldCoins|GoldSmall|GoldMedium|GoldLarge"
 Global $Ban_endstrItemList      = "_projectile"
 Global $Ban_startstrItemList    = "barbarian_|Demonhunter_|Monk_|WitchDoctor_|WD_|Enchantress_|Scoundrel_|Templar_|Wizard_|monsterAffix_|Demonic_|Generic_|fallenShaman_fireBall_impact|demonFlyer_B_clickable_corpse_01|grenadier_proj_trail"
@@ -123,9 +144,7 @@ Global $Current_Hero_Z          = 0
 Global $Death                   = 0
 Global $DeathCountToggle        = True
 Global $DebugMessage
-Global $DebugX                  = $posd3[0] + $posd3[2] + 10
-Global $DebugY                  = $posd3[1]
-Global $Die2FastCount           = 0
+Global $DieTooFastCount           = 0
 Global $EBP                     = 0
 Global $GF                      = 0
 Global $GOLD                    = 0
@@ -135,7 +154,7 @@ Global $GOLDMOY                 = 0
 Global $GOLDMOYbyH              = 0
 Global $GameDifficulty          = 0
 Global $GameFailed              = 0
-Global $GameOverTime            = False
+Global $CheckGameLength            = False
 Global $GetACD
 Global $Hero_Axe_Z              = 10
 Global $IgnoreItemList          = ""
@@ -153,8 +172,8 @@ Global $RepairTab               = 0
 Global $SkippedMove             = 0
 Global $Step                    = $PI / 6
 Global $Totalruns               = 1
-Global $Try_Logind3             = 0
-Global $Try_ResumeGame          = 0
+Global $TryLoginD3             = 0
+Global $TryResumeGame          = 0
 Global $act                     = 0
 Global $area                    = 0
 Global $begin_timer_stat        = 0
@@ -169,15 +188,14 @@ Global $gamecounter             = 0
 Global $games                   = 1
 Global $grabskip                = 0
 Global $grabtimeout             = 0
-Global $handle_banlist1         = ""
-Global $handle_banlist2         = ""
-Global $handle_banlistdef       = ""
+Global $HandleBanList1         = ""
+Global $HandleBanList2         = ""
+Global $HandleBanListdef       = ""
 Global $hotkeycheck             = 0
 Global $killtimeout             = 0
 Global $maxhp
 Global $mousedownleft           = 0
 Global $nameCharacter
-Global $posd3                   = WinGetPos("Diablo III")
 Global $spell_gestini_verif     = 0
 Global $success                 = 0
 Global $successratio            = 1
@@ -193,7 +211,6 @@ Global $timeforskill            = 0
 Global $timer_stat_run_moyen    = 0
 Global $timer_stat_total        = 0
 Global $timermaxgamelength      = 0
-Global Const $PI                = 3.141593
 
 ;var xp
 Global $Expencours              = 0
@@ -210,3 +227,4 @@ Global $actorStash = "Player_Shared_Stash"
 ; decor
 Global $decorlist = ""
 Global $bandecorlist = ""
+

@@ -2,7 +2,7 @@
 	Extension permettant de gerer les temps de pause avec déconnection
 #ce ----------------------------------------------------------------------------
 
-Func _pauseRepas($nbRun)
+Func PauseRepas($nbRun)
 
 	Local $petitDejeuner = "08:00"
 	Local $dejeuner = "12:20"
@@ -22,7 +22,7 @@ Func _pauseRepas($nbRun)
 
 	;Initialisation des variables à la mise en route du BOT
 	If ($nbRun = 1) Then
-		ConsoleWrite('Initialisation au lancement du bot' & @CRLF)
+		_Log('Initialisation au lancement du bot' & @CRLF)
 		If $Heure > $petitDejeuner Then
 			$petitDejeunerOK = 1
 		EndIf
@@ -41,8 +41,8 @@ Func _pauseRepas($nbRun)
 	EndIf
 
 	;Initialisation des variable entre 00:00 et 01:00 du matin
-	If ($nbRun > 1) And ($heure > "00:00" And $heure < "01:00") Then
-		ConsoleWrite('Initialisation entre 00:00 et 01:00' & @CRLF)
+	If ($nbRun > 1) And ($Heure > "00:00" And $Heure < "01:00") Then
+		_Log('Initialisation entre 00:00 et 01:00' & @CRLF)
 		$petitDejeunerOK = 0
 		$dejeunerOK = 0
 		$gouterOK = 0
@@ -52,62 +52,62 @@ Func _pauseRepas($nbRun)
 
 	If $Heure > $petitDejeuner And $petitDejeunerOK = 0 Then
 		$petitDejeunerOK = 1
-		ConsoleWrite('Pause à ' & $Heure & ' --> petit dejeuner' & @CRLF)
-		_deconnection()
+		_Log('Pause à ' & $Heure & ' --> petit dejeuner' & @CRLF)
+		Disconnect()
 		Sleep($tempsPause)
-		_connection()
+		Connection()
 	EndIf
 
 	If $Heure > $dejeuner And $dejeunerOK = 0 Then
-		ConsoleWrite('Pause à ' & $Heure & ' --> dejeuner' & @CRLF)
+		_Log('Pause à ' & $Heure & ' --> dejeuner' & @CRLF)
 		$dejeunerOK = 1
-		_deconnection()
+		Disconnect()
 		Sleep($tempsPause)
-		_connection()
+		Connection()
 	EndIf
 
 	If $Heure > $gouter And $gouterOK = 0 Then
-		ConsoleWrite('Pause à ' & $Heure & ' --> gouter' & @CRLF)
+		_Log('Pause à ' & $Heure & ' --> gouter' & @CRLF)
 		$gouterOK = 1
-		_deconnection()
+		Disconnect()
 		Sleep($tempsPause)
-		_connection()
+		Connection()
 	EndIf
 
 	If $Heure > $diner And $dinerOK = 0 Then
-		ConsoleWrite('Pause à ' & $Heure & ' --> diner' & @CRLF)
+		_Log('Pause à ' & $Heure & ' --> diner' & @CRLF)
 		$dinerOK = 1
-		_deconnection()
+		Disconnect()
 		Sleep($tempsPause)
-		_connection()
+		Connection()
 	EndIf
 
 	If $Heure > $collation And $collationOK = 0 Then
-		ConsoleWrite('Pause à ' & $Heure & ' --> collation' & @CRLF)
+		_Log('Pause à ' & $Heure & ' --> collation' & @CRLF)
 		$collationOK = 1
-		_deconnection()
+		Disconnect()
 		Sleep($tempsPause)
-		_connection()
+		Connection()
 	EndIf
 
-EndFunc   ;==>_pauseRepas
+EndFunc   ;==>PauseRepas
 
-Func _deconnection()
+Func Disconnect()
 	Send("{ESCAPE}")
 	MouseMove(Random(315, 478, 1), Random(348, 362, 1), Random(12, 14, 1))
 	MouseClick("left")
-EndFunc   ;==>_deconnection
+EndFunc   ;==>Disconnect
 
-Func _connection()
-	If _onloginscreen() Then
-		_log("LOGIN")
-		_logind3()
+Func Connection()
+	If IsOnLoginScreen() Then
+		_Log("LOGIN")
+		LoginD3()
 		Local $Random = Random(60000, 120000, 1)
 		Sleep($Random)
 		$PauseRepasCounter += 1;on compte les pause repas effectuer
 		$tempsPauserepas += ($tempsPause + $Random);on compte le temps de pause repas
-		$Try_Logind3 = 0
+		$TryLoginD3 = 0
 	EndIf
-EndFunc   ;==>_connection
+EndFunc   ;==>Connection
 
 

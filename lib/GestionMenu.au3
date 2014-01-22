@@ -1,19 +1,19 @@
 #cs ----------------------------------------------------------------------------
-
+	
 	Extension permettant de gerer le menu
-
+	
 #ce ----------------------------------------------------------------------------
 
 ;--------------------------------------------------------------
 ; Choix de l'acte
 ;-------------------------------------------------------------
 
-Func _choixgame($choixgame, $auto)
+Func SelectGameType($SelectGameType, $auto)
 
-	Local $xChoixGame, $yChoixGame, $posChoixGame
+	Local $xSelectGameType, $ySelectGameType, $posSelectGameType
 	;Automatisation des sequences sur enchainement de run
 	If $auto Then
-		Switch $choixgame
+		Switch $SelectGameType
 			Case 1
 				$Hero_Axe_Z = $Act1_Hero_Axe_Z
 				$File_Sequence = $SequenceFileAct1
@@ -38,7 +38,7 @@ Func _choixgame($choixgame, $auto)
 
 	;Selection du Heros
 	If ($Totalruns = 1) And ($TypedeBot = 1) Then
-		_choixHereos()
+		SelectHero()
 	EndIf
 
 	Sleep(Random(2500, 3000, 1));pause pour laiser temps quiter la game
@@ -46,28 +46,28 @@ Func _choixgame($choixgame, $auto)
 	If $TypedeBot <> 2 Then
 		;Selection -> CHANGER DE QUETE
 		Sleep(Random(300, 400, 1))
-		_randomclick(106, 270)
+		RandomMouseClick(106, 270)
 		Sleep(Random(300, 400, 1))
 
 		;Selection de la difficulte et de la puissance des monstres
 		If ($Totalruns = 1) And ($TypedeBot = 1) Then
-			_choixDifPm()
+			SelectDifficultyMonsterPower()
 		EndIf
 
 		;Selection de la quête
 
 		;Initialisation de la quete 1.2 preparation de l'arborescense des quêtes comparaison au choix des portails en reduisant l'arbo
-		$xChoixGame = Random(100, 200)
-		;$yChoixGame=170
-		$yChoixGame = Random(169, 171)
+		$xSelectGameType = Random(100, 200)
+		;$ySelectGameType=170
+		$ySelectGameType = Random(169, 171)
 
 		;Selection d'une quête au hasard
-		MouseMove($xChoixGame, $yChoixGame + 80, Random(12, 14, 1))
+		MouseMove($xSelectGameType, $ySelectGameType + 80, Random(12, 14, 1))
 		MouseClick("left")
 		Sleep(Random(600, 800, 1))
 
 		;vitesse de test ok =15
-		MouseMove($xChoixGame, $yChoixGame, Random(12, 14, 1))
+		MouseMove($xSelectGameType, $ySelectGameType, Random(12, 14, 1))
 
 		;valeur de test ok 27 ... mini pour balayer toutes les quêtes 26
 		For $i = 1 To Random(27, 28, 1) Step 1
@@ -82,7 +82,7 @@ Func _choixgame($choixgame, $auto)
 		MouseClick("left")
 		Sleep(Random(600, 800, 1))
 
-		Switch $choixgame
+		Switch $SelectGameType
 			Case 1
 				;selection de la quête 10.1 act 1
 				For $i = 1 To 9 Step 1
@@ -90,14 +90,14 @@ Func _choixgame($choixgame, $auto)
 					Sleep(Random(100, 150, 1))
 				Next
 
-				$posChoixGame = MouseGetPos()
-				$xChoixGame = $posChoixGame[0]
-				$yChoixGame = $posChoixGame[1] + 6
+				$posSelectGameType = MouseGetPos()
+				$xSelectGameType = $posSelectGameType[0]
+				$ySelectGameType = $posSelectGameType[1] + 6
 
-				MouseMove($xChoixGame, $yChoixGame, 15)
+				MouseMove($xSelectGameType, $ySelectGameType, 15)
 				MouseClick("left")
 				Sleep(Random(600, 800, 1))
-				MouseMove($xChoixGame, $yChoixGame + 30, 15)
+				MouseMove($xSelectGameType, $ySelectGameType + 30, 15)
 				MouseClick("left")
 				Sleep(Random(600, 800, 1))
 
@@ -108,14 +108,14 @@ Func _choixgame($choixgame, $auto)
 					Sleep(Random(100, 150, 1))
 				Next
 
-				$posChoixGame = MouseGetPos()
-				$xChoixGame = $posChoixGame[0]
-				$yChoixGame = $posChoixGame[1] + 5
+				$posSelectGameType = MouseGetPos()
+				$xSelectGameType = $posSelectGameType[0]
+				$ySelectGameType = $posSelectGameType[1] + 5
 
-				MouseMove($xChoixGame, $yChoixGame, 15)
+				MouseMove($xSelectGameType, $ySelectGameType, 15)
 				MouseClick("left")
 				Sleep(Random(600, 800, 1))
-				MouseMove($xChoixGame, $yChoixGame + 70, 15)
+				MouseMove($xSelectGameType, $ySelectGameType + 70, 15)
 				MouseClick("left")
 				Sleep(Random(600, 800, 1))
 
@@ -126,14 +126,14 @@ Func _choixgame($choixgame, $auto)
 					Sleep(Random(100, 150, 1))
 				Next
 
-				$posChoixGame = MouseGetPos()
-				$xChoixGame = $posChoixGame[0]
-				$yChoixGame = $posChoixGame[1] + 95
+				$posSelectGameType = MouseGetPos()
+				$xSelectGameType = $posSelectGameType[0]
+				$ySelectGameType = $posSelectGameType[1] + 95
 
-				MouseMove($xChoixGame, $yChoixGame, 15)
+				MouseMove($xSelectGameType, $ySelectGameType, 15)
 				MouseClick("left")
 				Sleep(Random(600, 800, 1))
-				MouseMove($xChoixGame, $yChoixGame + 70, 15)
+				MouseMove($xSelectGameType, $ySelectGameType + 70, 15)
 				MouseClick("left")
 				Sleep(Random(600, 800, 1))
 
@@ -142,13 +142,13 @@ Func _choixgame($choixgame, $auto)
 					MouseWheel("down")
 					Sleep(150)
 				Next
-				$posChoixGame = MouseGetPos()
-				$xChoixGame = $posChoixGame[0]
-				$yChoixGame = $posChoixGame[1] + 64
-				MouseMove($xChoixGame, $yChoixGame, 15)
+				$posSelectGameType = MouseGetPos()
+				$xSelectGameType = $posSelectGameType[0]
+				$ySelectGameType = $posSelectGameType[1] + 64
+				MouseMove($xSelectGameType, $ySelectGameType, 15)
 				MouseClick("left")
 				Sleep(Random(600, 800, 1))
-				MouseMove($xChoixGame, $yChoixGame + 66, 15)
+				MouseMove($xSelectGameType, $ySelectGameType + 66, 15)
 				MouseClick("left")
 				Sleep(Random(600, 800, 1))
 
@@ -157,13 +157,13 @@ Func _choixgame($choixgame, $auto)
 					MouseWheel("down")
 					Sleep(150)
 				Next
-				$posChoixGame = MouseGetPos()
-				$xChoixGame = $posChoixGame[0]
-				$yChoixGame = $posChoixGame[1] + 73
-				MouseMove($xChoixGame, $yChoixGame, 15)
+				$posSelectGameType = MouseGetPos()
+				$xSelectGameType = $posSelectGameType[0]
+				$ySelectGameType = $posSelectGameType[1] + 73
+				MouseMove($xSelectGameType, $ySelectGameType, 15)
 				MouseClick("left")
 				Sleep(Random(600, 800, 1))
-				MouseMove($xChoixGame, $yChoixGame + 44, 15)
+				MouseMove($xSelectGameType, $ySelectGameType + 44, 15)
 				MouseClick("left")
 				Sleep(Random(600, 800, 1))
 
@@ -173,38 +173,38 @@ Func _choixgame($choixgame, $auto)
 					Sleep(Random(100, 150, 1))
 				Next
 
-				$posChoixGame = MouseGetPos()
-				$xChoixGame = $posChoixGame[0]
-				$yChoixGame = $posChoixGame[1] + 95
+				$posSelectGameType = MouseGetPos()
+				$xSelectGameType = $posSelectGameType[0]
+				$ySelectGameType = $posSelectGameType[1] + 95
 
-				MouseMove($xChoixGame, $yChoixGame, 15)
+				MouseMove($xSelectGameType, $ySelectGameType, 15)
 				MouseClick("left")
 				Sleep(Random(600, 800, 1))
-				MouseMove($xChoixGame, $yChoixGame + 70, 15)
+				MouseMove($xSelectGameType, $ySelectGameType + 70, 15)
 				MouseClick("left")
 				Sleep(Random(600, 800, 1))
 		EndSwitch
 
 		;Bp choisir la quete
 		Sleep(Random(300, 400, 1))
-		_randomclick(500, 475)
+		RandomMouseClick(500, 475)
 		; Bp validation de la quête
 		Sleep(Random(300, 400, 1))
-		_randomclick(350, 350)
+		RandomMouseClick(350, 350)
 	EndIf
-EndFunc   ;==>_choixgame
+EndFunc   ;==>SelectGameType
 
 ;Selection de la quete en automatique
-Func _gestionDesQuete()
+Func SelectQuest()
 	If ($Choix_Act_Run = 1) And ($Totalruns = 1) Then
-		_choixgame(1, True)
+		SelectGameType(1, True)
 	EndIf
 	If ($Choix_Act_Run = 2) And ($Totalruns = 1) Then
-		_choixgame(2, True)
+		SelectGameType(2, True)
 	EndIf
 	If ($Choix_Act_Run = 3) Then
 		If ($Totalruns = 1) Then
-			_choixgame(3, True)
+			SelectGameType(3, True)
 		EndIf
 		If ($Totalruns = 2) Then
 			$Hero_Axe_Z = $Act3_Hero_Axe_Z
@@ -212,13 +212,13 @@ Func _gestionDesQuete()
 		EndIf
 	EndIf
 	If ($Choix_Act_Run = 333) Then
-		_choixgame(333, True)
+		SelectGameType(333, True)
 	EndIf
 	If ($Choix_Act_Run = 362) Then
-		_choixgame(362, True)
+		SelectGameType(362, True)
 	EndIf
 	If ($Choix_Act_Run = 373) Then
-		_choixgame(373, True)
+		SelectGameType(373, True)
 	EndIf
 
 	;Selection de la quete en automatique et enchainement des actes
@@ -241,7 +241,7 @@ Func _gestionDesQuete()
 			EndIf
 			$ColonneEnCour = 0
 			$Act_Encour = $ChainageActeEnCour[$ColonneEnCour]
-			_choixgame($Act_Encour, True)
+			SelectGameType($Act_Encour, True)
 
 			;Création d un fichier de log pour le mode automatique
 			If ($Totalruns = 1) Then
@@ -285,7 +285,7 @@ Func _gestionDesQuete()
 				$ColonneEnCour = 0
 			EndIf
 			$Act_Encour = $ChainageActeEnCour[$ColonneEnCour]
-			_choixgame($Act_Encour, True)
+			SelectGameType($Act_Encour, True)
 			$NombreRun_Encour = 1
 			If ($Nombre_de_Run = 0) Then
 				Switch $Act_Encour
@@ -311,9 +311,9 @@ Func _gestionDesQuete()
 			_FileWriteToLine($fileLog, $numLigneFichier, "Act " & $Act_Encour & ": " & $NombreRun_Encour & "/" & $NombreDeRun, 1)
 		EndIf
 	EndIf
-EndFunc   ;==>_gestionDesQuete
+EndFunc   ;==>SelectQuest
 
-Func _choixHereos()
+Func SelectHero()
 
 	; bonton Changer de heros
 	MouseMove(Random(350, 430), Random(515, 520), Random(12, 14, 1))
@@ -405,9 +405,9 @@ Func _choixHereos()
 	;Clic sur le bouton choisir temps mini de chargement du hero 4000ms
 	MouseClick("left")
 	Sleep(Random(6000, 8000, 1))
-EndFunc   ;==>_choixHereos
+EndFunc   ;==>SelectHero
 
-Func _choixDifPm()
+Func SelectDifficultyMonsterPower()
 
 	;Selection de la fleche du menu déroulant de la difficulté
 
@@ -493,4 +493,4 @@ Func _choixDifPm()
 	Sleep(Random(600, 800, 1))
 	MouseClick("left")
 	Sleep(Random(600, 800, 1))
-EndFunc   ;==>_choixDifPm
+EndFunc   ;==>SelectDifficultyMonsterPower

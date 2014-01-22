@@ -169,9 +169,6 @@ EndFunc   ;==>_MemoryClose
 
 Func SetPrivilege($privilege, $bEnable)
 
-	Const $TOKEN_ADJUST_PRIVILEGES = 0x0020
-	Const $TOKEN_QUERY = 0x0008
-	Const $SE_PRIVILEGE_ENABLED = 0x0002
 	Local $hToken, $SP_auxret, $SP_ret, $hCurrProcess, $nTokens, $nTokenIndex, $priv
 	$nTokens = 1
 	$LUID = DllStructCreate("dword;int")

@@ -7,21 +7,21 @@ Global $hGraphic
 Global $Gwidth
 Global $Gheight
 
-Func Initiate_GDIpicture($width, $height)
+Func InitiateGDIPicture($width, $height)
 	$Gwidth = $width
 	$Gheight = $height
-	
+
 	_GDIPlus_Startup()
-	
+
 	;$hGUI = GUICreate("Show PNG", $Gwidth, $Gheight)
 	;GUISetState()
 	;$hGraphic = _GDIPlus_GraphicsCreateFromHWND($hGUI)
-	
+
 	$hImage = _GDIPlus_BitmapCreateFromScan0($width, $height)
 	$hGraphic = _GDIPlus_ImageGetGraphicsContext($hImage)
-EndFunc   ;==>Initiate_GDIpicture
+EndFunc   ;==>InitiateGDIPicture
 
-Func Draw_Nav($x, $y, $type, $sizex, $sizey)
+Func DrawNav($x, $y, $type, $sizex, $sizey)
 
 	If $type = 1 Then
 		$color_rec = _GDIPlus_PenCreate(0xFF85DB24, 1)
@@ -38,22 +38,23 @@ Func Draw_Nav($x, $y, $type, $sizex, $sizey)
 	EndIf
 
 
-EndFunc   ;==>Draw_Nav
+EndFunc   ;==>DrawNav
 
-Func Save_GDIpicture()
+Func SaveGDIPicture()
 	_GDIPlus_ImageSaveToFile($hImage, @ScriptDir & "\TEST.PNG")
-EndFunc   ;==>Save_GDIpicture
+EndFunc   ;==>SaveGDIPicture
 
-Func Load_GDIpicture()
+Func LoadGDIPicture()
 	$hGUI = GUICreate("Show PNG", $Gwidth, $Gheight)
 	GUISetState()
 	$hImage = _GDIPlus_ImageLoadFromFile(@ScriptDir & "\TEST.PNG")
 	$hGraphic = _GDIPlus_GraphicsCreateFromHWND($hGUI)
 	_GDIPlus_GraphicsDrawImage($hGraphic, $hImage, 0, 0)
-EndFunc   ;==>Load_GDIpicture
+EndFunc   ;==>LoadGDIPicture
 
-Func _GDIPlus_BitmapCreateFromScan0($iWidth, $iHeight, $iStride = 0, $iPixelFormat = 0x0026200A, $pScan0 = 0)
-	Local $aResult = DllCall($ghGDIPDll, "uint", "GdipCreateBitmapFromScan0", "int", $iWidth, "int", $iHeight, "int", $iStride, "int", $iPixelFormat, "ptr", $pScan0, "int*", 0)
-	If @error Then Return SetError(@error, @extended, 0)
-	Return $aResult[6]
-EndFunc   ;==>_GDIPlus_BitmapCreateFromScan0
+; TODO : renommé si on veut l'utiliser, ou utiliser la built-in qui a été ajoutée dans Autoit
+;Func _GDIPlus_BitmapCreateFromScan0($iWidth, $iHeight, $iStride = 0, $iPixelFormat = 0x0026200A, $pScan0 = 0)
+;	Local $aResult = DllCall($ghGDIPDll, "uint", "GdipCreateBitmapFromScan0", "int", $iWidth, "int", $iHeight, "int", $iStride, "int", $iPixelFormat, "ptr", $pScan0, "int*", 0)
+;	If @error Then Return SetError(@error, @extended, 0)
+;	Return $aResult[6]
+;EndFunc   ;==>_GDIPlus_BitmapCreateFromScan0
