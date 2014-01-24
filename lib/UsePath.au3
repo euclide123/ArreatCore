@@ -1,5 +1,4 @@
-#include <Maths.au3>
-
+#include-once
 ;;--------------------------------------------------------------------------------
 ; Function:                     UsePath(ByRef $path)
 ; Description:
@@ -167,7 +166,6 @@ Func UsePath(ByRef $path)
 	Next
 	MouseUp("middle")
 EndFunc   ;==>UsePath
-
 
 Func GetNextIndex(ByRef $arr, $index)
 	Local $resultIndexPoint = GetNextPosIndex($arr, $index)

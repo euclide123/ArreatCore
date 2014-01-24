@@ -212,10 +212,6 @@ Func ArrayInit(ByRef $array_sequence)
 	Return $array_sequence
 EndFunc   ;==>ArrayInit
 
-Func Trim($String)
-	Return StringReplace($String, " ", "", 0, 2)
-EndFunc   ;==>Trim
-
 ;<<<<<<<<<<<<<<<<<<<<<<<< Début function ajouter >>>>>>>>>>>>>>>>>>>>>>>>>>>
 Func SetHeroAxeZ($String)
 	If Not $String = "" Then
@@ -330,7 +326,7 @@ Func Sequence()
 		Local $noblocline = 0
 		Local $old_ResActivated = $ResActivated
 		Local $old_UsePath = $UsePath
-		Local $old_TakeCheckTakeShrines = $TakeCheckTakeShrines
+		Local $old_TakeCheckTakeShrines = $takeShrines
 
 		Local $compt_line = 0
 		Dim $txttoarray[1]
@@ -554,10 +550,10 @@ Func Sequence()
 					$line = StringReplace($line, "takeCheckTakeShrines=", "", 0, 2)
 					If $old_TakeCheckTakeShrines Then
 						If $line = "true" Then
-							$TakeCheckTakeShrines = True
+							$takeShrines = True
 							_Log("Turn TakeCheckTakeShrines mod to On line : " & $i + 1)
 						Else
-							$TakeCheckTakeShrines = False
+							$takeShrines = False
 							_Log("Turn TakeCheckTakeShrines mod to Off line")
 						EndIf
 						$line = ""
@@ -706,7 +702,7 @@ Func Sequence()
 		$autobuff = False
 		$ResActivated = $old_ResActivated
 		$UsePath = $old_UsePath
-		$TakeCheckTakeShrines = $old_TakeCheckTakeShrines
+		$takeShrines = $old_TakeCheckTakeShrines
 		unbuff()
 
 

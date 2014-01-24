@@ -34,7 +34,7 @@ Global $TakeABreak = "false"
 Global $PauseRepas = "false"
 Global $PartieSolo = "true"
 
-Global $profilFile = "settings.ini"
+Global $profilFile = "settings/settings.ini"
 Global $a_range = Round(Random(55, 60))
 Global $g_range = Round(Random(100, 120))
 Global $a_time = 9000
@@ -63,7 +63,7 @@ Global $QualityLevel = 9
 Global $LifeForPotion = 50
 Global $takepot = True
 Global $PotionStock = 100
-Global $TakeCheckTakeShrines = "false"
+Global $takeShrines = "false"
 
 Global $MaximumHatred = 125
 Global $MaximumDiscipline = 25
@@ -157,12 +157,8 @@ Global $Recycle = "false"
 Global $QualityRecycle = 9
 
 
-Func writeConfigs($profilFile = "settings.ini", $creation = 0)
+Func writeConfigs($profilFile = "settings/settings.ini", $creation = 0)
 	IniWrite($profilFile, "Account info", "pass", 0)
-	IniWrite($profilFile, "Account info", "ftpserver", $ftpserver)
-	IniWrite($profilFile, "Account info", "ftpusername", $ftpusername)
-	IniWrite($profilFile, "Account info", "ftppass", $ftppass)
-	IniWrite($profilFile, "Account info", "ftpfilename", $ftpfilename)
 
 	IniWrite($profilFile, "Run info", "SequenceFile", $File_Sequence)
 	IniWrite($profilFile, "Run info", "UsePath", $UsePath)
@@ -200,7 +196,7 @@ Func writeConfigs($profilFile = "settings.ini", $creation = 0)
 	IniWrite($profilFile, "Run info", "delaiBuff4", $delaiBuff4)
 	IniWrite($profilFile, "Run info", "LifeForPotion", $LifeForPotion)
 	IniWrite($profilFile, "Run info", "PotionStock", $PotionStock)
-	IniWrite($profilFile, "Run info", "TakeCheckTakeShrines", $TakeCheckTakeShrines)
+	IniWrite($profilFile, "Run info", "TakeShrines", $takeShrines)
 	IniWrite($profilFile, "Run info", "Unidentified", $Unidentified)
 	IniWrite($profilFile, "Run info", "Identified", $Identified)
 
@@ -279,7 +275,7 @@ Func writeConfigs($profilFile = "settings.ini", $creation = 0)
 
 EndFunc   ;==>writeConfigs
 
-Func LoadConfigs($profilFile = "settings.ini", $creation = 0)
+Func LoadConfigs($profilFile = "settings/settings.ini", $creation = 0)
 
 	;; Account info
 	;$d3pass = IniRead($profilFile, "Account info", "pass", 0)
@@ -400,25 +396,25 @@ Func LoadConfigs($profilFile = "settings.ini", $creation = 0)
 
 	Switch $Heros
 		Case 1
-			InitSkillHeros("settingsHero1.ini")
+			InitSkillHeros("settings/settingsHero1.ini")
 		Case 2
-			InitSkillHeros("settingsHero2.ini")
+			InitSkillHeros("settings/settingsHero2.ini")
 		Case 3
-			InitSkillHeros("settingsHero3.ini")
+			InitSkillHeros("settings/settingsHero3.ini")
 		Case 4
-			InitSkillHeros("settingsHero4.ini")
+			InitSkillHeros("settings/settingsHero4.ini")
 		Case 5
-			InitSkillHeros("settingsHero5.ini")
+			InitSkillHeros("settings/settingsHero5.ini")
 		Case 6
-			InitSkillHeros("settingsHero6.ini")
+			InitSkillHeros("settings/settingsHero6.ini")
 		Case 7
-			InitSkillHeros("settingsHero7.ini")
+			InitSkillHeros("settings/settingsHero7.ini")
 		Case 8
-			InitSkillHeros("settingsHero8.ini")
+			InitSkillHeros("settings/settingsHero8.ini")
 		Case 9
-			InitSkillHeros("settingsHero9.ini")
+			InitSkillHeros("settings/settingsHero9.ini")
 		Case 10
-			InitSkillHeros("settingsHero10.ini")
+			InitSkillHeros("settings/settingsHero10.ini")
 	EndSwitch
 
 	$TypedeBot = IniRead($profilFile, "Run info", "TypeDeBot", $TypedeBot)
@@ -510,7 +506,7 @@ Func InitSkillHeros($skillHeros)
 	$LifeForPotion = IniRead($skillHeros, "Run info", "LifeForPotion", $LifeForPotion)
 	$PotionStock = IniRead($skillHeros, "Run info", "PotionStock", $PotionStock)
 
-	$TakeCheckTakeShrines = IniRead($skillHeros, "Run info", "TakeCheckTakeShrines", $TakeCheckTakeShrines)
+	$takeShrines = IniRead($skillHeros, "Run info", "TakeShrines", $takeShrines)
 
 	$repairafterxxgames = IniRead($skillHeros, "Run info", "repairafterxxgames", $repairafterxxgames)
 

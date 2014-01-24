@@ -13,10 +13,6 @@ Func InitiateGDIPicture($width, $height)
 
 	_GDIPlus_Startup()
 
-	;$hGUI = GUICreate("Show PNG", $Gwidth, $Gheight)
-	;GUISetState()
-	;$hGraphic = _GDIPlus_GraphicsCreateFromHWND($hGUI)
-
 	$hImage = _GDIPlus_BitmapCreateFromScan0($width, $height)
 	$hGraphic = _GDIPlus_ImageGetGraphicsContext($hImage)
 EndFunc   ;==>InitiateGDIPicture

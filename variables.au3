@@ -25,8 +25,7 @@ Global $BanmonsterList
 Global $File_Sequence
 Global $ResLife
 Global $Res_compt
-Global $TakeCheckTakeShrines
-Global $UsePath
+Global $takeShrines
 Global $nb_die_t
 Global $rdn_die_t
 

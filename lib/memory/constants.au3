@@ -1,7 +1,9 @@
+#include-once 
 #region ;**** Directives created by AutoIt3Wrapper_GUI ****
 #AutoIt3Wrapper_UseX64=n
 #AutoIt3Wrapper_Res_requestedExecutionLevel=asInvoker
 #endregion ;**** Directives created by AutoIt3Wrapper_GUI ****
+
 
 Global $_Const_MonsterType[10]   = ["Unknown", "Undead", "Demon", "Beast", "Human", "Breakable", "Scenery", "Ally", "Team", "Helper"]
 Global $_Const_MonsterRace[12]   = ["Unknown", "Unknown(INDEX ME!)", "Fallen", "GoatMen", "Rogue", "Skeleton", "Zombie", "Spider", "Triune", "WoodWraith", "Human", "Animal"]

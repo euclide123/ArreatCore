@@ -28,11 +28,11 @@ EndIf
 ;;--------------------------------------------------------------------------------
 ;;      Includes
 ;;--------------------------------------------------------------------------------
-#include "lib\NomadMemory.au3" ;THIS IS EXTERNAL, GET IT AT THE AUTOIT WEBSITE
-#include <math.au3>
+#include <Math.au3>
 #include <String.au3>
 #include <Array.au3>
-#include "lib\constants.au3"
+#include "lib\memory\NomadMemory.au3" ;THIS IS EXTERNAL, GET IT AT THE AUTOIT WEBSITE
+#include "lib\memory\constants.au3"
 
 ;;--------------------------------------------------------------------------------
 ;;      Initialize Options
@@ -660,7 +660,7 @@ EndFunc   ;==>LevelAreaConstants
 ;;--------------------------------------------------------------------------------
 Func GetAct()
 	If $Act = 0 Then
-		$arealist = FileRead("lib\area.txt")
+		$arealist = FileRead("lib\memory\area.txt")
 		$area = GetLevelAreaId()
 
 		_Log(" We are in map : " & $area)
@@ -1191,11 +1191,7 @@ Func FilterBackpack()
 		CheckWindowD3Size()
 		CheckBackpackSize()
 
-		;;;	if trim(StringLower($Unidentified)) = "false" Then
 		UseBookOfCain()
-		;;;	Else
-		;;;		$Uni_manuel = true
-		;;;	EndIF
 
 		For $i = 0 To $iMax - 1 ;c'est ici que l'on parcour (tours a tours) l'ensemble des items contenut dans notres bag
 
@@ -1218,27 +1214,6 @@ Func FilterBackpack()
 			EndIf
 
 			$itemDestination = CheckItem($__ACDACTOR[$i][0], $__ACDACTOR[$i][1], 1) ;on recupere ici ce que l'on doit faire de l'objet (stash/inventaire/trash)
-
-			;;;		If $Uni_manuel = true Then
-			;;;			If $quality >= 6 And _MemoryRead($__ACDACTOR[$i][7] + 0x164, $d3, 'int') > 0 And ($itemDestination <> "Stash" Or trim(StringLower($Unidentified)) = "false") Then
-			;Ici on verifie que la qualité est bien superieur a 6 et que l'item as besoin d'etre identifier, si l'item doit aller dans le stash ou si on definit Unidentified a false
-			;Il faudra modifier/ajouter quelque chose ici pour gerer les uni sur les oranges et modifier le nom de la variable Unidentified !
-
-
-			;				InventoryMove($__ACDACTOR[$i][3], $__ACDACTOR[$i][4]) ;met la souris sur l'item
-
-			;				If IterateActorAttributes($__ACDACTOR[$i][0], $Atrib_Item_Quality_Level) > 8 Then ;verifie la quality de l'item pour connaitre le temps necessaire a l'identification de ce dernier
-			;					Sleep(Random(250, 400))
-			;					MouseClick("Right")
-			;					Sleep(Random(4000, 4500))
-			;				Else
-			;					Sleep(Random(250, 400))
-			;					MouseClick("Right")
-			;					Sleep(Random(1000, 1500))
-			;				EndIf
-
-			;;;			EndIf
-			;;;		EndIf
 
 			$return[$i][0] = $__ACDACTOR[$i][3] ;definit la collone de l'item
 			$return[$i][1] = $__ACDACTOR[$i][4] ;definit la ligne de l'item
@@ -1318,27 +1293,6 @@ Func FilterBackpack2()
 			EndIf
 
 			$itemDestination = CheckItem($__ACDACTOR[$i][0], $__ACDACTOR[$i][1], 1) ;on recupere ici ce que l'on doit faire de l'objet (stash/inventaire/trash)
-
-			;;;		If $Uni_manuel = true Then
-			;;;			If $quality >= 6 And _MemoryRead($__ACDACTOR[$i][7] + 0x164, $d3, 'int') > 0 And ($itemDestination <> "Stash" Or trim(StringLower($Unidentified)) = "false") Then
-			;Ici on verifie que la qualité est bien superieur a 6 et que l'item as besoin d'etre identifier, si l'item doit aller dans le stash ou si on definit Unidentified a false
-			;Il faudra modifier/ajouter quelque chose ici pour gerer les uni sur les oranges et modifier le nom de la variable Unidentified !
-
-
-			;				InventoryMove($__ACDACTOR[$i][3], $__ACDACTOR[$i][4]) ;met la souris sur l'item
-
-			;				If IterateActorAttributes($__ACDACTOR[$i][0], $Atrib_Item_Quality_Level) > 8 Then ;verifie la quality de l'item pour connaitre le temps necessaire a l'identification de ce dernier
-			;					Sleep(Random(250, 400))
-			;					MouseClick("Right")
-			;					Sleep(Random(4000, 4500))
-			;				Else
-			;					Sleep(Random(250, 400))
-			;					MouseClick("Right")
-			;					Sleep(Random(1000, 1500))
-			;				EndIf
-
-			;;;			EndIf
-			;;;		EndIf
 
 			$return[$i][0] = $__ACDACTOR[$i][3] ;definit la collone de l'item
 			$return[$i][1] = $__ACDACTOR[$i][4] ;definit la ligne de l'item
@@ -1673,10 +1627,7 @@ Func IterateObjectList($_displayInfo = 0)
 		$OBJ[$i][12] = -1
 		$_CurOffset = $_CurOffset + $_ObjmanagerStrucSize
 	Next
-	;$OBJv2 = LinkActors($OBJ) ;//Would be a waste to do this in the main operation so we add more data to the object here after the main operation.
 	IterateLocalActor()
-	;	Local $difmesureobj = TimerDiff($mesureobj) ;;;;;;;;;;;;;
-	;_Log("Mesure iterOBJ :" & $difmesureobj &@crlf) ;FOR DEBUGGING;;;;;;;;;;;;
 	Return $OBJ
 EndFunc   ;==>IterateObjectList
 
@@ -1751,7 +1702,6 @@ EndFunc   ;==>UiRatio
 ;;      GetCurrentPos()
 ;;--------------------------------------------------------------------------------
 Func GetCurrentPos()
-	;	Local $mesurepos = TimerInit() ;;;;;;;;;;;;;;
 	Dim $return[3]
 
 	$return[0] = _MemoryRead($_Myoffset + 0x0A0, $d3, 'float')
@@ -1805,10 +1755,10 @@ Func MoveToPos($_x, $_y, $_z, $_a, $m_range)
 		$zd = $lastwp_z - $CurrentLoc[2]
 		$Distance = Sqrt($xd * $xd + $yd * $yd + $zd * $zd)
 		If $Distance < $m_range Then ExitLoop
-		;If _MemoryRead($ClickToMoveToggle, $d3, 'float') = 0 Then ExitLoop
 		Local $angle = 1
 		Local $Radius = 25
-		;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+		
+        
 		While _MemoryRead($ClickToMoveToggle, $d3, 'float') = 0
 			;_Log("Togglemove : " & _MemoryRead($ClickToMoveToggle, $d3, 'float'))
 			$Coords = FromD3ToScreenCoords($_x, $_y, $_z)
@@ -1816,7 +1766,6 @@ Func MoveToPos($_x, $_y, $_z, $_a, $m_range)
 			$Radius += 45
 
 
-			;MouseMove($Coords[0] - (Cos($angle) * $Radius), $Coords[1] - (Sin($angle) * $Radius), 3)
 			; ci desssous du dirty code pour eviter de cliquer n'importe ou hos de la fenetre du jeu
 			$Coords[0] = $Coords[0] - (Cos($angle) * $Radius)
 			$Coords[1] = $Coords[1] - (Sin($angle) * $Radius)
@@ -1849,7 +1798,6 @@ Func MoveToPos($_x, $_y, $_z, $_a, $m_range)
 			EndIf
 			Sleep(10)
 		WEnd
-		;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 		Sleep(10)
 		$Coords = FromD3ToScreenCoords($lastwp_x, $lastwp_y, $lastwp_z)
 		;_Log("currentloc: " & $_Myoffset & " - "&$CurrentLoc[0] & " : " & $CurrentLoc[1] & " : " & $CurrentLoc[2] &@CRLF)
@@ -1859,7 +1807,6 @@ Func MoveToPos($_x, $_y, $_z, $_a, $m_range)
 			$LastCP = GetCurrentPos()
 			If $_a = 1 Then Attack()
 			;_Log("Last check: " & $Distance & @CRLF)
-			;MouseMove($Coords[0], $Coords[1], 3)
 
 			$Coords_RndX = $Coords[0] + Random(-17, 17)
 			$Coords_RndY = $Coords[1] + Random(-17, 17)
@@ -2099,10 +2046,7 @@ Func IterateFilterZone($dist, $n = 2)
 		$compt += 1
 		If IsInteractable($item, "") Then
 			If IsMonster($item) And Sqrt(($item[2] - $my_pos_zone[0]) ^ 2 + ($item[3] - $my_pos_zone[1]) ^ 2) < $dist And $item[4] < 10 Then
-;~ 				ReDim $item_buff_2D[$i + 1][10]
-;~ 				For $x = 0 To 9
-;~ 					$item_buff_2D[$i][$x] = $item[$x]
-;~ 				Next
+
 				$i += 1
 			EndIf
 
@@ -2162,19 +2106,6 @@ Func SortObjectMonster($item)
 			$item_temp[$Z] = $item[$i][$Z]
 		Next
 
-
-;~
-;~ 		If DetectElite($item[$i][0]) then
-
-;~ 			If UBound($tab_elite) > 1 Or $compt_elite <> 0 Then
-;~ 				ReDim $tab_elite[UBound($tab_elite) + 1][10]
-;~ 			EndIf
-;~ 			For $y = 0 To 9
-;~ 				$tab_elite[UBound($tab_elite) - 1][$y] = $item[$i][$y]
-;~ 			Next
-;~ 			$compt_elite += 1
-
-;~ 		Else
 		If IsMonster($item_temp) Then
 
 			If UBound($tab_monster) > 1 Or $compt_monster <> 0 Then
@@ -2309,7 +2240,7 @@ Func IsInteractable($item, $IgnoreList)
 EndFunc   ;==>IsInteractable
 
 Func HandleCheckTakeShrine(ByRef $item)
-	If $TakeCheckTakeShrines = "True" Then
+	If $takeShrines = "True" Then
 		$CurrentACD = GetACDOffsetByACDGUID($item[0]); ###########
 		$CurrentIdAttrib = _memoryread($CurrentACD + 0x120, $d3, "ptr"); ###########
 		If GetAttribute($CurrentIdAttrib, $Atrib_gizmo_state) <> 1 Then
@@ -4058,89 +3989,6 @@ Func ManageSpellCasting($Distance, $action_spell, $elite, $Guid = 0, $offset = 0
 							CastSpell($i)
 							$buff_table[10] = TimerInit()
 
-;~ 			case 23
-;~ 			   ;or ($buff_table[1] and IsPowerReady($_MyGuid, $buff_table[9]))
-;~ If $buff_table[1] <> False  Then
-;~   Switch $buff_table[6]
-;~ 	  Case "right"
-;~ 		  MouseDown("right")
-;~ 	  Case "left"
-;~ 		  MouseDown("left")
-;~ 	  Case Else
-;~ 	   Send("{" & $buff_table[6] & " down}")
-;~    EndSwitch
-;~ send("{shiftdown}")
-;~  $check_source=GetResource( $_MyGuid, $buff_table[5])
-;~     $vie=GetLifeLeftPercent()
-;~    if IterateActorAttributes($Guid, $Atrib_Hitpoints_Cur) > 0 and $check_source>$buff_table[4]/$MaximumSource and $vie>$buff_table[7]/100 then
-;~ 	  $cana=true
-;~    Else
-;~ 	  $cana=False
-;~ 	  EndIf
-
-;~ while $cana=true
-;~    Dim $pos = UpdateObjectsPos($offset)
-;~    $Coords = FromD3ToScreenCoords($pos[0], $pos[1], $pos[2])
-;~    MouseMove($Coords[0], $Coords[1], 3)
-;~    sleep(10)
-;~    $check_source=GetResource( $_MyGuid, $buff_table[5])
-;~    $vie=GetLifeLeftPercent()
-;~    if IterateActorAttributes($Guid, $Atrib_Hitpoints_Cur) > 0 and $check_source>$buff_table[4]/$MaximumSource and $vie>$buff_table[7]/100 then
-;~ 	  $cana=true
-;~    Else
-;~ 	  $cana=False
-;~    EndIf
-;~
-;~    	For $ii = 0 To 5
-
-;~ 		Dim $buff_table2[11]
-
-;~ 			Switch $ii
-
-;~ 	case 0
-;~ 		$buff_table2 = $Skill1
-;~ 	case 1
-;~ 		$buff_table2 = $Skill2
-;~ 	case 2
-;~ 		$buff_table2 = $Skill3
-;~ 	case 3
-;~ 		$buff_table2 = $Skill4
-;~ 	case 4
-;~ 		$buff_table2 = $Skill5
-;~ 	case 5
-;~ 		$buff_table2 = $Skill6
-;~ 	Endswitch
-;~ 	If $buff_table2[3]=4 and IsBuffActive($_MyGuid, $buff_table2[9])=false  Then
-;~ 	   $cana=false
-;~ 	   endif
-;~  Next
-;~
-;~    if IsPlayerDead() Then
-;~ 	  send("{shiftup}")
-;~ 	   Switch $buff_table[6]
-;~ 	  Case "right"
-;~ 		  mouseup("right")
-;~ 	  Case "left"
-;~ 		  mouseup("left")
-;~ 	  Case Else
-;~ 		 Send("{" & $buff_table[6] & " up}")
-;~    endswitch
-;~    exitloop
-;~ endif
-;~ WEnd
-;~  send("{shiftup}")
-;~    Switch $buff_table[6]
-;~ 	  Case "right"
-;~ 		  mouseup("right")
-;~ 	  Case "left"
-;~ 		  mouseup("left")
-;~ 	  Case Else
-;~ 		 Send("{" & $buff_table[6] & " up}")
-;~    endswitch
-;~
-
-;~ 				$buff_table[10] = TimerInit()
-
 					EndSwitch
 
 				Case 2
@@ -4929,7 +4777,7 @@ Func InitGrabListFile()
 	;local $load_file = ""
 	Local $compt_line = 0
 
-	Local $file = FileOpen($grabListFile, 0)
+	Local $file = FileOpen("grablist/" & $grabListFile, 0)
 	If $file = -1 Then
 		MsgBox(0, "Error", "Unable to open file : " & $grabListFile)
 		Exit
@@ -5751,10 +5599,6 @@ Func FindSafeZone($x_perso, $y_perso, $item_verif, $z_test, $x_mob, $y_mob)
 			$safe_array[$bb][1] = $x_test
 			$safe_array[$bb][2] = $y_test
 			$safe_array[$bb][0] = $distance_safe
-;~ 			$safe_array[$bb+1][1]=$x_test
-;~ 			$safe_array[$bb+1][2]=$y_test
-;~ 			$safe_array[$bb+1][0]=$distance_safe
-;~ 		   $b= ubound($tab_aff2)-1
 		EndIf
 	Next
 	If $safe_array[0][0] <> 0 Then
