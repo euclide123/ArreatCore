@@ -39,8 +39,9 @@ Func TraitementSequence(ByRef $arr_sequence, $index, $mvtp = 0)
 				Return False
 			EndIf
 		ElseIf $arr_sequence[$index][1] = "OffsetList" Then
-			While Not OffsetList()
-				Sleep(40)
+			Local $hTimer = TimerInit()
+			While Not OffsetList() And TimerDiff($hTimer) < 30000 ; 30secondes
+					Sleep(40)
 			WEnd
 		EndIf
 	EndIf

@@ -230,9 +230,14 @@ EndFunc   ;==>CheckWindowD3Size
 Func FindActor($name, $maxRange = 400)
 
 	If IsInGame() Then
-		While Not OffsetList()
+		Local $hTimer = TimerInit()
+		While Not OffsetList() And TimerDiff($hTimer) < 30000 ; 30secondes
 			Sleep(10)
 		WEnd
+		If TimerDiff($hTimer) >= 30000 Then
+			_Log("OffsetList in FindActor impossible : " & TimerDiff($hTimer) & @CRLF)
+			return 0
+		EndIf
 	Else
 		OffsetList()
 	EndIf
@@ -990,7 +995,7 @@ Func AntiIdle()
 	ToolTip("Detection de stuff modifié !" & @CRLF & "Zone : " & $warnarea & @CRLF & "Position : " & $warnloc[0] & ", " & $warnloc[1] & ", " & $warnloc[2] & @CRLF & "Un screenshot a été pris, il se situe dans document/diablo 3", 15, 15)
 
 
-	While Not IsInTown()
+	While Not IsInTown() And IsInGame()
 		UseTownPortal()
 		Sleep(100)
 	WEnd
@@ -2788,21 +2793,18 @@ EndFunc   ;==>OpenWp
 Func TakeWP($tarChapter, $tarNum, $curChapter, $curNum)
 	If $GameFailed = 0 Then
 		Local $Waypoint = ""
-		While Not OffsetList()
-			Sleep(10)
+
+		
+		Local $hTimer = TimerInit()
+		While Not OffsetList() And TimerDiff($hTimer) < 30000 ; 30secondes
+			Sleep(40)
 		WEnd
 
-		#cs
-			If FindActor("waypoint_arrival_ribbonGeo", 80) Then
-			$Waypoint = "waypoint_arrival_ribbonGeo"
-			ElseIf FindActor("waypoint_neutral_ringGlow", 80) Then
-			$Waypoint = "waypoint_neutral_ringGlow"
-			ElseIf FindActor("Waypoint_Town", 80) Then
-			$Waypoint = "Waypoint_Town"
-			Else
-			$Waypoint = "waypoint"
-			EndIf
-		#ce
+		If TimerDiff($hTimer) >= 30000 Then
+			_Log('Fail to use OffsetList - TakeWP')
+			Return False
+		EndIf
+
 
 
 		;*******************************************************
@@ -2824,7 +2826,6 @@ Func TakeWP($tarChapter, $tarNum, $curChapter, $curNum)
 		If $Waypoint = "" Then
 			$Waypoint = "waypoint"
 		EndIf
-		;******************************************************
 
 		;******************************************************
 
@@ -2866,27 +2867,6 @@ Func TakeWP($tarChapter, $tarNum, $curChapter, $curNum)
 
 		EndIf
 
-		;******************************************************
-
-
-		#cs
-			InteractByActorName($Waypoint)
-			Sleep(350)
-			Local $wptry = 0
-			While IsWaypointSelectionOpened() = False And IsPlayerDead() = False
-			If $wptry <= 6 Then
-			_Log('Fail to open wp')
-			$wptry = $wptry + 1
-			InteractByActorName($Waypoint)
-			EndIf
-			If $wptry > 6 Then
-			$GameFailed = 1
-			_Log('Failed to open wp after 6 try')
-			ExitLoop
-			EndIf
-			WEnd
-		#ce
-
 		If $tarChapter <> $curChapter Or ($tarChapter = $curChapter And $tarChapter < $curChapter) Then
 			For $i = 0 To $tarChapter - 1
 				$coord = UiRatio(35, 100 + ($i * 12.5))
@@ -2905,9 +2885,15 @@ Func TakeWP($tarChapter, $tarNum, $curChapter, $curNum)
 		EndIf
 		Sleep(1500)
 
-		While Not OffsetList()
-			Sleep(10)
+		Local $hTimer = TimerInit()
+		While Not OffsetList() And TimerDiff($hTimer) < 30000 ; 30secondes
+			Sleep(40)
 		WEnd
+
+		If TimerDiff($hTimer) >= 30000 Then
+			_Log('Fail to use OffsetList - TakeWP')
+			Return False
+		EndIf
 		$SkippedMove = 0 ;reset ouur skipped move count cuz we should be in brand new area
 	EndIf
 EndFunc   ;==>TakeWP
@@ -4300,9 +4286,14 @@ Func TpRepairAndBack()
 	If $PortBack Then
 		SafePortBack()
 
-		While Not OffsetList()
-			Sleep(10)
+		Local $hTimer = TimerInit()
+		While Not OffsetList() And TimerDiff($hTimer) < 30000 ; 30secondes
+			Sleep(40)
 		WEnd
+
+		If TimerDiff($hTimer) >= 30000 Then
+			_Log('Fail to use OffsetList - TpRepairAndBack')
+		EndIf
 	EndIf
 
 	$games = 0
@@ -4323,9 +4314,15 @@ Func StashAndRepair()
 			Sleep(Random(200, 300))
 		WEnd
 
-		While Not OffsetList()
-			Sleep(10)
+		Local $hTimer = TimerInit()
+		While Not OffsetList() And TimerDiff($hTimer) < 30000 ; 30secondes
+			Sleep(40)
 		WEnd
+
+		If TimerDiff($hTimer) >= 30000 Then
+			_Log('Fail to use OffsetList - StashAndRepair')
+			Return False
+		EndIf
 
 		Sleep(Random(500, 1000))
 
@@ -4415,9 +4412,15 @@ Func StashAndRepair()
 			Sleep(Random(200, 300))
 		WEnd
 
-		While Not OffsetList()
-			Sleep(10)
+		Local $hTimer = TimerInit()
+		While Not OffsetList() And TimerDiff($hTimer) < 30000 ; 30secondes
+			Sleep(40)
 		WEnd
+
+		If TimerDiff($hTimer) >= 30000 Then
+			_Log('Fail to use OffsetList - StashAndRepairs')
+			Return False
+		EndIf
 
 		Sleep(Random(500, 1000))
 
@@ -4520,24 +4523,6 @@ Func StashAndRepair()
 		Sleep(700)
 		Local $stashtry = 0
 
-		#cs While IsStashOpened() = False
-			If $stashtry <= 4 Then
-			_Log('Fail to open Stash')
-			$stashtry += 1
-			InteractByActorName("Blacksmith_RepairShortcut")
-			Sleep(Random(100, 200))
-
-			Else
-			Send("{PRINTSCREEN}")
-			Sleep(200)
-			_Log('Failed to open Stash after 4 try')
-			WinSetOnTop("Diablo III", "", 0)
-			MsgBox(0, "Impossible d'ouvrir le stash :", "SVP, veuillez reporter ce problème sur le forum. Erreur : s001 ")
-			Terminate()
-
-			EndIf
-			WEnd
-		#ce
 		$tabfull = 0
 		CheckWindowD3Size()
 		MouseMove(150, 150, 2) ; clic sur dez
@@ -4938,9 +4923,16 @@ Func SafePortStart()
 	$Curentarea = GetLevelAreaId()
 	;fix offset list
 	While $Curentarea = -1
-		While Not OffsetList()
-			Sleep(10)
+		Local $hTimer = TimerInit()
+		While Not OffsetList() And TimerDiff($hTimer) < 30000 ; 30secondes
+			Sleep(40)
 		WEnd
+
+		If TimerDiff($hTimer) >= 30000 Then
+			_Log('Fail to use OffsetList - SafePortStart')
+			Return False
+		EndIf
+
 		$Curentarea = GetLevelAreaId()
 
 	WEnd
@@ -4972,9 +4964,15 @@ Func SafePortStart()
 
 	If $Newarea <> $Curentarea Then
 		_Log('succesfully teleported back : ' & $Curentarea & ":" & $Newarea)
-		While Not OffsetList()
-			Sleep(10)
+		Local $hTimer = TimerInit()
+		While Not OffsetList() And TimerDiff($hTimer) < 30000 ; 30secondes
+			Sleep(40)
 		WEnd
+
+		If TimerDiff($hTimer) >= 30000 Then
+			_Log('Fail to use OffsetList - SafePortStart')
+		EndIf
+
 	Else
 		$GameFailed = 1
 	EndIf
@@ -5019,9 +5017,15 @@ Func SafePortBack()
 
 	If $Newarea <> $Curentarea Then
 		_Log('succesfully teleported back : ' & $Curentarea & ":" & $Newarea)
-		While Not OffsetList()
-			Sleep(10)
+		Local $hTimer = TimerInit()
+		While Not OffsetList() And TimerDiff($hTimer) < 30000 ; 30secondes
+			Sleep(40)
 		WEnd
+
+		If TimerDiff($hTimer) >= 30000 Then
+			_Log('Fail to use OffsetList - SafePortBack')
+		EndIf
+
 	Else
 		_Log('We failed to teleport back')
 	EndIf
@@ -5430,11 +5434,18 @@ Func UseTownPortal($mode = 0)
 		Sleep(100)
 		$PortBack = True
 	WEnd
+	
+	Local $hTimer = TimerInit()
+	While Not OffsetList() And TimerDiff($hTimer) < 30000 ; 30secondes
+		Sleep(40)
+	WEnd
+
+	If TimerDiff($hTimer) >= 30000 Then
+		_Log('Fail to use OffsetList - TakeWP')
+		Return False
+	EndIf
 
 	_Log("on a renvoyer true, quite bien la fonction")
-	While Not OffsetList()
-		Sleep(10)
-	WEnd
 
 	Return True
 EndFunc   ;==>UseTownPortal
