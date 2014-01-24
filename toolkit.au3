@@ -3108,11 +3108,11 @@ Func _Log($text, $write = 0)
 	If $write == 1 Then
 		$file = FileOpen(@ScriptDir & "\log\" & $fichierlog, 1)
 		If $file = -1 Then
-			_Log("Log file error, cant be open")
+			ConsoleWrite("Log file error, cant be open")
 		Else
 			FileWrite($file, $texte_write & @CRLF)
 		EndIf
-		FileClose($file)
+		ConsoleWrite($file)
 	EndIf
 
 	_Log(@MDAY & "/" & @MON & "/" & @YEAR & " " & @HOUR & ":" & @MIN & ":" & @SEC & " | " & $text & @CRLF)

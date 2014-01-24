@@ -278,8 +278,8 @@ Global $Monk_skill_Table[26][8] = [ _
 		[0x1da62, "Monk_TempestRush"                        , ""    , "move"          , 25 , "spirit"    , ""   , ""], _
 		[0x17721, "Monk_WaveOfLight"                        , 2000  , "attack&elite"  , 75 , "spirit"    , ""   , 15], _
 		[0x17b56, "WayOfTheHundredFists"                    , ""    , "physical"      , "" , ""          , ""   , ""] _
-		]     
-		
+		]
+
 Global $WitchDoctor_skill_Table[22][8] = [ _
 		[0x11337, "Witchdoctor_AcidCloud"                   , 1500  , "attack"        , 172, "mana"      , ""   , 45], _
 		[0x1ca9a, "Witchdoctor_BigBadVoodoo"                , 120000, "buff"          , 0  , "mana"      , ""   , ""], _
@@ -303,7 +303,7 @@ Global $WitchDoctor_skill_Table[22][8] = [ _
 		[0x190ad, "Witchdoctor_SummonZombieDog"             , 45000 , "move"          , 49 , "mana"      , ""   , ""], _
 		[0x20eb5, "Witchdoctor_WallOfZombies"               , 20000 , "attack&elite"  , 130, "mana"      , ""   , 45], _
 		[0x12113, "Witchdoctor_ZombieCharger"               , 0     , "attack&elite"  , 140, "mana"      , ""   , 20] _
-		]       		
+		]
 
 
 Global $Barbarian_Skill_Table[22][8] = [ _
@@ -355,8 +355,8 @@ Global $DemonHunter_skill_Table[23][8] = [ _
 		[0x12625, "DemonHunter_SpikeTrap"                   , 5000  , "attack&life"   , 30 , "hatred"    , 90   , 50], _
 		[0x20b8e, "DemonHunter_Strafe"                      , 0     , "physical"      , 12 , "hatred"    , ""   , ""], _
 		[0x1b26f, "DemonHunter_Vault"                       , 3000  , "life"          , 8  , "discipline", 85   , ""] _
-		]     
-		
+		]
+
 Global $Wizard_skill_Table[27][8] = [ _
 		[0x77d8 , "Wizard_Blizzard"                         , 2500  , "attack"        , 40 , "arcane"    , 100  , 45], _
 		[0x1274f, "Wizard_DiamondSkin"                      , 15000 , "life"          , "" , ""          , 35   , ""], _
@@ -366,6 +366,7 @@ Global $Wizard_skill_Table[27][8] = [ _
 		[0x1177c, "Wizard_SpectralBlade"                    , ""    , "physical"      , "" , ""          , 100  , 45], _
 		[0x77cc , "Wizard_ArcaneOrb"                        , ""    , "attack"        , 35 , "arcane"    , 100  , 45], _
 		[0x20d38, "Wizard_ArcaneTorrent"                    , ""    , "attack"        , 16 , "arcane"    , 100  , 45], _
+		[0x20ed8, "Wizard_Archon"							, ""	, "buff"		  , "" , ""          , 100  , ""], _
 		[0x21046, "Wizard_Archon_DisintegrationWave"        , ""    , "attack"        , 18 , "arcane"    , 100  , 45], _
 		[0x211ef, "Wizard_Archon_SlowTime"                  , 15000 , "life"          , "" , ""          , 60   , ""], _
 		[0x28ee0, "Wizard_Archon_Teleport"                  , 15000 , "life"          , "" , ""          , 35   , ""], _
