@@ -209,7 +209,7 @@ Func CheckWindowD3()
 	EndIf
 	$posd3 = WinGetPos("Diablo III")
 	$DebugX = $posd3[0] + $posd3[2] + 10
-	$DebugY = $posd3[1
+	$DebugY = $posd3[1]
 EndFunc   ;==>CheckWindowD3
 
 Func CheckWindowD3Size()
