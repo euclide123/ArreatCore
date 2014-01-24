@@ -357,7 +357,7 @@ Global $DemonHunter_skill_Table[23][8] = [ _
 		[0x1b26f, "DemonHunter_Vault"                       , 3000  , "life"          , 8  , "discipline", 85   , ""] _
 		]
 
-Global $Wizard_skill_Table[27][8] = [ _
+Global $Wizard_skill_Table[28][8] = [ _
 		[0x77d8 , "Wizard_Blizzard"                         , 2500  , "attack"        , 40 , "arcane"    , 100  , 45], _
 		[0x1274f, "Wizard_DiamondSkin"                      , 15000 , "life"          , "" , ""          , 35   , ""], _
 		[0x153cf, "Wizard_EnergyArmor"                      , 110000, "buff"          , 25 , "arcane"    , ""   , ""], _
