@@ -340,7 +340,7 @@ Func IsOnLoginScreen()
 EndFunc   ;==>IsOnLoginScreen
 
 Func IsEscapeMenuOpened()
-	Local $uiEscapeMenu = "Root.TopLayer.gamemenu_dialog.gamemenu_bkgrnd.ButtonStackContainer.buttonLeaveGame"
+	Local $uiEscapeMenu = "Root.TopLayer.gamemenu_dialog.gamemenu_bkgrnd.ButtonStackContainer.button_leaveGame"
 	Return FastCheckUiItemVisible($uiEscapeMenu, 1, 1447)
 EndFunc   ;==>IsEscapeMenuOpened
 
@@ -2197,7 +2197,7 @@ Func UpdateObjectsPos($offset)
 EndFunc   ;==>UpdateObjectsPos
 
 Func IsShrine($item)
-	If StringInStr($item[1], "CheckTakeShrine") And $item[9] < 35 Then
+	If StringInStr($item[1], "shrine") And $item[9] < 35 Then
 		Return True
 	Else
 		Return False
@@ -3112,10 +3112,10 @@ Func _Log($text, $write = 0)
 		Else
 			FileWrite($file, $texte_write & @CRLF)
 		EndIf
-		ConsoleWrite($file)
+		FileClose($file)
 	EndIf
 
-	_Log(@MDAY & "/" & @MON & "/" & @YEAR & " " & @HOUR & ":" & @MIN & ":" & @SEC & " | " & $text & @CRLF)
+	ConsoleWrite(@MDAY & "/" & @MON & "/" & @YEAR & " " & @HOUR & ":" & @MIN & ":" & @SEC & " | " & $text & @CRLF)
 EndFunc   ;==>_Log
 
 Func RandSleep($min = 5, $max = 45, $chance = 3)
