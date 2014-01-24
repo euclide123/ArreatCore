@@ -131,9 +131,9 @@ Global $tempsPauserepas         = 0;global pour récupèré temps de pause
 ;fin global ajouter
 
 ; global sur la fenetre d3
-Global $posd3                   = WinGetPos("Diablo III")
-Global $DebugX                  = $posd3[0] + $posd3[2] + 10
-Global $DebugY                  = $posd3[1]
+Global $posd3
+Global $DebugX
+Global $DebugY
 
 Global $Ban_ItemACDCheckList    = "a1_|a3_|a2_|a4_|Lore_Book_Flippy|Topaz_|Emeraude_|Rubis_|Amethyste_|healthPotion_Mythic|GoldCoins|GoldSmall|GoldMedium|GoldLarge"
 Global $Ban_endstrItemList      = "_projectile"

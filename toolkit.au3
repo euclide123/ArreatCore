@@ -207,6 +207,9 @@ Func CheckWindowD3()
 	Else
 		_Log("Setting Window Diablo III OK")
 	EndIf
+	$posd3 = WinGetPos("Diablo III")
+	$DebugX = $posd3[0] + $posd3[2] + 10
+	$DebugY = $posd3[1
 EndFunc   ;==>CheckWindowD3
 
 Func CheckWindowD3Size()
@@ -1757,8 +1760,8 @@ Func MoveToPos($_x, $_y, $_z, $_a, $m_range)
 		If $Distance < $m_range Then ExitLoop
 		Local $angle = 1
 		Local $Radius = 25
-		
-        
+
+
 		While _MemoryRead($ClickToMoveToggle, $d3, 'float') = 0
 			;_Log("Togglemove : " & _MemoryRead($ClickToMoveToggle, $d3, 'float'))
 			$Coords = FromD3ToScreenCoords($_x, $_y, $_z)
@@ -4523,7 +4526,7 @@ Func StashAndRepair()
 			$stashtry += 1
 			InteractByActorName("Blacksmith_RepairShortcut")
 			Sleep(Random(100, 200))
-			
+
 			Else
 			Send("{PRINTSCREEN}")
 			Sleep(200)
@@ -4531,7 +4534,7 @@ Func StashAndRepair()
 			WinSetOnTop("Diablo III", "", 0)
 			MsgBox(0, "Impossible d'ouvrir le stash :", "SVP, veuillez reporter ce problème sur le forum. Erreur : s001 ")
 			Terminate()
-			
+
 			EndIf
 			WEnd
 		#ce
