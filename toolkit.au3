@@ -374,7 +374,6 @@ Func IsInventoryOpened()
 	Return FastCheckUiItemVisible($uiInventoryWindow, 1, 1622)
 EndFunc   ;==>IsInventoryOpened
 
-
 ;;--------------------------------------------------------------------------------
 ; Function:			TownStateCheck()
 ; Description:		Check if we are in town or not by comparing distance from stash
@@ -393,6 +392,10 @@ Func IsInTown()
 EndFunc   ;==>IsInTown
 ;==>TownStateCheck
 
+Func IsQuestChangeUiOpened()
+        Local $uiQuestChange = "Root.TopLayer.BattleNetModalNotifications_main.ModalNotification.Buttons.ButtonList.OkButton"
+        Return FastCheckUiItemVisible($uiNewGame, 1, 1073)
+EndFunc  ;==> _checkLoadNewGame
 
 Func GetLevelAreaId()
 	Return _MemoryRead(_MemoryRead(0x183E9E4, $d3, "int") + 0x44, $d3, "int")

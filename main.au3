@@ -138,6 +138,11 @@ Func _botting()
 
 		; Si Choix_Act_Run <> 0 le bot passe en mode automatique
 		If $Choix_Act_Run <> 0 Then
+			If IsInGame() = true and $TypedeBot < 2 Then;si en jeu lors du lancement auto 
+				WinSetOnTop("[CLASS:D3 Main Window Class]", "", 0)
+				MsgBox(0, "ERREUR", "Vous devez être dans le menu pour lancer une run en auto ! ")
+				Terminate()
+			EndIf  
 			SelectQuest()
 		EndIf
 
