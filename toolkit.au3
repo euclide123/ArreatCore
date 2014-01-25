@@ -696,16 +696,16 @@ Func GetAct()
 			;set our vendor aaccording to the act we are in as we know it.
 			Switch $Act
 				Case 1
-					Global $RepairVendor = "UniqueVendor_minerIsInTown"
+					Global $RepairVendor = "UniqueVendor_miner_InTown"
 
 				Case 2
-					Global $RepairVendor = "UniqueVendor_PeddlerIsInTown" ; act 2 fillette
+					Global $RepairVendor = "UniqueVendor_Peddler_InTown" ; act 2 fillette
 
 				Case 3
-					Global $RepairVendor = "UniqueVendor_CollectorIsInTown" ; act 3
+					Global $RepairVendor = "UniqueVendor_Collector_InTown" ; act 3
 
 				Case 4
-					Global $RepairVendor = "UniqueVendor_CollectorIsInTown" ; act 3
+					Global $RepairVendor = "UniqueVendor_Collector_InTown" ; act 3
 
 			EndSwitch
 			_Log("Our Current Act is : " & $Act & " ---> So our vendor is : " & $RepairVendor)
