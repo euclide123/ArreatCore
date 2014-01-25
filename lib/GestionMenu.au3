@@ -1,7 +1,7 @@
 #cs ----------------------------------------------------------------------------
-	
+
 	Extension permettant de gerer le menu
-	
+
 #ce ----------------------------------------------------------------------------
 
 ;--------------------------------------------------------------
@@ -184,17 +184,16 @@ Func SelectGameType($SelectGameType, $auto)
 				MouseClick("left")
 				Sleep(Random(600, 800, 1))
 		EndSwitch
-			
-		 ;Bp choisir la quete
-		Sleep(Random(300,400,1))
+
+		;Bp choisir la quete
+		Sleep(Random(300, 400, 1))
 		RandomMouseClick(500, 475)
-		Sleep(Random(300,400,1))
-		; Bp validation de la quête 
+		Sleep(Random(300, 400, 1))
+		; Bp validation de la quête
 		If IsQuestChangeUiOpened() Then
 			_log("Détection de changement quête")
-			Sleep(Random(300,400,1))
+			Sleep(Random(300, 400, 1))
 			RandomMouseClick(350, 350)
-			Endif
 		EndIf
 	EndIf
 EndFunc   ;==>SelectGameType

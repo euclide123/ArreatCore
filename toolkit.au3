@@ -394,7 +394,7 @@ EndFunc   ;==>IsInTown
 
 Func IsQuestChangeUiOpened()
         Local $uiQuestChange = "Root.TopLayer.BattleNetModalNotifications_main.ModalNotification.Buttons.ButtonList.OkButton"
-        Return FastCheckUiItemVisible($uiNewGame, 1, 1073)
+        Return FastCheckUiItemVisible($uiQuestChange, 1, 1073)
 EndFunc  ;==> _checkLoadNewGame
 
 Func GetLevelAreaId()
@@ -3095,7 +3095,7 @@ Func _Log($text, $write = 0)
 	$texte_write = @MDAY & "/" & @MON & "/" & @YEAR & " " & @HOUR & ":" & @MIN & ":" & @SEC & " | " & $text
 
 	If $write == 1 Then
-		$file = FileOpen(@ScriptDir & "\log\" & $fichierlog, 1)
+		$file = FileOpen(@ScriptDir & "\log\" & $fichierlog, 1 + 8) ;1 write/append + 8 : create path 
 		If $file = -1 Then
 			ConsoleWrite("Log file error, cant be open")
 		Else
