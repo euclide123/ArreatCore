@@ -3446,7 +3446,7 @@ Func StatsDisplay()
 			$DebugMessage = $DebugMessage & "XP Moyen/Heure : " & Int($Xp_Moy_Hrs / 1000) / 1000 & " M" & @CRLF
 		EndIf
 
-		²If ($Xp_Moy_HrsPerte < 1000000) Then ;afficher en "K"
+		If ($Xp_Moy_HrsPerte < 1000000) Then ;afficher en "K"
 			$DebugMessage = $DebugMessage & "Perte Moyenne/Heure : -" & Int($Xp_Moy_HrsPerte / 1000) & " K (" & Round($Xp_Moy_HrsPerte_Ratio) & "%)" & @CRLF
 		EndIf
 		If ($Xp_Moy_HrsPerte > 999999) Then ;afficher en "M"
