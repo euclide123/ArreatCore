@@ -853,11 +853,13 @@ Func GoToTown()
 				$nbTriesTownPortal = 3
 			EndIf
 		Else
+			; On attack, au cas où il y aurait des mobs après les fail tp
+			Attack()
 			LeaveGame()
 			$nbTriesTownPortal = 0
 			Sleep(10000)
 			While IsInMenu() = False
-				Sleep(10)
+				Sleep(100)
 			WEnd
 			ExitLoop
 		EndIf
@@ -1250,8 +1252,8 @@ Func UseTownPortal($mode = 0)
 
 	$compt = 0
 
-	While Not IsInTown()
-
+	While Not IsInTown() And IsInGame()
+		
 		_Log("tour de boucle IsInTown")
 
 		$compt += 1
