@@ -5419,8 +5419,8 @@ Func UseTownPortal($mode = 0)
 				$compt_while += 1
 			WEnd
 
-			_Log("compare time to tp -> " & TimerDiff($timer) & "> 3700")
-			If TimerDiff($timer) > 3700 Then
+			_Log("compare time to tp -> " & TimerDiff($timer) & "> 4000")
+			If TimerDiff($timer) > 4000 Then
 				While Not IsInTown() And $try < 6
 					_Log("on a peut etre reussi a tp, on reste inerte pendant 6sec voir si on arrive en ville, tentative -> " & $try)
 					$try += 1
