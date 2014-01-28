@@ -1210,7 +1210,7 @@ Func FilterBackpack()
 			$CurrentIdAttrib = _memoryread($ACD + 0x120, $d3, "ptr")
 			$quality = GetAttribute($CurrentIdAttrib, $Atrib_Item_Quality_Level) ;on definit la quality de l'item traiter ici
 			If ($quality = 9) Then
-				If ($PartieSolo = 'false') Then WriteMe(3) ; TChat
+				If ($PartieSolo = 'false') Then WriteMe($WRITE_ME_HAVE_LEGENDARY) ; TChat
 				$nbLegs += 1 ; on definit les legendaire et on compte les legs id au coffre
 			ElseIf ($quality = 6) Then
 				$nbRares += 0 ; on definit les rares
@@ -1290,7 +1290,7 @@ Func FilterBackpack2()
 			$CurrentIdAttrib = _memoryread($ACD + 0x120, $d3, "ptr")
 			$quality = GetAttribute($CurrentIdAttrib, $Atrib_Item_Quality_Level) ;on definit la quality de l'item traiter ici
 			If ($quality = 9) Then
-				If ($PartieSolo = 'false') Then WriteMe(3) ; TChat
+				If ($PartieSolo = 'false') Then WriteMe($WRITE_ME_HAVE_LEGENDARY) ; TChat
 				$nbLegs += 1 ; on definit les legendaire et on compte les legs unid au coffre
 			ElseIf ($quality = 6) Then
 				$nbRaresUnid += 0 ; on definit les rares
@@ -2954,14 +2954,14 @@ Func LeaveGame()
 			Sleep(Random(200, 300, 1))
 		WEnd
 
-		If ($PartieSolo = 'false') Then WriteMe(4) ; TChat
+		If ($PartieSolo = 'false') Then WriteMe($WRITE_ME_QUITE) ; TChat
 		 
 		RandomMouseClick(420, 323)
 		Sleep(Random(500, 1000, 1))
 		_Log("Leave Game Done")
 	EndIf
 
-	If ($PartieSolo = 'false') Then WriteMe(11) ; TChat
+	If ($PartieSolo = 'false') Then WriteMe($WRITE_ME_TAKE_BREAK_MENU) ; TChat
 
 EndFunc   ;==>LeaveGame
 
@@ -4263,7 +4263,7 @@ Func TpRepairAndBack()
 
 	$PortBack = False
 	
-	If ($PartieSolo = 'false') Then WriteMe(5) ; TChat
+	If ($PartieSolo = 'false') Then WriteMe($WRITE_ME_INVENTORY_FULL) ; TChat
 
 	While Not IsInTown()
 		If Not UseTownPortal2() Then
@@ -4280,7 +4280,7 @@ Func TpRepairAndBack()
 
 	If $PortBack Then
 	   
-	    If ($PartieSolo = 'false') Then WriteMe(6) ; TChat
+	    If ($PartieSolo = 'false') Then WriteMe($WRITE_ME_BACK_REPAIR) ; TChat
 		SafePortBack()
 
 		Local $hTimer = TimerInit()
@@ -4303,7 +4303,7 @@ Func StashAndRepair()
 	$RepairORsell += 1
 	$item_to_stash = 0
 	
-	If ($PartieSolo = 'false') Then WriteMe(8) ; TChat
+	If ($PartieSolo = 'false') Then WriteMe($WRITE_ME_SALE) ; TChat
 
 	If trim(StringLower($Unidentified)) = "true" Or (trim(StringLower($Unidentified) = "false") And trim(StringLower($Identified)) = "false") Then ; swicht unidentifier
 		_Log("Unidentified")
@@ -5344,7 +5344,7 @@ EndFunc   ;==>GetActivePlayerSkill
 
 Func UseTownPortal($mode = 0)
 
-	If ($PartieSolo = 'false') Then WriteMe(7) ; TChat
+	If ($PartieSolo = 'false') Then WriteMe($WRITE_ME_TP) ; TChat
 
 	$compt = 0
 

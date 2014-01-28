@@ -103,7 +103,7 @@ Func _dorun()
 		DetectStrInventoryFull()
 	EndIf
 
-	If ($PartieSolo = 'false') Then WriteMe(2) ; TChat
+	If ($PartieSolo = 'false') Then WriteMe($WRITE_ME_WELCOME) ; TChat
 	
 	GetAct()
 	Global $CheckTakeShrinebanlist = ""
@@ -153,7 +153,7 @@ Func _botting()
 		EndIf
 
 		If IsInMenu() And IsOnLoginScreen() = False Then
-		   If ($PartieSolo = 'false') Then WriteMe(1) ; TChat
+		   If ($PartieSolo = 'false') Then WriteMe($WRITE_ME_RESART_GAME) ; TChat
 			RandSleep()
 			$DeathCountToggle = True
 			ResumeGame()

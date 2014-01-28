@@ -12,6 +12,19 @@ Global Const $MODE_STASH_FULL	  		= 1
 Global Const $MODE_BOSS_TP_DENIED 		= 2
 Global Const $MODE_NO_IDENTIFIED_ITEM 	= 3
 
+; GestionChat
+Global Const $WRITE_ME_RESART_GAME		= 1
+Global Const $WRITE_ME_WELCOME			= 2
+Global Const $WRITE_ME_HAVE_LEGENDARY	= 3
+Global Const $WRITE_ME_QUITE			= 4
+Global Const $WRITE_ME_INVENTORY_FULL	= 5
+Global Const $WRITE_ME_BACK_REPAIR		= 6
+Global Const $WRITE_ME_TP				= 7
+Global Const $WRITE_ME_SALE				= 8
+Global Const $WRITE_ME_DEATH			= 9
+Global Const $WRITE_ME_TAKE_WP			= 10
+Global Const $WRITE_ME_TAKE_BREAK_MENU	= 11
+
 ; ?
 Global $ClickToMoveToggle
 Global $GameFailed

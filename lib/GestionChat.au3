@@ -21,7 +21,7 @@ Func WriteMe($situation)
 	Local $Tp = 5000
 	Local $NewRun = 2000
 	Local $TaweWp = 5000
-	Local $StarNewGame = 15000
+	Local $StartNewGame = 15000
 	Local $BreakMenu = 120000
    
 	Switch $situation
@@ -34,7 +34,7 @@ Func WriteMe($situation)
 				Case 3
 					WriteInChat("Tu es prêt, je relance")
 			EndSwitch 
-			Sleep($StarNewGame)
+			Sleep($StartNewGame)
 			
 		Case 2;en jeu, début de la run
 			Switch Random(1, 5, 1) 
