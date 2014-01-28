@@ -141,6 +141,7 @@ Global $nbRares                 = 0
 Global $nbRaresUnid             = 0
 Global $tempsPauseGame          = 0
 Global $tempsPauserepas         = 0;global pour récupèré temps de pause
+Global $CheckTakeShrinebanlist
 ;fin global ajouter
 
 ; global sur la fenetre d3
