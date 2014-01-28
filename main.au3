@@ -26,21 +26,27 @@ Opt("MouseCoordMode", 2) ;1=absolute, 0=relative, 2=client
 
 
 ; --------------------------------------------------------------------------------
-;   Include 
+;   Include
 ; --------------------------------------------------------------------------------
 ;; non related bot includes
 #include <File.au3>
 #include <WinAPI.au3>
-#include "lib\utils.au3"
 
 ;; file with variables
 #include "variables.au3"
 #include "lib\settings.au3"
+#include "lib\utils.au3"
 #include "lib\SkillsConstants.au3"
 #include "lib\sequence.au3"
 
 ; toolkit
 #include "toolkit.au3"
+
+; libs
+#include "lib/game.au3"
+#include "lib/player.au3"
+#include "lib/stats.au3"
+#include "lib/UsePath.au3"
 
 ; TChat
 #include "lib\GestionChat.au3"
@@ -65,6 +71,7 @@ HotKeySet("{F3}", "TogglePause")
 AdlibRegister("DieTooFast", 1200000)
 OffsetList()
 LoadingSNOExtended()
+InitSettings()
 Func _dorun()
 	_Log("======== new run ==========")
     Local $hTimer = TimerInit()
@@ -104,9 +111,9 @@ Func _dorun()
 	EndIf
 
 	If ($PartieSolo = 'false') Then WriteMe($WRITE_ME_WELCOME) ; TChat
-	
+
 	GetAct()
-	Global $CheckTakeShrinebanlist = ""
+	$CheckTakeShrinebanlist = ""
 	EmergencyStopCheck()
 
 	If IsItemDamaged() Then
@@ -122,7 +129,7 @@ Func _dorun()
 	InitSequence()
 	Sequence()
 
-	Global $CheckTakeShrinebanlist = ""
+	$CheckTakeShrinebanlist = ""
 	_Log("End Run" & " gamefailled: " & $GameFailed)
 	Return True
 EndFunc   ;==>_dorun
@@ -144,11 +151,11 @@ Func _botting()
 
 		; Si Choix_Act_Run <> 0 le bot passe en mode automatique
 		If $Choix_Act_Run <> 0 Then
-			If IsInGame() = true and $TypedeBot < 2 Then;si en jeu lors du lancement auto 
+			If IsInGame() = true and $TypedeBot < 2 Then;si en jeu lors du lancement auto
 				WinSetOnTop("[CLASS:D3 Main Window Class]", "", 0)
 				MsgBox(0, "ERREUR", "Vous devez être dans le menu pour lancer une run en auto ! ")
 				Terminate()
-			EndIf  
+			EndIf
 			SelectQuest()
 		EndIf
 
@@ -251,76 +258,6 @@ Func CheckHotkeys()
 	_Log("Check des touches OK" & @CRLF)
 	$hotkeycheck = 1
 EndFunc   ;==>CheckHotkeys
-
-
-;;--------------------------------------------------------------------------------
-;;     Initialise Buffs while in training Area
-;;--------------------------------------------------------------------------------
-Func Buffinit()
-	If $delaiBuff1 Then
-		AdlibRegister("buff1", $delaiBuff1 * Random(1, 1.2))
-
-	EndIf
-	If $PreBuff1 = "true" Then
-		buff1()
-		Sleep(400)
-	EndIf
-	If $delaiBuff2 Then
-		AdlibRegister("buff2", $delaiBuff2 * Random(1, 1.2))
-
-	EndIf
-	If $PreBuff2 = "true" Then
-		buff2()
-		Sleep(400)
-	EndIf
-	If $delaiBuff3 Then
-		AdlibRegister("buff3", $delaiBuff3 * Random(1, 1.2))
-
-	EndIf
-	If $PreBuff3 = "true" Then
-		buff3()
-		Sleep(400)
-	EndIf
-	If $delaiBuff4 Then
-		AdlibRegister("buff4", $delaiBuff4 * Random(1, 1.2))
-
-	EndIf
-	If $PreBuff4 = "true" Then
-		buff4()
-		Sleep(400)
-	EndIf
-EndFunc   ;==>Buffinit
-
-;;--------------------------------------------------------------------------------
-;;     Stop All buff timers
-;;--------------------------------------------------------------------------------
-Func UnBuff()
-	If $delaiBuff1 Then
-		AdlibUnRegister("buff1")
-	EndIf
-	If $delaiBuff2 Then
-		AdlibUnRegister("buff2")
-	EndIf
-	If $delaiBuff3 Then
-		AdlibUnRegister("buff3")
-	EndIf
-	If $delaiBuff4 Then
-		AdlibUnRegister("buff4")
-	EndIf
-EndFunc   ;==>UnBuff
-Func buff1()
-	Send($ToucheBuff1)
-EndFunc   ;==>buff1
-Func buff2()
-	Send($ToucheBuff2)
-EndFunc   ;==>buff2
-Func buff3()
-	Send($ToucheBuff3)
-EndFunc   ;==>buff3
-Func buff4()
-	Send($ToucheBuff4)
-EndFunc   ;==>buff4
-
 
 
 _botting()

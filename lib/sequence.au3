@@ -1,3 +1,4 @@
+#include-once
 #region ;**** Directives created by AutoIt3Wrapper_GUI ****
 #AutoIt3Wrapper_UseX64=n
 #AutoIt3Wrapper_Res_requestedExecutionLevel=asInvoker
@@ -706,6 +707,117 @@ Func Sequence()
 EndFunc   ;==>Sequence
 
 
+Func SafePortStart()
+	$Curentarea = GetLevelAreaId()
+	;fix offset list
+	While $Curentarea = -1
+		Local $hTimer = TimerInit()
+		While Not OffsetList() And TimerDiff($hTimer) < 30000 ; 30secondes
+			Sleep(40)
+		WEnd
+
+		If TimerDiff($hTimer) >= 30000 Then
+			_Log('Fail to use OffsetList - SafePortStart')
+			Return False
+		EndIf
+
+		$Curentarea = GetLevelAreaId()
+
+	WEnd
+	_Log('cur area :' & $Curentarea)
+
+	$tptry = 0
+	$tpcheck = 0
+
+	While $tpcheck = 0 And $tptry <= 1
+		_Log("try n°" & $tptry + 1 & " hearthPortal")
+		InteractByActorName('hearthPortal')
+		$Newarea = GetLevelAreaId()
+
+		Local $areatry = 0
+
+		While $Newarea = $Curentarea And $areatry <= 10
+			$Newarea = GetLevelAreaId()
+			Sleep(500)
+			$areatry = $areatry + 1
+		WEnd
+
+		If $Newarea <> $Curentarea Then
+			$tpcheck = 1
+		Else
+			$tptry += 1
+		EndIf
+
+	WEnd
+
+	If $Newarea <> $Curentarea Then
+		_Log('succesfully teleported back : ' & $Curentarea & ":" & $Newarea)
+		Local $hTimer = TimerInit()
+		While Not OffsetList() And TimerDiff($hTimer) < 30000 ; 30secondes
+			Sleep(40)
+		WEnd
+
+		If TimerDiff($hTimer) >= 30000 Then
+			_Log('Fail to use OffsetList - SafePortStart')
+		EndIf
+
+	Else
+		$GameFailed = 1
+	EndIf
+
+EndFunc   ;==>SafePortStart
+
+Func SafePortBack()
+	$Curentarea = GetLevelAreaId()
+	_Log('cur area :' & $Curentarea)
+	;Go to center according to act
+	Switch $Act
+		Case 1 ; act 1
+			MoveToPos(2922.02783203125, 2791.189453125, 24.0453262329102, 0, 25)
+			MoveToPos(2945.61547851563, 2800.7109375, 24.0453319549561, 0, 25)
+			MoveToPos(2973.68774414063, 2800.90869140625, 24.0453262329102, 0, 25)
+
+		Case 2 ; act 2
+			;mtp a definir
+
+
+		Case 3 ; act 3
+			MoveToPos(427.152893066406, 345.048858642578, 0.10000141710043, 0, 25)
+			MoveToPos(400.490386962891, 380.362884521484, 0.332595944404602, 0, 25)
+			MoveToPos(390.630401611328, 399.380554199219, 0.55376011133194, 0, 25)
+
+		Case 4 ; act 4
+			MoveToPos(427.152893066406, 345.048858642578, 0.10000141710043, 0, 25)
+			MoveToPos(400.490386962891, 380.362884521484, 0.332595944404602, 0, 25)
+			MoveToPos(390.630401611328, 399.380554199219, 0.55376011133194, 0, 25)
+
+	EndSwitch
+
+	InteractByActorName('hearthPortal')
+	$Newarea = GetLevelAreaId()
+
+	Local $areatry = 0
+	While $Newarea = $Curentarea And $areatry <= 10
+		$Newarea = GetLevelAreaId()
+		Sleep(500)
+		$areatry = $areatry + 1
+	WEnd
+
+	If $Newarea <> $Curentarea Then
+		_Log('succesfully teleported back : ' & $Curentarea & ":" & $Newarea)
+		Local $hTimer = TimerInit()
+		While Not OffsetList() And TimerDiff($hTimer) < 30000 ; 30secondes
+			Sleep(40)
+		WEnd
+
+		If TimerDiff($hTimer) >= 30000 Then
+			_Log('Fail to use OffsetList - SafePortBack')
+		EndIf
+
+	Else
+		_Log('We failed to teleport back')
+	EndIf
+EndFunc   ;==>SafePortBack
 
 
 ;***************** CMD ************

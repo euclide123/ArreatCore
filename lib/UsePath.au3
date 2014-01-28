@@ -59,7 +59,7 @@ Func UsePath(ByRef $path)
 		Local $angle = 1
 		Local $Radius = 25
 		;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-		While _MemoryRead($ClickToMoveToggle, $d3, 'float') = 0
+		While Not IsPlayerMoving()
 			;_Log("Togglemove : " & _MemoryRead($ClickToMoveToggle, $d3, 'float'))
 
 			MouseUp("middle")
