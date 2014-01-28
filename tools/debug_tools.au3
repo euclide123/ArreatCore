@@ -55,7 +55,7 @@ GUISetState(@SW_SHOW, $debugForm)
 #inits
 OffsetList()
 LoadingSNOExtended()
-
+InitSettings("../settings/settings.ini")
 While 1
 	Sleep(100)
 WEnd
@@ -66,16 +66,19 @@ EndFunc   ;==>CloseForm
 
 
 Func ExecFunc()
-	Local $cmd = GUICtrlRead($tCommandBloc)
+	Local $cmd = StringSplit(GUICtrlRead($tCommandBloc),@CRLF)
 	GUICtrlSetData($tResultCommand, "")
 
-	If StringLen($cmd) > 0 Then
-		$return = Execute($cmd)
-
+	$returnStr = ""
+	For $i = 1 To $cmd[0]
+		ConsoleWrite("[" & $i & "] "&$cmd[$i])
+		$return = Execute($cmd[$i])
 		If @error <> 0 Then
-			GUICtrlSetData($tResultCommand, "Error")
+			$returnStr &= "[" & $i & "] Error" &@CRLF
 		Else
-			GUICtrlSetData($tResultCommand, $return)
+			$returnStr &= "[" & $i & "] " & $return &@CRLF
 		EndIf
-	EndIf
+	Next
+
+	GUICtrlSetData($tResultCommand, $returnStr)
 EndFunc   ;==>ExecFunc
