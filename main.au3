@@ -42,6 +42,9 @@ Opt("MouseCoordMode", 2) ;1=absolute, 0=relative, 2=client
 ; toolkit
 #include "toolkit.au3"
 
+; TChat
+#include "lib\GestionChat.au3"
+
 ; Automatisation des séquences
 #include "lib\GestionMenu.au3"
 #include "lib\GestionPause.au3"
@@ -73,6 +76,7 @@ Func _dorun()
             Return False
     EndIf
 
+	If $Totalruns = 1 And ($PartieSolo = 'false') Then SetConfigPartieSolo(); TChat configuration du settings
 
 	If $GameFailed = 0 Then
 		$success += 1
@@ -99,6 +103,8 @@ Func _dorun()
 		DetectStrInventoryFull()
 	EndIf
 
+	If ($PartieSolo = 'false') Then WriteMe(2) ; TChat
+	
 	GetAct()
 	Global $CheckTakeShrinebanlist = ""
 	EmergencyStopCheck()
@@ -147,20 +153,11 @@ Func _botting()
 		EndIf
 
 		If IsInMenu() And IsOnLoginScreen() = False Then
+		   If ($PartieSolo = 'false') Then WriteMe(1) ; TChat
 			RandSleep()
 			$DeathCountToggle = True
+			ResumeGame()
 		EndIf
-
-		;TCHAT
-		If ($PartieSolo = 'false') Then
-			Switch Random(1, 2, 1)
-				Case 1
-					WriteInChat("Bonjour c'est partie pour un run")
-				Case 2
-					WriteInChat("Je vous souhaite LA bienvenuE")
-			EndSwitch
-		EndIf
-		ResumeGame()
 
 		While IsOnLoginScreen() = False And IsInGame() = False
 			_Log("Ingame False")
@@ -175,15 +172,7 @@ Func _botting()
 				WEnd
 				ContinueLoop 2
 			EndIf
-			;TCHAT
-			If ($PartieSolo = 'false') Then
-				Switch Random(1, 2, 1)
-					Case 1
-						WriteInChat("En avant l'aventure")
-					Case 2
-						WriteInChat("La chasse au montres est ouverte")
-				EndSwitch
-			EndIf
+
 			ResumeGame()
 		WEnd
 

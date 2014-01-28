@@ -1210,15 +1210,7 @@ Func FilterBackpack()
 			$CurrentIdAttrib = _memoryread($ACD + 0x120, $d3, "ptr")
 			$quality = GetAttribute($CurrentIdAttrib, $Atrib_Item_Quality_Level) ;on definit la quality de l'item traiter ici
 			If ($quality = 9) Then
-				;Tchat
-				If ($PartieSolo = 'false') Then
-					Switch Random(1, 2, 1)
-						Case 1
-							WriteInChat("Et encore un souffre dans le coffre")
-						Case 2
-							WriteInChat("YES j'ai trouvé un legendaire")
-					EndSwitch
-				EndIf
+				If ($PartieSolo = 'false') Then WriteMe(3) ; TChat
 				$nbLegs += 1 ; on definit les legendaire et on compte les legs id au coffre
 			ElseIf ($quality = 6) Then
 				$nbRares += 0 ; on definit les rares
@@ -1298,6 +1290,7 @@ Func FilterBackpack2()
 			$CurrentIdAttrib = _memoryread($ACD + 0x120, $d3, "ptr")
 			$quality = GetAttribute($CurrentIdAttrib, $Atrib_Item_Quality_Level) ;on definit la quality de l'item traiter ici
 			If ($quality = 9) Then
+				If ($PartieSolo = 'false') Then WriteMe(3) ; TChat
 				$nbLegs += 1 ; on definit les legendaire et on compte les legs unid au coffre
 			ElseIf ($quality = 6) Then
 				$nbRaresUnid += 0 ; on definit les rares
@@ -2961,24 +2954,14 @@ Func LeaveGame()
 			Sleep(Random(200, 300, 1))
 		WEnd
 
-		;TCHAT
-		If ($PartieSolo = 'false') Then
-			Switch Random(1, 2, 1)
-				Case 1
-					WriteInChat("c'est fini on quitte et on relance")
-				Case 2
-					WriteInChat("c'est clean on en refait une vite fait")
-			EndSwitch
-		EndIf
+		If ($PartieSolo = 'false') Then WriteMe(4) ; TChat
+		 
 		RandomMouseClick(420, 323)
 		Sleep(Random(500, 1000, 1))
 		_Log("Leave Game Done")
 	EndIf
 
-	If ($PartieSolo = 'false') Then
-		;attente du groupe entre 3 et 5 mns
-		Sleep(Random(180000, 300000))
-	EndIf
+	If ($PartieSolo = 'false') Then WriteMe(11) ; TChat
 
 EndFunc   ;==>LeaveGame
 
@@ -4279,6 +4262,8 @@ EndFunc   ;==>GoToTown
 Func TpRepairAndBack()
 
 	$PortBack = False
+	
+	If ($PartieSolo = 'false') Then WriteMe(5) ; TChat
 
 	While Not IsInTown()
 		If Not UseTownPortal2() Then
@@ -4294,6 +4279,8 @@ Func TpRepairAndBack()
 	StashAndRepair()
 
 	If $PortBack Then
+	   
+	    If ($PartieSolo = 'false') Then WriteMe(6) ; TChat
 		SafePortBack()
 
 		Local $hTimer = TimerInit()
@@ -4315,6 +4302,8 @@ Func StashAndRepair()
 	_Log("Func StashAndRepair")
 	$RepairORsell += 1
 	$item_to_stash = 0
+	
+	If ($PartieSolo = 'false') Then WriteMe(8) ; TChat
 
 	If trim(StringLower($Unidentified)) = "true" Or (trim(StringLower($Unidentified) = "false") And trim(StringLower($Identified)) = "false") Then ; swicht unidentifier
 		_Log("Unidentified")
@@ -5355,17 +5344,7 @@ EndFunc   ;==>GetActivePlayerSkill
 
 Func UseTownPortal($mode = 0)
 
-	;TCHAT
-	If ($PartieSolo = 'false') Then
-		Switch Random(1, 3, 1)
-			Case 1
-				WriteInChat("sell")
-			Case 2
-				WriteInChat("je vends/repare")
-			Case 3
-				WriteInChat("je retourne en ville")
-		EndSwitch
-	EndIf
+	If ($PartieSolo = 'false') Then WriteMe(7) ; TChat
 
 	$compt = 0
 
@@ -5753,15 +5732,6 @@ EndFunc   ;==>IsAffix
 
 Func UseBookOfCain()
 
-	;TCHAT
-	If ($PartieSolo = 'false') Then
-		Switch Random(1, 2, 1)
-			Case 1
-				WriteInChat("je vends")
-			Case 2
-				WriteInChat("bof rien à garder comme d'hab")
-		EndSwitch
-	EndIf
 	If IsInventoryOpened() = True Then
 		Send("i")
 		Sleep(150)
@@ -5820,11 +5790,3 @@ Func GetGold()
 	Next
 	Return 0
 EndFunc   ;==>GetGold
-
-;TCHAT
-Func WriteInChat($str)
-	_Log("--------------------> TCHAT : " & $str & @CRLF)
-	Send("{ENTER}") ;validation de la fenetre de tchat sur le groupe
-	Send('' & $str & '');Ecriture du message
-	Send("{ENTER}") ;Envoie du message et sort de la fenetre du tchat
-EndFunc   ;==>WriteInChat

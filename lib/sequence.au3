@@ -69,18 +69,8 @@ Func Revive(ByRef $path)
 		$nb_die_t = $nb_die_t + 1
 		$Res_compt = $Res_compt + 1
 		_Log("You are dead, max :" & $rdn_die_t - $nb_die_t & " more death allowed")
-
-		;TCHAT
-		If ($PartieSolo = 'false') Then
-			Switch Random(1, 3, 1)
-				Case 1
-					WriteInChat("Je me suis fait avoir comme un bleu")
-				Case 2
-					WriteInChat("Ils font mal")
-				Case 3
-					WriteInChat("ça pique fort")
-			EndSwitch
-		EndIf
+		
+		If ($PartieSolo = 'false') Then WriteMe(9) ; TChat
 
 		If $nb_die_t <= $rdn_die_t Then
 			Sleep(Random(5000, 6000))
@@ -389,16 +379,9 @@ Func Sequence()
 
 				;***************************************CMD BLOQUANTE*****************************************
 				If StringInStr($line, "takewp=", 2) Then; TakeWP detected
-					;TCHAT
-					If ($PartieSolo = 'false') Then
-						Switch Random(1, 2, 1)
-							Case 1
-								WriteInChat("TP sur moi je suis dans une autre zone")
-							Case 2
-								WriteInChat("TP sur mon drapeau")
-						EndSwitch
-					EndIf
 
+					If ($PartieSolo = 'false') Then WriteMe(10) ; TChat
+					 
 					$line = StringReplace($line, "takewp=", "", 0, 2)
 					$table_wp = StringSplit($line, ",", 2)
 
