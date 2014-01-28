@@ -547,12 +547,12 @@ Func InitSkillHeros($skillHeros)
 
 EndFunc   ;==>InitSkillHeros
 
-Func InitGrabListFile()
+Func InitGrabListFile($grabListPath = "grablist/")
 	Dim $txttoarray[1]
 	;local $load_file = ""
 	Local $compt_line = 0
 
-	Local $file = FileOpen("grablist/" & $grabListFile, 0)
+	Local $file = FileOpen($grabListPath &  $grabListFile, 0)
 	If $file = -1 Then
 		MsgBox(0, "Error", "Unable to open file : " & $grabListFile)
 		Exit
@@ -706,14 +706,14 @@ Func GrabListFilterToStr($str)
 	Return $result
 EndFunc   ;==>GrabListFilterToStr
 
-Func InitSettings()
+Func InitSettings($configFile = "settings/settings.ini", $grabListPath = "grablist/")
 	; ------------------------------------
 	If Not FileExists($profilFile) Then
-		writeConfigs()
+		writeConfigs($configFile, 1)
 	EndIf
 
-	LoadConfigs()
-	InitGrabListFile()
+	LoadConfigs($configFile)
+	InitGrabListFile($grabListPath)
 	InitGrabListTab()
 	; ------------------------------------
 
