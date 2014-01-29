@@ -167,7 +167,6 @@ Func OffsetList()
 	Global $_itrInteractD = _MemoryRead($_itrInteractC + $ofs__InteractOffsetA, $d3, 'ptr')
 	Global $_itrInteractE = $_itrInteractD + $ofs__InteractOffsetB
 
-	ConsoleWrite('god')
 	If LocateMyToon() Then
 		Global $ClickToMoveMain = _MemoryRead($_Myoffset + $ofs__ObjmanagerActorLinkToCTM, $d3, 'ptr')
 		Global $ClickToMoveRotation = $ClickToMoveMain + $RotationOffset
@@ -244,7 +243,7 @@ Func FindActor($name, $maxRange = 400)
 	While IterateObjectsList($index, $offset, $count, $item)
 		If StringInStr($item[1], $name) And $item[9] < $maxRange Then
 			$find = 1
-			_Log("Mesure FindActor Trouvé" & TimerDiff($hTimer) & @CRLF)
+			_Log("Mesure FindActor Trouvï¿½" & TimerDiff($hTimer) & @CRLF)
 			Return 1
 		EndIf
 	WEnd
@@ -970,8 +969,8 @@ Func FilterBackpack()
 			$return[$i][1] = $__ACDACTOR[$i][4] ;definit la ligne de l'item
 			$return[$i][3] = $quality
 
-			;;;       If $itemDestination = "Stash_Filtre" And trim(StringLower($Unidentified)) = "false" Then ;Si c'est un item à filtrer et que l'on a definit Unidentified sur false (il faudra juste changer le nom de la variable Unidentifier)
-			If $itemDestination = "Stash_Filtre" Then ;Si c'est un item à filtrer
+			;;;       If $itemDestination = "Stash_Filtre" And trim(StringLower($Unidentified)) = "false" Then ;Si c'est un item ï¿½ filtrer et que l'on a definit Unidentified sur false (il faudra juste changer le nom de la variable Unidentifier)
+			If $itemDestination = "Stash_Filtre" Then ;Si c'est un item ï¿½ filtrer
 				If CheckFilterFromTable($GrabListTab, $__ACDACTOR[$i][1], $CurrentIdAttrib) Then ;on lance le filtre sur l'item
 					_Log('valide', 1)
 					_Log(' - ', 1)
@@ -991,7 +990,7 @@ Func FilterBackpack()
 		;debut Recyclage Item
 		If $Recycle = "true" Then
 			For $i = 0 To UBound($return) - 1
-				If $return[$i][2] = "Trash" And $return[$i][3] > 2 And $return[$i][3] < $QualityRecycle Then ; si trash + qualité >2, soit les bleus et jaunes, mettre 5 pour ne recycler que les jaunes.
+				If $return[$i][2] = "Trash" And $return[$i][3] > 2 And $return[$i][3] < $QualityRecycle Then ; si trash + qualitï¿½ >2, soit les bleus et jaunes, mettre 5 pour ne recycler que les jaunes.
 					;Recyle les bleus et vend les jaunes >2 <6
 					$return[$i][2] = "Recycle"
 				EndIf
@@ -1051,8 +1050,8 @@ Func FilterBackpack2()
 			$return[$i][3] = $quality
 
 			If $Unidentified = "false" And $Identified = "false" Then ;ajouter pour ne rien filtrer
-				If $itemDestination = "Stash_Filtre" Then ;on traite la qualité
-					If ($quality < 9) Then;si la qualité est plus petite que 9 on jette
+				If $itemDestination = "Stash_Filtre" Then ;on traite la qualitï¿½
+					If ($quality < 9) Then;si la qualitï¿½ est plus petite que 9 on jette
 						$return[$i][2] = "Trash"
 						_Log('invalide', 1)
 						_Log(' - ', 1)
@@ -1066,7 +1065,7 @@ Func FilterBackpack2()
 
 
 			If $Unidentified = "true" Then
-				If $itemDestination = "Stash_Filtre" Then ;Si c'est un item à filtrer
+				If $itemDestination = "Stash_Filtre" Then ;Si c'est un item ï¿½ filtrer
 					If CheckFilterFromTable($GrabListTab, $__ACDACTOR[$i][1], $CurrentIdAttrib) Then ;on lance le filtre sur l'item
 						_Log('valide', 1)
 						_Log(' - ', 1)
@@ -1089,7 +1088,7 @@ Func FilterBackpack2()
 		; Recyclage Item
 		If $Recycle = "true" And $Identified = "false" Then
 			For $i = 0 To UBound($return) - 1
-				If $return[$i][2] = "Trash" And $return[$i][3] > 2 And $return[$i][3] < $QualityRecycle Then ; si trash + qualité >2, soit les bleus et jaunes, mettre 5 pour ne recycler que les jaunes.
+				If $return[$i][2] = "Trash" And $return[$i][3] > 2 And $return[$i][3] < $QualityRecycle Then ; si trash + qualitï¿½ >2, soit les bleus et jaunes, mettre 5 pour ne recycler que les jaunes.
 					$return[$i][2] = "Recycle"
 				EndIf
 			Next
@@ -2259,7 +2258,7 @@ Func FastCheckUiItemVisibleSize($valuetocheckfor, $visibility, $bucket)
 	Return False
 EndFunc   ;==>FastCheckUiItemVisibleSize
 
-; TODO : check où le mettre
+; TODO : check oï¿½ le mettre
 Func CheckBackpackSize()
 	$sizelookfor = "Root.NormalLayer.inventory_dialog_mainPage.inventory_button_backpack"
 
@@ -2288,7 +2287,7 @@ Func CheckBackpackSize()
 
 EndFunc   ;==>CheckBackpackSize
 
-; TODO : check où le mettre
+; TODO : check oï¿½ le mettre
 Func AutoModeInitSpells()
 	If StringLower(Trim($nameCharacter)) = "monk" Then
 		Dim $tab_skill_temp = $Monk_skill_Table
@@ -2352,7 +2351,7 @@ Func AutoModeInitSpells()
 	Next
 EndFunc   ;==>AutoModeInitSpells
 
-; TODO : check où le mettre
+; TODO : check oï¿½ le mettre
 Func AssociateSkills($y, $key, $tab_skill_temp)
 	Dim $tab[11]
 	$tab[0] = True
@@ -2569,7 +2568,7 @@ Func GetMaxResource($idAttrib, $classe)
 
 EndFunc   ;==>GetMaxResource
 
-; TODO : voir a quoi ça sert et où
+; TODO : voir a quoi ï¿½a sert et oï¿½
 Func ResetTimerIgnore()
 	If TimerDiff($timer_ignore_reset) > 120000 Then
 
