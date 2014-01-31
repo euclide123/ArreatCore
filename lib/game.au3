@@ -598,6 +598,7 @@ EndFunc   ;==>FindSafeZone
 Func IsAffix($item, $pv = 0)
 	If $item[9] < 50 Then
 		If ((StringInStr($item[1], "bomb_buildup") And $pv <= $Life_explo / 100) Or _
+				(StringInStr($item[1], "Corpulent_") And $pv<=$Life_explo/100 ) Or _
 				(StringInStr($item[1], "demonmine_C") And $pv <= $Life_mine / 100) Or _
 				(StringInStr($item[1], "creepMobArm") And $pv <= $Life_arm / 100) Or _
 				(StringInStr($item[1], "woodWraith_explosion") And $pv <= $Life_spore / 100) Or _

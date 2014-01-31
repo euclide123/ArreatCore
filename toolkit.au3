@@ -2596,6 +2596,8 @@ Func IterateFilterAffix()
 			If (StringInStr($item[1], "woodWraith_explosion") Or StringInStr($item[1], "WoodWraith_sporeCloud_emitter")) Then $item_affix_2D[$i][10] = $range_ice
 			If StringInStr($item[1], "sandwasp_projectile") Then $item_affix_2D[$i][10] = $range_arcane
 			If StringInStr($item[1], "molten_trail") Then $item_affix_2D[$i][10] = $range_lave
+			If (StringInStr($item[1], "Corpulent_") And (StringLower(Trim($nameCharacter)) = "demonhunter" Or StringLower(Trim($nameCharacter)) = "witchdoctor" Or StringLower(Trim($nameCharacter)) = "wizard")) Then $item_affix_2D[$i][10] = $range_arcane
+			If StringInStr($item[1], "Corpulent_suicide_blood") Then $item_affix_2D[$i][10] = $range_arcane
 			If StringInStr($item[1], "Desecrator") Then $item_affix_2D[$i][10] = $range_profa
 			If (StringInStr($item[1], "bomb_buildup") Or StringInStr($item[1], "Icecluster") Or StringInStr($item[1], "Molten_deathExplosion") Or StringInStr($item[1], "Molten_deathStart")) Then $item_affix_2D[$i][10] = $range_ice
 			If (StringInStr($item[1], "demonmine_C") Or StringInStr($item[1], "Crater_DemonClawBomb")) Then $item_affix_2D[$i][10] = $range_mine
