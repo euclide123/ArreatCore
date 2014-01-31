@@ -304,12 +304,9 @@ Func Repair()
 			InteractByActorName($RepairVendor)
 		EndIf
 		If $vendortry > 4 Then
-			Send("{PRINTSCREEN}")
-			Sleep(200)
 			_Log('Failed to open Vendor after 4 try')
-			WinSetOnTop("[CLASS:D3 Main Window Class]", "", 0)
-			MsgBox(0, "Impossible d'ouvrir le vendeur :", "SVP, veuillez reporter ce problème sur le forum. Erreur : v001 ")
-			Terminate()
+			$GameFailed = 1
+			Return False ; on ne termine plus, on sort de la fonction
 			ExitLoop
 		EndIf
 	WEnd
@@ -924,6 +921,7 @@ Func StashAndRepair()
 	_Log("Func StashAndRepair")
 	$RepairORsell += 1
 	$item_to_stash = 0
+	$FailOpen_BookOfCain = 0
 
 	If ($PartieSolo = 'false') Then WriteMe($WRITE_ME_SALE) ; TChat
 
@@ -951,6 +949,11 @@ Func StashAndRepair()
 		$items = FilterBackpack2()
 		$ToStash = _ArrayFindAll($items, "Stash", 0, 0, 0, 1, 2)
 
+		If $FailOpen_BookOfCain = 1 Then
+			$GameFailed = 1
+			Return False
+		EndIf
+		
 		If $ToStash <> -1 Then
 			Send("{SPACE}")
 			Sleep(500)
@@ -966,12 +969,9 @@ Func StashAndRepair()
 					Sleep(Random(100, 200))
 
 				Else
-					Send("{PRINTSCREEN}")
-					Sleep(200)
 					_Log('Failed to open Stash after 4 try')
-					WinSetOnTop("Diablo III", "", 0)
-					MsgBox(0, "Impossible d'ouvrir le stash :", "SVP, veuillez reporter ce problème sur le forum. Erreur : s001 ")
-					Terminate()
+					$GameFailed = 1
+					Return False ; on ne termine plus, on sort de la fonction
 
 				EndIf
 			WEnd
@@ -1048,6 +1048,11 @@ Func StashAndRepair()
 		_Log('Filter Backpack')
 		$items = FilterBackpack()
 		$ToStash = _ArrayFindAll($items, "Stash", 0, 0, 0, 1, 2)
+		
+		If $FailOpen_BookOfCain = 1 Then
+			$GameFailed = 1
+			Return False
+		EndIf
 
 		If $ToStash <> -1 Then
 			Send("{SPACE}")
@@ -1064,12 +1069,9 @@ Func StashAndRepair()
 					Sleep(Random(100, 200))
 
 				Else
-					Send("{PRINTSCREEN}")
-					Sleep(200)
 					_Log('Failed to open Stash after 4 try')
-					WinSetOnTop("Diablo III", "", 0)
-					MsgBox(0, "Impossible d'ouvrir le stash :", "SVP, veuillez reporter ce problème sur le forum. Erreur : s001 ")
-					Terminate()
+					$GameFailed = 1
+					Return False ; on ne termine plus, on sort de la fonction
 
 				EndIf
 			WEnd
@@ -1126,12 +1128,18 @@ Func StashAndRepair()
 	Send("{SPACE}")
 	Sleep(Random(100, 200))
 	Sleep(Random(500, 1000))
+	
 	If (trim(StringLower($Unidentified)) = "true" And trim(StringLower($Identified)) = "false") Then
 		UseBookOfCain()
 		Sleep(Random(100, 200))
 		Send("{SPACE}")
 		Sleep(Random(100, 200))
 	EndIf
+	
+	If $FailOpen_BookOfCain = 1 Then
+		$GameFailed = 1
+		Return False
+	EndIf  
 
 	; <<<<<<<<<<<<<<<<<<<<<<<<<        Test pour le recyclage ITEM  >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -1212,12 +1220,9 @@ Func StashAndRepair()
 				$vendortry += 1
 				InteractByActorName($RepairVendor)
 			Else
-				Send("{PRINTSCREEN}")
-				Sleep(200)
 				_Log('Failed to open Vendor after 5 try')
-				WinSetOnTop("Diablo III", "", 0)
-				MsgBox(0, "Impossible d'ouvrir le vendeur :", "SVP, veuillez reporter ce problème sur le forum. Erreur : v002 ")
-				Terminate()
+				$GameFailed = 1
+				Return False ; on ne termine plus, on sort de la fonction 
 				ExitLoop
 			EndIf
 		WEnd
@@ -1305,9 +1310,15 @@ Func UseTownPortal($mode = 0)
 			_Log("compare time to tp -> " & TimerDiff($timer) & "> 4000")
 			If TimerDiff($timer) > 4000 Then
 				While Not IsInTown() And $try < 6
-					_Log("on a peut etre reussi a tp, on reste inerte pendant 6sec voir si on arrive en ville, tentative -> " & $try)
-					$try += 1
-					Sleep(1000)
+					 If Not IsDisconnected() Then
+						_Log("on a peut etre reussi a tp, on reste inerte pendant 6sec voir si on arrive en ville, tentative -> " & $try)
+						$try += 1
+						Sleep(1000)
+					 Else
+						_Log("D�connect� lors du TP") 
+						$GameFailed = 1
+						Return False
+					 EndIf
 				WEnd
 			EndIf
 
@@ -1553,7 +1564,13 @@ Func UseBookOfCain()
 		;_Log("Ui : " & FastCheckUiItemVisible("Root.NormalLayer.game_dialog_backgroundScreen.loopinganimmeter", 1, 1512) & " Error : " &  FastCheckUiItemVisible("Root.TopLayer.error_notify.error_text", 1, 1185))
 		_Log("tour boucle")
 		If Not FastCheckUiItemVisible("Root.NormalLayer.game_dialog_backgroundScreen.loopinganimmeter", 1, 1512) Then
-			InteractByActorName("All_Book_Of_Cain")
+			If Not IsDisconnected() Then
+			    InteractByActorName("All_Book_Of_Cain")
+			Else
+			    _Log("Failed to open Book Of Cain")
+			    $FailOpen_BookOfCain = 1
+			    Return False
+			EndIf
 		EndIf
 	WEnd
 	While FastCheckUiItemVisible("Root.NormalLayer.game_dialog_backgroundScreen.loopinganimmeter", 1, 1512)

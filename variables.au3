@@ -167,6 +167,7 @@ Global $GOLDMOY                 = 0
 Global $GOLDMOYbyH              = 0
 Global $GameDifficulty          = 0
 Global $GameFailed              = 0
+Global $FailOpen_BookOfCain		= 0
 Global $CheckGameLength            = False
 Global $GetACD
 Global $Hero_Axe_Z              = 10

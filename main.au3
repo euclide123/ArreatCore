@@ -150,7 +150,7 @@ Func _botting()
 		;Lancement de la partie
 
 		; Si Choix_Act_Run <> 0 le bot passe en mode automatique
-		If $Choix_Act_Run <> 0 Then
+		If $Choix_Act_Run <> 0 And IsOnLoginScreen() = False Then
 			If IsInGame() = true and $TypedeBot < 2 Then;si en jeu lors du lancement auto
 				WinSetOnTop("[CLASS:D3 Main Window Class]", "", 0)
 				MsgBox(0, "ERREUR", "Vous devez être dans le menu pour lancer une run en auto ! ")
@@ -229,7 +229,16 @@ Func _botting()
 		_Log('loop IsInMenu() = False And IsOnLoginScreen()')
 
 		While IsInMenu() = False And IsOnLoginScreen() = False
-			Sleep(10)
+			If Not IsDisconnected() Then;si la fenêtre déconnexion n'y est pas, on attend de voir si on arrive au menu 
+			   Sleep(10) 
+			Else 
+			   _Log("Vous avez été déconnecté en ville") 
+			   $GameFailed = 1
+			   $disconnectcount += 1 
+			   Sleep(1500) 
+			   RandomMouseClick(398, 349) 
+			   Sleep(1500) 
+			Endif 
 		WEnd
 
 	WEnd
