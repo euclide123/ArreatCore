@@ -65,6 +65,9 @@ Global $takepot = True
 Global $PotionStock = 100
 Global $takeShrines = "false"
 
+; BuyPotion
+Global $NbPotionBuy = 0
+
 ; PauseToSurviveHC
 Global $HCSecurity = "false"
 Global $MinHCLife = 0
@@ -269,6 +272,9 @@ Func writeConfigs($profilFile = "settings/settings.ini", $creation = 0)
 	IniWrite($profilFile, "Run info", "Life_Explo", $life_explo)
 
 	IniWrite($profilFile, "Run info", "Gest_affixe_ByClass", $Gest_affixe_ByClass)
+	
+	; BuyPotion
+	IniWrite($profilFile, "Run info", "NbPotionBuy", $NbPotionBuy)
 	
 	; PauseToSurviveHC
 	IniWrite($profilFile, "Run info", "HCSecurity", $HCSecurity)
@@ -513,6 +519,9 @@ Func InitSkillHeros($skillHeros)
 	; Routines
 	$LifeForPotion = IniRead($skillHeros, "Run info", "LifeForPotion", $LifeForPotion)
 	$PotionStock = IniRead($skillHeros, "Run info", "PotionStock", $PotionStock)
+	
+	; BuyPotion
+	$NbPotionBuy = IniRead($skillHeros, "Run info", "NbPotionBuy", $NbPotionBuy)
 
 	$takeShrines = IniRead($skillHeros, "Run info", "TakeShrines", $takeShrines)
 

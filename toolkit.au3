@@ -1022,7 +1022,7 @@ Func FilterBackpack2()
 		CheckWindowD3Size()
 		CheckBackpackSize()
 
-		MoveToPointZero()
+		MoveTo($BookOfCain)
 
 		If $Unidentified = "false" And $Identified = "false" Then
 			UseBookOfCain()

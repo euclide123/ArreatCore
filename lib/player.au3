@@ -1195,6 +1195,8 @@ Func StashAndRepair()
 	;on mesure l'or avant la rÃ©paration
 	Local $GoldBeforeRepaire = GetGold()
 
+	BuyPotion()
+	
 	Repair()
 	Sleep(Random(100, 200))
 	Send("{SPACE}")
@@ -1607,24 +1609,33 @@ Func UseBookOfCain()
 	WEnd
 EndFunc   ;==>UseBookOfCain
 
-Func MoveToPointZero();function qui a pour bu de le placer au point voulu dans chaque act
+Func MoveTo($BeforeInteract) ; placer notre perso au point voulu dans chaque act avant d'interagir
 
 	If IsInventoryOpened() = True Then
 		Send("i")
 		Sleep(150)
 	EndIf
 
-	Switch $Act
-		Case 1
-			MoveToPos(2955.8681640625, 2803.51489257813, 24.0453319549561, 0, 20)
-		Case 2
-			;do nothing act 2
-		Case 3 To 4
-			;do nothing act 3 and 4
+	Switch $BeforeInteract
+		 Case 1 ; BookOfCain
+			Switch $Act
+				  Case 1
+						MoveToPos(2955.8681640625, 2803.51489257813, 24.0453319549561, 0, 20)
+				  Case 2 to 4
+						;do nothing act 2, 3 and 4
+			EndSwitch
+			
+		 Case 2 ; Potion_Vendor
+			Switch $Act
+				  Case 1
+						MoveToPos(3007.27221679688, 2820.4560546875, 24.0453319549561,1,25)
+				  Case 2 to 4
+						;do nothing act 2, 3 and 4
+			EndSwitch
 	EndSwitch
 
-	Sleep(50)
-EndFunc   ;==>MoveToPointZero
+	Sleep(100)
+EndFunc   ;==>MoveTo
 
 Func GetGold()
 	IterateLocalActor()
@@ -1651,6 +1662,68 @@ EndFunc   ;==>GetGold
     EndIf
 
 EndFunc    ;==>PauseToSurviveHC
+
+Func BuyPotion()	
+	GetDifficulty()
+	
+	Local $potinstock = Number(FastCheckUiValue('Root.NormalLayer.game_dialog_backgroundScreenPC.game_potion.text', 1, 875)) ; récupéré les potions en stock
+	Local $ClickPotion = Round($NbPotionBuy / 5) ; nombre de clic
+	
+	If $GameDifficulty = 4 And $NbPotionBuy > 0 Then ; selement si armageddon, NbPotionBuy = 0 on déactive la fonction
+	   If $potinstock <= $PotionStock Then
+		  
+		  MoveTo($Potion_Vendor) ; on se positionne
+		  
+		  InteractByActorName($PotionVendor)
+		  Sleep(700)
+		  
+		  Local $vendortry = 0
+		  While IsVendorOpened() = False ; si la fenêtre n'y est pas
+			   If $vendortry <= 4 Then ; on essaye 5 fois
+				  _Log('Fail to open vendor')
+				  $vendortry += 1
+				  InteractByActorName($PotionVendor)
+			   Else
+				  _Log('Failed to open Vendor after 4 try')
+				  MoveTo($Potion_Vendor) ; on se repositionne
+				  $GameFailed = 1
+				  Return False  ; si pas fenêtre on sort de la fonction
+			   EndIf
+		  WEnd
+		  
+		  _Log('Achat de ' & $NbPotionBuy & ' potions')
+		  
+		  $coord = UiRatio(282, 265)
+		  MouseClick('left', $coord[0], $coord[1], 1, 3) ; potion tap
+		  Sleep(200)
+		  $coord = UiRatio(211, 122)
+		  MouseMove($coord[0], $coord[1], 3) ; potion Button
+		  Sleep(200)
+		  Send("{SHIFTDOWN}") ; pour acheter en paquet 5
+		  Sleep(100)
+		  
+		  Local $Click = 0
+		  While $Click <> $ClickPotion ; tant qu'on n'a pas atteint le nombre de clic
+			   MouseClick('right')
+			   Sleep(Random(150, 200))
+			   $Click += 1
+		  WEnd
+		  
+		  Sleep(200)
+		  Send("{SHIFTUP}")
+		  Sleep(100)
+		  Send("{SPACE}"); ferme l'inventaire
+		  Sleep(500)
+		  
+		  MoveTo($Potion_Vendor) ; on se repositionne
+	   Else
+		  _Log('Vous avez asser potion')
+	   EndIf
+    Else
+	   _Log('Fonction BuyPotion déactivée')
+    EndIf
+
+EndFunc    ;==>BuyPotion
 
 ;;--------------------------------------------------------------------------------
 ;;     Initialise Buffs while in training Area
