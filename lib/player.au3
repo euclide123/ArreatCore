@@ -1409,7 +1409,8 @@ Func MoveToPos($_x, $_y, $_z, $_a, $m_range)
 	Local $TimeOut = TimerInit()
 	$grabtimeout = 0
 	$killtimeout = 0
-	If IsPlayerDead() Or $CheckGameLength = True Or $GameFailed = 1 Or $SkippedMove > 6 Then
+	If IsPlayerDead() Or $CheckGameLength = True Or $SkippedMove > 6 Then
+		$SkippedMove = 0 ; reset $SkippedMove sinon on ne pourra plus rentré dans la fonction
 		$GameFailed = 1
 		Return
 	EndIf
@@ -1578,7 +1579,6 @@ Func UseBookOfCain()
 
 	Switch $Act
 		Case 1
-			InteractByActorName("Waypoint_Town");ajouter pour ne pas blocquÃ© au coffre
 			MoveToPos(2955.8681640625, 2803.51489257813, 24.0453319549561, 0, 20)
 		Case 2
 			;do nothing act 2
