@@ -885,7 +885,7 @@ Func TpRepairAndBack()
 	If ($PartieSolo = 'false') Then WriteMe($WRITE_ME_INVENTORY_FULL) ; TChat
 
 	While Not IsInTown()
-		If Not UseTownPortal2() Then
+		If Not UseTownPortal() Then
 			$GameFailed = 1
 			Return False
 		EndIf
@@ -1255,17 +1255,19 @@ Func UseTownPortal($mode = 0)
 
 	If ($PartieSolo = 'false') Then WriteMe($WRITE_ME_TP) ; TChat
 
-	$compt = 0
+	Local $compt = 0
 
 	While Not IsInTown() And IsInGame()
 		
-		_Log("tour de boucle IsInTown")
-
+		Local $try = 0
+		Local $TPtimer = 0
+		Local $compt_while = 0
+		Local $Attacktimer = 0
+		
 		$compt += 1
-		$compt_while = 0
-		$timer = 0
-		$try = 0
 
+		_Log("tour de boucle IsInTown " & $compt & " tentative de TP")
+		
 		If $mode <> 0 And $compt > $mode Then
 			_Log("Too Much TP try !!!")
 			ExitLoop
@@ -1278,13 +1280,10 @@ Func UseTownPortal($mode = 0)
 
 		Sleep(100)
 
-		$CurrentLoc = GetCurrentPos()
-		MoveToPos($CurrentLoc[0] + 5, $CurrentLoc[1] + 5, $CurrentLoc[2], 0, 6)
-
-
 		If IsPlayerDead() = False Then
 
 			Sleep(250)
+			_Log("on enclenche le TP")
 			Send("t")
 			Sleep(250)
 
@@ -1297,28 +1296,56 @@ Func UseTownPortal($mode = 0)
 
 			_Log("enclenchement fastCheckui de la barre de loading")
 
-			While FastCheckUiItemVisible("Root.NormalLayer.game_dialog_backgroundScreen.loopinganimmeter.progressBar", 1, 996)
-				If $compt_while = 0 Then
-					_Log("enclenchement du timer")
-					$timer = TimerInit()
-				EndIf
+			If DetectUiError($MODE_INVENTORY_FULL) = False And $GameFailed = 0 Then
+				_Log("enclenchement fastCheckui de la barre de loading")
 
-				Sleep(100)
-				$compt_while += 1
-			WEnd
+			    While FastCheckUiItemVisible("Root.NormalLayer.game_dialog_backgroundScreen.loopinganimmeter.progressBar", 1, 996) ; détection la barre de TP
+				    If $compt_while = 0 Then
+					   _Log("enclenchement du timer")
+					   $TPtimer = TimerInit() ; temp total de la boucle
+					EndIf
+					$compt_while += 1
 
-			_Log("compare time to tp -> " & TimerDiff($timer) & "> 4000")
-			If TimerDiff($timer) > 4000 Then
+					CheckDrinkPotion() ; si dans la lave, spore... ect prendre une potion pour la survie
+
+					$Attacktimer = TimerInit()
+					Attack() ; si mob on attaque
+					Sleep(100)
+					TimerDiff($Attacktimer) ; temps de la durée du combat
+					
+					If IsPlayerDead() = True Or $GameFailed = 1 Then
+						ExitLoop
+					EndIf
+			    WEnd
+			Else ; si inventaire plein
+				_Log("enclenchement fastCheckui de la barre de loading, MODE_INVENTORY_FULL")
+
+				While FastCheckUiItemVisible("Root.NormalLayer.game_dialog_backgroundScreen.loopinganimmeter.progressBar", 1, 996) ; détection la barre de TP
+					If $compt_while = 0 Then
+					  _Log("enclenchement du timer")
+					  $TPtimer = Timerinit() ; temp total de la boucle
+				    EndIF
+				    $compt_while += 1
+
+				    $Attacktimer = TimerInit()
+				    Sleep(100)
+				    TimerDiff($Attacktimer) ; temps des sleep
+				WEnd	
+			EndIf			
+
+			If $compt_while = 0 Then ; si pas de détection de la barre de TP
+			    $CurrentLoc = GetCurrentPos()
+				MoveToPos($CurrentLoc[0] + 5, $CurrentLoc[1] + 5, $CurrentLoc[2], 0, 6); on se déplace
+				_Log("On se déplace, pas de détection de la barre de TP")
+			Else
+			    _Log("compare time to tp -> " & (TimerDiff($TPtimer) - TimerDiff($Attacktimer)) & "> 3700 ") ; valeur test de 3600 a 4000
+			EndIf
+			 
+			If (TimerDiff($TPtimer) - TimerDiff($Attacktimer)) > 3700 And $compt_while > 0 Then
 				While Not IsInTown() And $try < 6
-					 If Not IsDisconnected() Then
-						_Log("on a peut etre reussi a tp, on reste inerte pendant 6sec voir si on arrive en ville, tentative -> " & $try)
-						$try += 1
-						Sleep(1000)
-					 Else
-						_Log("Déconnecté lors du TP") 
-						$GameFailed = 1
-						Return False
-					 EndIf
+					 _Log("on a peut etre reussi a tp, on reste inerte pendant 6sec voir si on arrive en ville, tentative -> " & $try)
+					 $try += 1
+					 Sleep(1000)
 				WEnd
 			EndIf
 
