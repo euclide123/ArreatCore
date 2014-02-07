@@ -1893,10 +1893,12 @@ Func GrabIt($name, $offset)
 			Interact($pos[0], $pos[1], $pos[2])
 
 
-			If DetectUiError($MODE_INVENTORY_FULL) Then
+			If DetectUiError($MODE_INVENTORY_FULL) And $Tp_Repair_And_Back = 0 Then ; $Tp_Repair_And_Back = 0,car on ne veut pas y rentrer plus d'une fois "correction double tp inventaire plein"
+				$Tp_Repair_And_Back = 1
 				Unbuff()
 				TpRepairAndBack()
 				Buffinit()
+				$Tp_Repair_And_Back = 0
 			EndIf
 
 		EndIf
