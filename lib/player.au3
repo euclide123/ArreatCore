@@ -377,6 +377,8 @@ Func ManageSpellCasting($Distance, $action_spell, $elite, $Guid = 0, $offset = 0
 
 	CheckDrinkPotion()
 
+	PauseToSurviveHC() ; pause HCSecurity
+
 	For $i = 0 To 5
 
 		Dim $buff_table[11]
@@ -1635,6 +1637,20 @@ Func GetGold()
 	Next
 	Return 0
 EndFunc   ;==>GetGold
+ 
+ Func PauseToSurviveHC() ; fonction qui permet de mettre le jeu en Pause lorsque la vie de votre personnage descend en dessous d'un seuil fixé
+    
+	If StringStripWS(StringLower($HCSecurity),8)= "true" And GetLifeLeftPercent() <= $MinHCLife/100 Then
+	   Send("{ESCAPE}")	   
+	   While 1 
+		  Send("{ESCAPE}") 
+		  Sleep(100 + random(0, 50)) 
+		  Send("{ESCAPE}") 
+		  Sleep(600000 + Random(-60000, 60000)) 
+	   Wend 
+    EndIf
+
+EndFunc    ;==>PauseToSurviveHC
 
 ;;--------------------------------------------------------------------------------
 ;;     Initialise Buffs while in training Area

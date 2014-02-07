@@ -65,6 +65,10 @@ Global $takepot = True
 Global $PotionStock = 100
 Global $takeShrines = "false"
 
+; PauseToSurviveHC
+Global $HCSecurity = "false"
+Global $MinHCLife = 0
+
 Global $MaximumHatred = 125
 Global $MaximumDiscipline = 25
 Global $MaximumSpirit = 100
@@ -265,6 +269,10 @@ Func writeConfigs($profilFile = "settings/settings.ini", $creation = 0)
 	IniWrite($profilFile, "Run info", "Life_Explo", $life_explo)
 
 	IniWrite($profilFile, "Run info", "Gest_affixe_ByClass", $Gest_affixe_ByClass)
+	
+	; PauseToSurviveHC
+	IniWrite($profilFile, "Run info", "HCSecurity", $HCSecurity)
+	IniWrite($profilFile, "Run info", "MinHCLife", $MinHCLife)
 
 	; dev mod
 	IniWrite($profilFile, "Run info", "Devmode", $Devmode)
@@ -544,6 +552,10 @@ Func InitSkillHeros($skillHeros)
 	$UsePath = StringLower(IniRead($skillHeros, "Run info", "UsePath", $UsePath))
 	$ResActivated = StringLower(IniRead($skillHeros, "Run info", "ResActivated", $ResActivated))
 	$ResLife = IniRead($skillHeros, "Run info", "ResLife", $ResLife)
+	
+	;PauseToSurviveHC
+	$HCSecurity = IniRead($skillHeros, "Run info", "HCSecurity", $HCSecurity)
+	$MinHCLife = IniRead($skillHeros, "Run info", "MinHCLife", $MinHCLife)
 
 EndFunc   ;==>InitSkillHeros
 
