@@ -185,15 +185,19 @@ Func GetAct()
 			Switch $Act
 				Case 1
 					Global $RepairVendor = "UniqueVendor_miner_InTown"
+					Global $PotionVendor = "UniqueVendor_Collector_InTown"
 
 				Case 2
 					Global $RepairVendor = "UniqueVendor_Peddler_InTown" ; act 2 fillette
+					Global $PotionVendor = "UniqueVendor_Peddler_InTown"
 
 				Case 3
 					Global $RepairVendor = "UniqueVendor_Collector_InTown" ; act 3
+					Global $PotionVendor = "UniqueVendor_Collector_InTown"
 
 				Case 4
 					Global $RepairVendor = "UniqueVendor_Collector_InTown" ; act 3
+					Global $PotionVendor = "UniqueVendor_Collector_InTown"
 
 			EndSwitch
 			_Log("Our Current Act is : " & $Act & " ---> So our vendor is : " & $RepairVendor)

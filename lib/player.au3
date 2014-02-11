@@ -377,6 +377,8 @@ Func ManageSpellCasting($Distance, $action_spell, $elite, $Guid = 0, $offset = 0
 
 	CheckDrinkPotion()
 
+	PauseToSurviveHC() ; pause HCSecurity
+
 	For $i = 0 To 5
 
 		Dim $buff_table[11]
@@ -885,7 +887,7 @@ Func TpRepairAndBack()
 	If ($PartieSolo = 'false') Then WriteMe($WRITE_ME_INVENTORY_FULL) ; TChat
 
 	While Not IsInTown()
-		If Not UseTownPortal2() Then
+		If Not UseTownPortal() Then
 			$GameFailed = 1
 			Return False
 		EndIf
@@ -1193,6 +1195,8 @@ Func StashAndRepair()
 	;on mesure l'or avant la rÃ©paration
 	Local $GoldBeforeRepaire = GetGold()
 
+	BuyPotion()
+	
 	Repair()
 	Sleep(Random(100, 200))
 	Send("{SPACE}")
@@ -1255,17 +1259,19 @@ Func UseTownPortal($mode = 0)
 
 	If ($PartieSolo = 'false') Then WriteMe($WRITE_ME_TP) ; TChat
 
-	$compt = 0
+	Local $compt = 0
 
 	While Not IsInTown() And IsInGame()
 		
-		_Log("tour de boucle IsInTown")
-
+		Local $try = 0
+		Local $TPtimer = 0
+		Local $compt_while = 0
+		Local $Attacktimer = 0
+		
 		$compt += 1
-		$compt_while = 0
-		$timer = 0
-		$try = 0
 
+		_Log("tour de boucle IsInTown " & $compt & " tentative de TP")
+		
 		If $mode <> 0 And $compt > $mode Then
 			_Log("Too Much TP try !!!")
 			ExitLoop
@@ -1278,13 +1284,10 @@ Func UseTownPortal($mode = 0)
 
 		Sleep(100)
 
-		$CurrentLoc = GetCurrentPos()
-		MoveToPos($CurrentLoc[0] + 5, $CurrentLoc[1] + 5, $CurrentLoc[2], 0, 6)
-
-
 		If IsPlayerDead() = False Then
 
 			Sleep(250)
+			_Log("on enclenche le TP")
 			Send("t")
 			Sleep(250)
 
@@ -1297,28 +1300,56 @@ Func UseTownPortal($mode = 0)
 
 			_Log("enclenchement fastCheckui de la barre de loading")
 
-			While FastCheckUiItemVisible("Root.NormalLayer.game_dialog_backgroundScreen.loopinganimmeter.progressBar", 1, 996)
-				If $compt_while = 0 Then
-					_Log("enclenchement du timer")
-					$timer = TimerInit()
-				EndIf
+			If DetectUiError($MODE_INVENTORY_FULL) = False And $GameFailed = 0 Then
+				_Log("enclenchement fastCheckui de la barre de loading")
 
-				Sleep(100)
-				$compt_while += 1
-			WEnd
+			    While FastCheckUiItemVisible("Root.NormalLayer.game_dialog_backgroundScreen.loopinganimmeter.progressBar", 1, 996) ; détection la barre de TP
+				    If $compt_while = 0 Then
+					   _Log("enclenchement du timer")
+					   $TPtimer = TimerInit() ; temp total de la boucle
+					EndIf
+					$compt_while += 1
 
-			_Log("compare time to tp -> " & TimerDiff($timer) & "> 4000")
-			If TimerDiff($timer) > 4000 Then
+					CheckDrinkPotion() ; si dans la lave, spore... ect prendre une potion pour la survie
+
+					$Attacktimer = TimerInit()
+					Attack() ; si mob on attaque
+					Sleep(100)
+					TimerDiff($Attacktimer) ; temps de la durée du combat
+					
+					If IsPlayerDead() = True Or $GameFailed = 1 Then
+						ExitLoop
+					EndIf
+			    WEnd
+			Else ; si inventaire plein
+				_Log("enclenchement fastCheckui de la barre de loading, MODE_INVENTORY_FULL")
+
+				While FastCheckUiItemVisible("Root.NormalLayer.game_dialog_backgroundScreen.loopinganimmeter.progressBar", 1, 996) ; détection la barre de TP
+					If $compt_while = 0 Then
+					  _Log("enclenchement du timer")
+					  $TPtimer = Timerinit() ; temp total de la boucle
+				    EndIF
+				    $compt_while += 1
+
+				    $Attacktimer = TimerInit()
+				    Sleep(100)
+				    TimerDiff($Attacktimer) ; temps des sleep
+				WEnd	
+			EndIf			
+
+			If $compt_while = 0 Then ; si pas de détection de la barre de TP
+			    $CurrentLoc = GetCurrentPos()
+				MoveToPos($CurrentLoc[0] + 5, $CurrentLoc[1] + 5, $CurrentLoc[2], 0, 6); on se déplace
+				_Log("On se déplace, pas de détection de la barre de TP")
+			Else
+			    _Log("compare time to tp -> " & (TimerDiff($TPtimer) - TimerDiff($Attacktimer)) & "> 3700 ") ; valeur test de 3600 a 4000
+			EndIf
+			 
+			If (TimerDiff($TPtimer) - TimerDiff($Attacktimer)) > 3700 And $compt_while > 0 Then
 				While Not IsInTown() And $try < 6
-					 If Not IsDisconnected() Then
-						_Log("on a peut etre reussi a tp, on reste inerte pendant 6sec voir si on arrive en ville, tentative -> " & $try)
-						$try += 1
-						Sleep(1000)
-					 Else
-						_Log("Déconnecté lors du TP") 
-						$GameFailed = 1
-						Return False
-					 EndIf
+					 _Log("on a peut etre reussi a tp, on reste inerte pendant 6sec voir si on arrive en ville, tentative -> " & $try)
+					 $try += 1
+					 Sleep(1000)
 				WEnd
 			EndIf
 
@@ -1382,7 +1413,8 @@ Func MoveToPos($_x, $_y, $_z, $_a, $m_range)
 	Local $TimeOut = TimerInit()
 	$grabtimeout = 0
 	$killtimeout = 0
-	If IsPlayerDead() Or $CheckGameLength = True Or $GameFailed = 1 Or $SkippedMove > 6 Then
+	If IsPlayerDead() Or $CheckGameLength = True Or $SkippedMove > 6 Then
+		$SkippedMove = 0 ; reset $SkippedMove sinon on ne pourra plus rentré dans la fonction
 		$GameFailed = 1
 		Return
 	EndIf
@@ -1551,7 +1583,6 @@ Func UseBookOfCain()
 
 	Switch $Act
 		Case 1
-			InteractByActorName("Waypoint_Town");ajouter pour ne pas blocquÃ© au coffre
 			MoveToPos(2955.8681640625, 2803.51489257813, 24.0453319549561, 0, 20)
 		Case 2
 			;do nothing act 2
@@ -1578,24 +1609,33 @@ Func UseBookOfCain()
 	WEnd
 EndFunc   ;==>UseBookOfCain
 
-Func MoveToPointZero();function qui a pour bu de le placer au point voulu dans chaque act
+Func MoveTo($BeforeInteract) ; placer notre perso au point voulu dans chaque act avant d'interagir
 
 	If IsInventoryOpened() = True Then
 		Send("i")
 		Sleep(150)
 	EndIf
 
-	Switch $Act
-		Case 1
-			MoveToPos(2955.8681640625, 2803.51489257813, 24.0453319549561, 0, 20)
-		Case 2
-			;do nothing act 2
-		Case 3 To 4
-			;do nothing act 3 and 4
+	Switch $BeforeInteract
+		 Case 1 ; BookOfCain
+			Switch $Act
+				  Case 1
+						MoveToPos(2955.8681640625, 2803.51489257813, 24.0453319549561, 0, 20)
+				  Case 2 to 4
+						;do nothing act 2, 3 and 4
+			EndSwitch
+			
+		 Case 2 ; Potion_Vendor
+			Switch $Act
+				  Case 1
+						MoveToPos(3007.27221679688, 2820.4560546875, 24.0453319549561,1,25)
+				  Case 2 to 4
+						;do nothing act 2, 3 and 4
+			EndSwitch
 	EndSwitch
 
-	Sleep(50)
-EndFunc   ;==>MoveToPointZero
+	Sleep(100)
+EndFunc   ;==>MoveTo
 
 Func GetGold()
 	IterateLocalActor()
@@ -1608,6 +1648,82 @@ Func GetGold()
 	Next
 	Return 0
 EndFunc   ;==>GetGold
+ 
+ Func PauseToSurviveHC() ; fonction qui permet de mettre le jeu en Pause lorsque la vie de votre personnage descend en dessous d'un seuil fixé
+    
+	If StringStripWS(StringLower($HCSecurity),8)= "true" And GetLifeLeftPercent() <= $MinHCLife/100 Then
+	   Send("{ESCAPE}")	   
+	   While 1 
+		  Send("{ESCAPE}") 
+		  Sleep(100 + random(0, 50)) 
+		  Send("{ESCAPE}") 
+		  Sleep(600000 + Random(-60000, 60000)) 
+	   Wend 
+    EndIf
+
+EndFunc    ;==>PauseToSurviveHC
+
+Func BuyPotion()	
+	GetDifficulty()
+	
+	Local $potinstock = Number(FastCheckUiValue('Root.NormalLayer.game_dialog_backgroundScreenPC.game_potion.text', 1, 875)) ; récupéré les potions en stock
+	Local $ClickPotion = Round($NbPotionBuy / 5) ; nombre de clic
+	
+	If $GameDifficulty = 4 And $NbPotionBuy > 0 Then ; selement si armageddon, NbPotionBuy = 0 on déactive la fonction
+	   If $potinstock <= $PotionStock Then
+		  
+		  MoveTo($Potion_Vendor) ; on se positionne
+		  
+		  InteractByActorName($PotionVendor)
+		  Sleep(700)
+		  
+		  Local $vendortry = 0
+		  While IsVendorOpened() = False ; si la fenêtre n'y est pas
+			   If $vendortry <= 4 Then ; on essaye 5 fois
+				  _Log('Fail to open vendor')
+				  $vendortry += 1
+				  InteractByActorName($PotionVendor)
+			   Else
+				  _Log('Failed to open Vendor after 4 try')
+				  MoveTo($Potion_Vendor) ; on se repositionne
+				  $GameFailed = 1
+				  Return False  ; si pas fenêtre on sort de la fonction
+			   EndIf
+		  WEnd
+		  
+		  _Log('Achat de ' & $NbPotionBuy & ' potions')
+		  
+		  $coord = UiRatio(282, 265)
+		  MouseClick('left', $coord[0], $coord[1], 1, 3) ; potion tap
+		  Sleep(200)
+		  $coord = UiRatio(211, 122)
+		  MouseMove($coord[0], $coord[1], 3) ; potion Button
+		  Sleep(200)
+		  Send("{SHIFTDOWN}") ; pour acheter en paquet 5
+		  Sleep(100)
+		  
+		  Local $Click = 0
+		  While $Click <> $ClickPotion ; tant qu'on n'a pas atteint le nombre de clic
+			   MouseClick('right')
+			   Sleep(Random(150, 200))
+			   $Click += 1
+		  WEnd
+		  
+		  Sleep(200)
+		  Send("{SHIFTUP}")
+		  Sleep(100)
+		  Send("{SPACE}"); ferme l'inventaire
+		  Sleep(500)
+		  
+		  MoveTo($Potion_Vendor) ; on se repositionne
+	   Else
+		  _Log('Vous avez asser potion')
+	   EndIf
+    Else
+	   _Log('Fonction BuyPotion déactivée')
+    EndIf
+
+EndFunc    ;==>BuyPotion
 
 ;;--------------------------------------------------------------------------------
 ;;     Initialise Buffs while in training Area

@@ -25,6 +25,10 @@ Global Const $WRITE_ME_DEATH			= 9
 Global Const $WRITE_ME_TAKE_WP			= 10
 Global Const $WRITE_ME_TAKE_BREAK_MENU	= 11
 
+; MoveTo
+Global Const $BookOfCain 				= 1
+Global Const $Potion_Vendor				= 2
+
 ; ?
 Global $ClickToMoveToggle
 Global $GameFailed
@@ -152,6 +156,7 @@ Global $DebugY
 Global $Ban_ItemACDCheckList    = "a1_|a3_|a2_|a4_|Lore_Book_Flippy|Topaz_|Emeraude_|Rubis_|Amethyste_|healthPotion_Mythic|GoldCoins|GoldSmall|GoldMedium|GoldLarge"
 Global $Ban_endstrItemList      = "_projectile"
 Global $Ban_startstrItemList    = "barbarian_|Demonhunter_|Monk_|WitchDoctor_|WD_|Enchantress_|Scoundrel_|Templar_|Wizard_|monsterAffix_|Demonic_|Generic_|fallenShaman_fireBall_impact|demonFlyer_B_clickable_corpse_01|grenadier_proj_trail"
+Global $Tp_Repair_And_Back 		= 0 ; correction double tp inventaire plein
 Global $Count_ACD               = 0
 Global $Current_Hero_Z          = 0
 Global $Death                   = 0
