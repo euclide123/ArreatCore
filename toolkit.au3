@@ -215,6 +215,16 @@ Func Terminate()
 	EndIf
 EndFunc   ;==>Terminate
 
+Func StashAndRepairTerminate()
+    
+	GoToTown()
+	StashAndRepair()
+	LeaveGame()
+	Sleep(6000)
+	Terminate()
+
+EndFunc   ;==>StashAndRepairTerminate
+
 ;;--------------------------------------------------------------------------------
 ; Function:                     FindActor()
 ; Description:          Check if an actor is present or not
