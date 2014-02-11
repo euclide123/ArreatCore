@@ -1,6 +1,6 @@
 #include-once
  ; ------------------------------------------------------------
-; Ce fichier contient toutes les fonctions liÃ©es auxs stats
+; Ce fichier contient toutes les fonctions liées auxs stats
 ; -------------------------------------------------------------
 
 
@@ -19,7 +19,7 @@ EndFunc   ;==>WriteStatsInHtml
 Func StatsDisplay()
 
 	Local $index, $offset, $count, $item[4]
-	Local $time_Xp_Full_Paragon = 0;ajouter pour la stast paragon 100 dans
+	Local $time_Xp_Full_Paragon = 0;ajouté pour la stat paragon 100 dans
 	Local $Xp_Moy_HrsPerte_Ratio = 0
 	Local $LossGoldMoyH = 0
 	Local $GoldBySaleRatio = 0
@@ -43,27 +43,27 @@ Func StatsDisplay()
 		$MF = Ceiling(GetAttribute($_MyGuid, $Atrib_Magic_Find) * 100)
 		$PR = GetAttribute($_MyGuid, $Atrib_Gold_PickUp_Radius)
 		$MS = (GetAttribute($_MyGuid, $Atrib_Movement_Scalar_Capped_Total) - 1) * 100
-		$EBP = Ceiling(GetAttribute($_MyGuid, $Atrib_Experience_Bonus_Percent) * 100);% xp Ã©quipement
-		$LV = GetAttribute($_MyGuid, $Atrib_Level);level personage
+		$EBP = Ceiling(GetAttribute($_MyGuid, $Atrib_Experience_Bonus_Percent) * 100);% xp équipement
+		$LV = GetAttribute($_MyGuid, $Atrib_Level);level personnage
 	Else
         $GOLDInthepocket = $GOLD - $GOLDINI
         $GOLDMOY = $GOLDInthepocket / ($Totalruns - 1)
-        $GoldBySaleRatio = ($GoldBySale / $GOLDInthepocket * 100);ratio des vente
-        $GoldByColectRatio = (($GOLDInthepocket - $GoldBySale - $GoldByRepaire) / $GOLDInthepocket * 100);ratio de l'or collectÃ©
-        $GoldByRepaireRatio = ($GoldByRepaire / $GOLDInthepocket * 100);ratio du cout des rÃ©paration
+        $GoldBySaleRatio = ($GoldBySale / $GOLDInthepocket * 100);ratio des ventes
+        $GoldByColectRatio = (($GOLDInthepocket - $GoldBySale - $GoldByRepaire) / $GOLDInthepocket * 100);ratio de l'or collecté
+        $GoldByRepaireRatio = ($GoldByRepaire / $GOLDInthepocket * 100);ratio du coût des réparation
         $dif_timer_stat = TimerDiff($begin_timer_stat);temps total
         $dif_timer_stat_pause = ($tempsPauseGame + $tempsPauserepas);calcule du temps de pause (game + repas)=total pause
         $dif_timer_stat_game = ($dif_timer_stat - $dif_timer_stat_pause);calcule (temps totale - temps total pause)=Temps de jeu
         $dif_timer_stat_game_Ratio = ($dif_timer_stat_game / $dif_timer_stat * 100);ratio temps total jeu
-        $dif_timer_stat_pause_Ratio = ($dif_timer_stat_pause / $dif_timer_stat * 100);ration temp de pause total
-        $GOLDMOYbyH = $GOLDInthepocket * 3600000 / $dif_timer_stat;calcule du gold a l'heure temps total
-        $GOLDMOYbyHgame = $GOLDInthepocket * 3600000 / $dif_timer_stat_game;calcule du gold a l'heure temp de jeu
-        $LossGoldMoyH = (($GOLDMOYbyHgame - $GOLDMOYbyH) / $GOLDMOYbyHgame * 100);ratio de la perte d'or du a la pause
+        $dif_timer_stat_pause_Ratio = ($dif_timer_stat_pause / $dif_timer_stat * 100);ration temps de pause total
+        $GOLDMOYbyH = $GOLDInthepocket * 3600000 / $dif_timer_stat;calcule du gold à l'heure temps total
+        $GOLDMOYbyHgame = $GOLDInthepocket * 3600000 / $dif_timer_stat_game;calcule du gold à l'heure temp de jeu
+        $LossGoldMoyH = (($GOLDMOYbyHgame - $GOLDMOYbyH) / $GOLDMOYbyHgame * 100);ratio de la perte d'or due à la pause
 	EndIf
 
 	;stat XP
 
-	;Xp nÃ©cessaire pour passer un niveau de paragon
+	;Xp nécessaire pour passer un niveau de paragon
 
 	If $Totalruns = 1 Then
 		Global $level[102]
@@ -181,9 +181,9 @@ Func StatsDisplay()
 
 	Else
 		;calcul de l'xp du run
-		If $NiveauParagon = GetAttribute($_MyGuid, $Atrib_Alt_Level) Then; verification de level up (Ã©galitÃ© => pas de level up
+		If $NiveauParagon = GetAttribute($_MyGuid, $Atrib_Alt_Level) Then; vérification de level up (égalité => pas de level up
 
-			$Xp_Run = ($level[GetAttribute($_MyGuid, $Atrib_Alt_Level) + 1] - GetAttribute($_MyGuid, $Atrib_Alt_Experience_Next)) - $Expencours;experience run n - experience run n-1
+			$Xp_Run = ($level[GetAttribute($_MyGuid, $Atrib_Alt_Level) + 1] - GetAttribute($_MyGuid, $Atrib_Alt_Experience_Next)) - $Expencours;expérience run n - expérience run n-1
 
 		EndIf
 
@@ -198,10 +198,10 @@ Func StatsDisplay()
 
 		$Xp_Total = $Xp_Total + $Xp_Run
 		$Xp_Moy_Run = $Xp_Total / ($Totalruns - 1)
-		$Xp_Moy_Hrs = $Xp_Total * 3600000 / $dif_timer_stat;on calcul l'xp/heure en temps total
-		$Xp_Moy_Hrsgame = $Xp_Total * 3600000 / $dif_timer_stat_game;on calcul l'xp/heure en temps de jen
-		$Xp_Moy_HrsPerte = ($Xp_Moy_Hrsgame - $Xp_Moy_Hrs);on calcule la perte du au pause
-		$Xp_Moy_HrsPerte_Ratio = ($Xp_Moy_HrsPerte / $Xp_Moy_Hrsgame * 100);ratio de la perte xp/heure du au pause
+		$Xp_Moy_Hrs = $Xp_Total * 3600000 / $dif_timer_stat;on calcule l'xp/heure en temps total
+		$Xp_Moy_Hrsgame = $Xp_Total * 3600000 / $dif_timer_stat_game;on calcule l'xp/heure en temps de jeu
+		$Xp_Moy_HrsPerte = ($Xp_Moy_Hrsgame - $Xp_Moy_Hrs);on calcule la perte due aux pauses
+		$Xp_Moy_HrsPerte_Ratio = ($Xp_Moy_HrsPerte / $Xp_Moy_Hrsgame * 100);ratio de la perte xp/heure due aux pauses
 		$NiveauParagon = GetAttribute($_MyGuid, $Atrib_Alt_Level)
 		$ExperienceNextLevel = GetAttribute($_MyGuid, $Atrib_Alt_Experience_Next)
 
@@ -210,15 +210,15 @@ Func StatsDisplay()
 		$time_Xp = Int($ExperienceNextLevel / $Xp_Moy_Sec) * 1000
 		$time_Xp = FormatTime($time_Xp)
 
-		If $NiveauParagon = 100 Then;ici on devra changer la valeur a 1000 pour Ros
+		If $NiveauParagon = 100 Then;ici on devra changer la valeur à 1000 pour Ros
 			$Xp_Moy_HrsPerte_Ratio = 0
 		Endif
 
-		;<<<<<<<<<<<<<<<<<<<<<<<<< dÃ©but ajouter pour paragon dans 100 >>>>>>>>>>>>>>>>>>>>>>>>>>>>
-		;; calcul de l'experience total puis temps nÃ©cessaire pour atteindre le paragon 100
+		;<<<<<<<<<<<<<<<<<<<<<<<<< début ajouté pour paragon 100 dans  >>>>>>>>>>>>>>>>>>>>>>>>>>>>
+		;; calcul de l'expérience totale puis temps nécessaire pour atteindre le paragon 100
 		;; et 99 exclu c'est le dernier level
 		If $NiveauParagon < 99 Then
-			;; xp restant Ã  faire pour le level paragon en cours
+			;; xp restant à faire pour le level paragon en cours
 			$ExperienceFullParagon = $ExperienceNextLevel
 			;; on ajoute les n+1 levels paragons restants
 			$current_paragon_level = $NiveauParagon + 1
@@ -230,7 +230,7 @@ Func StatsDisplay()
 			$time_Xp_Full_Paragon = Int($ExperienceFullParagon / $Xp_Moy_Sec) * 1000
 			$time_Xp_Full_Paragon = FormatTime($time_Xp_Full_Paragon)
 		Else
-			;; cas du dernier level 99 ou alors paragon 100 deja atteind
+			;; cas du dernier level 99 ou alors paragon 100 deja atteint
 			If $NiveauParagon = 99 Then
 				;; on utilise le calcul existant
 				$time_Xp_Full_Paragon = $time_Xp
@@ -238,7 +238,7 @@ Func StatsDisplay()
 				$time_Xp_Full_Paragon = "ALREADY 100 !!!"
 			EndIf
 		EndIf
-		;<<<<<<<<<<<<<<<<<<<<<<<<< fin ajouter pour paragon dans 100 >>>>>>>>>>>>>>>>>>>>>>>>>>>>
+		;<<<<<<<<<<<<<<<<<<<<<<<<< fin ajouté pour paragon 100 dans  >>>>>>>>>>>>>>>>>>>>>>>>>>>>
 	EndIf
 	;########
 
@@ -253,82 +253,82 @@ Func StatsDisplay()
 		;Xpmoyen=0
 	Else
 		;;;$dif_timer_stat_moyen = $dif_timer_stat / ($Totalruns - 1)
-		$dif_timer_stat_moyen = $dif_timer_stat_game / ($Totalruns - 1);on recalcule le temps moyen d'une run par raport au temps jeu
+		$dif_timer_stat_moyen = $dif_timer_stat_game / ($Totalruns - 1);on recalcule le temps moyen d'un run par rapport au temps de jeu
 		$timer_stat_run_moyen = FormatTime($dif_timer_stat_moyen)
 	EndIf
 
 	GetAct()
 	GetMonsterPow()
-	$DebugMessage = "                                 INFO RUNS ACT " & $Act & @CRLF
+	$DebugMessage = "                                 INFOS RUN ACTE " & $Act & @CRLF
 	$DebugMessage = $DebugMessage & "PM " & $MP & @CRLF
 	$DebugMessage = $DebugMessage & "Runs : " & $Totalruns & @CRLF
 	$DebugMessage = $DebugMessage & "Morts : " & $Death & @CRLF
-	$DebugMessage = $DebugMessage & "Resurrections : " & $Res_compt & @CRLF
-	$DebugMessage = $DebugMessage & "DÃ©connexions  : " & $disconnectcount & @CRLF
+	$DebugMessage = $DebugMessage & "Résurrections : " & $Res_compt & @CRLF
+	$DebugMessage = $DebugMessage & "Déconnexions  : " & $disconnectcount & @CRLF
 	$DebugMessage = $DebugMessage & "Sanctuaires Pris : " & $CheckTakeShrineTaken & @CRLF
-	$DebugMessage = $DebugMessage & "Ã‰lites RencontrÃ©s : " & $CptElite & @CRLF
-	$DebugMessage = $DebugMessage & "SuccÃ¨s Runs : " & Round($successratio * 100) & "%   ( " & ($Totalruns - $success) & " AvortÃ©s )" & @CRLF
+	$DebugMessage = $DebugMessage & "Elites Rencontrés : " & $CptElite & @CRLF
+	$DebugMessage = $DebugMessage & "Success Runs : " & Round($successratio * 100) & "%   ( " & ($Totalruns - $success) & " Avortés )" & @CRLF
 	$DebugMessage = $DebugMessage & "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" & @CRLF
-	$DebugMessage = $DebugMessage & "                                   INFO COFFRE" & @CRLF
-	$DebugMessage = $DebugMessage & "Nombre Objets RecylÃ©s : " & $ItemToRecycle & @CRLF
+	$DebugMessage = $DebugMessage & "                                 INFOS COFFRE" & @CRLF
+	$DebugMessage = $DebugMessage & "Nombre Objets Recyclés : " & $ItemToRecycle & @CRLF
 	$DebugMessage = $DebugMessage & "Nombre de Legs au Coffre : " & $nbLegs & @CRLF
-	$DebugMessage = $DebugMessage & "Nombre de Rare ID au Coffre : " & $nbRares & @CRLF
-	$DebugMessage = $DebugMessage & "Nombre de Rare Unid au Coffre : " & $nbRaresUnid & @CRLF
-	$DebugMessage = $DebugMessage & "Objets StockÃ©s Dans le Coffre : " & $ItemToStash & @CRLF
+	$DebugMessage = $DebugMessage & "Nombre de Rares ID au Coffre : " & $nbRares & @CRLF
+	$DebugMessage = $DebugMessage & "Nombre de Rares Unid au Coffre : " & $nbRaresUnid & @CRLF
+	$DebugMessage = $DebugMessage & "Objets Stockés Dans le Coffre : " & $ItemToStash & @CRLF
 	$DebugMessage = $DebugMessage & "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" & @CRLF
-	$DebugMessage = $DebugMessage & "                                     INFO GOLD" & @CRLF
+	$DebugMessage = $DebugMessage & "                                 INFOS GOLD" & @CRLF
 	$DebugMessage = $DebugMessage & "Gold au Coffre : " & FormatNumber(Ceiling($GOLD)) & @CRLF
 	$DebugMessage = $DebugMessage & "Gold Total Obtenu  : " & FormatNumber(Ceiling($GOLDInthepocket)) & @CRLF
 	$DebugMessage = $DebugMessage & "Gold Moyen/Run : " & FormatNumber(Ceiling($GOLDMOY)) & @CRLF
 	$DebugMessage = $DebugMessage & "Gold Moyen/Heure : " & FormatNumber(Ceiling($GOLDMOYbyH)) & @CRLF
 	;$DebugMessage = $DebugMessage & "Gold Moyen/Heure Jeu : " & formatNumber(Ceiling($GOLDMOYbyHgame)) & @CRLF ;====> gold de temps de jeu
 	$DebugMessage = $DebugMessage & "Perte Moyenne/Heure : " & FormatNumber(Ceiling($GOLDMOYbyH - $GOLDMOYbyHgame)) & "   (" & Round($LossGoldMoyH) & "%)" & @CRLF
-	$DebugMessage = $DebugMessage & "Nombre d'objet Vendu :  " & $ItemToSell & "  /  " & FormatNumber(Ceiling($GoldBySale)) & "   (" & Round($GoldBySaleRatio) & "%)" & @CRLF
+	$DebugMessage = $DebugMessage & "Nombre d'Objets Vendus :  " & $ItemToSell & "  /  " & FormatNumber(Ceiling($GoldBySale)) & "   (" & Round($GoldBySaleRatio) & "%)" & @CRLF
 	$DebugMessage = $DebugMessage & "Gold Obtenu par Collecte  :    " & FormatNumber(Ceiling($GOLDInthepocket - $GoldBySale - $GoldByRepaire)) & "   (" & Round($GoldByColectRatio) & "%)" & @CRLF
-	$DebugMessage = $DebugMessage & "Nombre de RÃ©paration : " & $RepairORsell & " / " & FormatNumber(Ceiling($GoldByRepaire)) & "   (" & Round($GoldByRepaireRatio) & "%)" & @CRLF
+	$DebugMessage = $DebugMessage & "Nombre de Réparations : " & $RepairORsell & " / " & FormatNumber(Ceiling($GoldByRepaire)) & "   (" & Round($GoldByRepaireRatio) & "%)" & @CRLF
 	$DebugMessage = $DebugMessage & "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" & @CRLF
-	$DebugMessage = $DebugMessage & "                                     INFO TEMPS " & @CRLF
-	;$DebugMessage = $DebugMessage & "DÃ©butÃ© Ã  :  " & @HOUR & ":" & @MIN & @CRLF
-	$DebugMessage = $DebugMessage & "DurÃ©e Moyenne/Run : " & $timer_stat_run_moyen & @CRLF
+	$DebugMessage = $DebugMessage & "                                 INFOS TEMPS " & @CRLF
+	;$DebugMessage = $DebugMessage & "Débuté à  :  " & @HOUR & ":" & @MIN & @CRLF
+	$DebugMessage = $DebugMessage & "Durée Moyenne/Run : " & $timer_stat_run_moyen & @CRLF
 	$DebugMessage = $DebugMessage & "Temps Total De Bot:   " & $timer_stat_total & @CRLF
 	$DebugMessage = $DebugMessage & "Temps Total En Jeu :   " & FormatTime($dif_timer_stat_game) & " (" & Round($dif_timer_stat_game_Ratio) & "%)" & @CRLF
-	$DebugMessage = $DebugMessage & "Pauses EffectuÃ©es : " & ($BreakTimeCounter + $PauseRepasCounter) & "  /  " & FormatTime($dif_timer_stat_pause) & " (" & Round($dif_timer_stat_pause_Ratio) & "%)" & @CRLF
+	$DebugMessage = $DebugMessage & "Pauses Effectuées : " & ($BreakTimeCounter + $PauseRepasCounter) & "  /  " & FormatTime($dif_timer_stat_pause) & " (" & Round($dif_timer_stat_pause_Ratio) & "%)" & @CRLF
 	;stats XP
 	$DebugMessage = $DebugMessage & "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" & @CRLF
-	$DebugMessage = $DebugMessage & "                                        INFO XP" & @CRLF
+	$DebugMessage = $DebugMessage & "                                 INFOS XP" & @CRLF
 
 	If $NiveauParagon < 100 Then
 		$DebugMessage = $DebugMessage & "Bonus d'XP : " & $EBP & " %" & @CRLF
 
-		If ($Xp_Total < 1000000) Then ;afficher en "K"
-			$DebugMessage = $DebugMessage & "XP Obtenu : " & Int($Xp_Total / 1000) & " K" & @CRLF
+		If ($Xp_Total < 1000000) Then ;affiché en "K"
+			$DebugMessage = $DebugMessage & "XP Obtenue : " & Int($Xp_Total / 1000) & " K" & @CRLF
 		EndIf
-		If ($Xp_Total > 999999) Then ;afficher en "M"
-			$DebugMessage = $DebugMessage & "XP Obtenu : " & Int($Xp_Total / 1000) / 1000 & " M" & @CRLF
-		EndIf
-
-		If ($Xp_Moy_Run < 1000000) Then ;afficher en "K"
-			$DebugMessage = $DebugMessage & "XP Moyen/Run : " & Int($Xp_Moy_Run / 1000) & " K" & @CRLF
-		EndIf
-		If ($Xp_Moy_Run > 999999) Then ;afficher en "M"
-			$DebugMessage = $DebugMessage & "XP Moyen/Run : " & Int($Xp_Moy_Run / 1000) / 1000 & " M" & @CRLF
+		If ($Xp_Total > 999999) Then ;affiché en "M"
+			$DebugMessage = $DebugMessage & "XP Obtenue : " & Int($Xp_Total / 1000) / 1000 & " M" & @CRLF
 		EndIf
 
-		If ($Xp_Moy_Hrs < 1000000) Then ;afficher en "K"
-			$DebugMessage = $DebugMessage & "XP Moyen/Heure : " & Int($Xp_Moy_Hrs / 1000) & " K" & @CRLF
+		If ($Xp_Moy_Run < 1000000) Then ;affiché en "K"
+			$DebugMessage = $DebugMessage & "XP Moyenne/Run : " & Int($Xp_Moy_Run / 1000) & " K" & @CRLF
 		EndIf
-		If ($Xp_Moy_Hrs > 999999) Then ;afficher en "M"
-			$DebugMessage = $DebugMessage & "XP Moyen/Heure : " & Int($Xp_Moy_Hrs / 1000) / 1000 & " M" & @CRLF
+		If ($Xp_Moy_Run > 999999) Then ;affiché en "M"
+			$DebugMessage = $DebugMessage & "XP Moyenne/Run : " & Int($Xp_Moy_Run / 1000) / 1000 & " M" & @CRLF
 		EndIf
 
-		If ($Xp_Moy_HrsPerte < 1000000) Then ;afficher en "K"
+		If ($Xp_Moy_Hrs < 1000000) Then ;affiché en "K"
+			$DebugMessage = $DebugMessage & "XP Moyenne/Heure : " & Int($Xp_Moy_Hrs / 1000) & " K" & @CRLF
+		EndIf
+		If ($Xp_Moy_Hrs > 999999) Then ;affiché en "M"
+			$DebugMessage = $DebugMessage & "XP Moyenne/Heure : " & Int($Xp_Moy_Hrs / 1000) / 1000 & " M" & @CRLF
+		EndIf
+
+		If ($Xp_Moy_HrsPerte < 1000000) Then ;affiché en "K"
 			$DebugMessage = $DebugMessage & "Perte Moyenne/Heure : -" & Int($Xp_Moy_HrsPerte / 1000) & " K (" & Round($Xp_Moy_HrsPerte_Ratio) & "%)" & @CRLF
 		EndIf
-		If ($Xp_Moy_HrsPerte > 999999) Then ;afficher en "M"
+		If ($Xp_Moy_HrsPerte > 999999) Then ;affiché en "M"
 			$DebugMessage = $DebugMessage & "Perte Moyenne/Heure : -" & Int($Xp_Moy_HrsPerte / 1000) / 1000 & " M (" & Round($Xp_Moy_HrsPerte_Ratio) & "%)" & @CRLF
 		EndIf
 
-		$DebugMessage = $DebugMessage & "Temps Avant Prochain LV : " & $time_Xp & @CRLF
+		$DebugMessage = $DebugMessage & "Temps Avant Prochain LVL : " & $time_Xp & @CRLF
 		$DebugMessage = $DebugMessage & "Temps Avant Parangon 100 : " & $time_Xp_Full_Paragon & @CRLF
 	Else
 		$DebugMessage = $DebugMessage & "Paragon 100 atteint"  & @CRLF
@@ -339,14 +339,14 @@ Func StatsDisplay()
 	;#########
 
 
-	$DebugMessage = $DebugMessage & "                                    INFO PERSO " & @CRLF
+	$DebugMessage = $DebugMessage & "                                 INFOS PERSO " & @CRLF
 	$DebugMessage = $DebugMessage & $nameCharacter & "  " & $LV & " [ " & $NiveauParagon & " ] " & @CRLF
 	$DebugMessage = $DebugMessage & "PickUp Radius  : " & $PR & @CRLF
 	$DebugMessage = $DebugMessage & "Movement Speed : " & Round($MS) & " %" & @CRLF
 	$DebugMessage = $DebugMessage & "Gold Find Total      : " & ($GF + ($NiveauParagon * 3) + ($MP * 25)) & " %" & @CRLF
-	$DebugMessage = $DebugMessage & "      Ã‰quipement : " & $GF & " %" & @CRLF
+	$DebugMessage = $DebugMessage & "      Equipement : " & $GF & " %" & @CRLF
 	$DebugMessage = $DebugMessage & "Magic Find Total     : " & ($MF + ($NiveauParagon * 3) + ($MP * 25)) & " %" & @CRLF
-	$DebugMessage = $DebugMessage & "      Ã‰quipement : " & $MF & " %" & @CRLF
+	$DebugMessage = $DebugMessage & "      Equipement : " & $MF & " %" & @CRLF
 	$DebugMessage = $DebugMessage & "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" & @CRLF
 	Switch $Choix_Act_Run
 		Case -1
@@ -359,11 +359,11 @@ Func StatsDisplay()
 		Case 0
 			$DebugMessage = $DebugMessage & "Mode normal" & @CRLF
 		Case 1
-			$DebugMessage = $DebugMessage & "Act 1 en automatique" & @CRLF
+			$DebugMessage = $DebugMessage & "Acte 1 en automatique" & @CRLF
 		Case 2
-			$DebugMessage = $DebugMessage & "Act 2 en automatique" & @CRLF
+			$DebugMessage = $DebugMessage & "Acte 2 en automatique" & @CRLF
 		Case 3
-			$DebugMessage = $DebugMessage & "Act 3 en automatique" & @CRLF
+			$DebugMessage = $DebugMessage & "Acte 3 en automatique" & @CRLF
 	EndSwitch
 
 
