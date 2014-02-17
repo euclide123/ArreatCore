@@ -2,6 +2,7 @@ MonsterList=WitherMoth|WoodWraith|Beast_B|Goatman_M|Goatman_R|WitherMoth|Beast_A
 BanList=Skeleton_A
 autobuff=True
 usepath=false
+attackrange=40
 TakeWP=2, 0, 0, 0
 Sleep=500
 2170.98901367188, 1832.54260253906, 1.37640595436096,1,25
