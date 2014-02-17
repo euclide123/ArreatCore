@@ -62,6 +62,7 @@ CheckWindowD3()
 ;;================================================================================
 ;; Set Some Hotkey
 ;;================================================================================
+HotKeySet("{F1}", "StashAndRepairTerminate")
 HotKeySet("{F2}", "Terminate")
 HotKeySet("{F3}", "TogglePause")
 
