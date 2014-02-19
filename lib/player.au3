@@ -993,21 +993,26 @@ Func StashAndRepair()
 					_Log('Tab is full : Switching tab')
 					CheckWindowD3Size()
 					$i = $i - 1
-					If $tabfull = 0 Then
-						MouseClick('left', 286, 194, 5)
-						$tabfull = 1
-					ElseIf $tabfull = 1 Then
-						MouseClick('left', 282, 266, 5)
-						$tabfull = 2
-					ElseIf $tabfull = 2 Then
-						_Log('Stash is full : Botting stopped')
-						Terminate()
-					EndIf
+					Switch $tabfull
+						case 0
+							MouseClick('left', 286, 194, 5) ; Tap 2
+							$tabfull = 1
+						case 1
+							MouseClick('left', 282, 266, 5) ; Tap 3
+							$tabfull = 2
+						case 2
+							MouseClick('left', 283, 123, 5) ; Tap 1
+							$tabfull = 3
+						case 3
+							WinSetOnTop("[CLASS:D3 Main Window Class]", "", 0)
+							MsgBox(0, "ERREUR", "Stash is full : Botting stopped")
+							Terminate()
+					EndSwitch
 
 					Sleep(5000)
 
 				Else
-					$ItemToStash = $ItemToStash + 1
+					$ItemToStash += 1
 				EndIf
 			Next
 
@@ -1093,21 +1098,26 @@ Func StashAndRepair()
 					_Log('Tab is full : Switching tab')
 					CheckWindowD3Size()
 					$i = $i - 1
-					If $tabfull = 0 Then
-						MouseClick('left', 286, 194, 5)
-						$tabfull = 1
-					ElseIf $tabfull = 1 Then
-						MouseClick('left', 282, 266, 5)
-						$tabfull = 2
-					ElseIf $tabfull = 2 Then
-						_Log('Stash is full : Botting stopped')
-						Terminate()
-					EndIf
+					Switch $tabfull
+						case 0
+							MouseClick('left', 286, 194, 5) ; Tap 2
+							$tabfull = 1
+						case 1
+							MouseClick('left', 282, 266, 5) ; Tap 3
+							$tabfull = 2
+						case 2
+							MouseClick('left', 283, 123, 5) ; Tap 1
+							$tabfull = 3
+						case 3
+							WinSetOnTop("[CLASS:D3 Main Window Class]", "", 0)
+							MsgBox(0, "ERREUR", "Stash is full : Botting stopped")
+							Terminate()
+					EndSwitch
 
 					Sleep(5000)
 
 				Else
-					$ItemToStash = $ItemToStash + 1
+					$ItemToStash += 1
 				EndIf
 			Next
 
