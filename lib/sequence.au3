@@ -416,7 +416,7 @@ Func Sequence()
 						SendSequence($array_sequence)
 						$array_sequence = ArrayInit($array_sequence)
 						_Log("Enclenchement d'un _townportal() line : " & $i + 1)
-						If Not UseTownPortal() Then
+						If Not UseTownPortal(10) Then
 							$GameFailed = 1
 							Return False
 						EndIf

@@ -1292,7 +1292,7 @@ Func UseTownPortal($mode = 0)
 		
 		$compt += 1
 
-		_Log("tour de boucle IsInTown " & $compt & " tentative de TP")
+		_Log("Tour de boucle IsInTown " & $compt & " tentative de TP -- En Mode :" & $mode)
 		
 		If $mode <> 0 And $compt > $mode Then
 			_Log("Too Much TP try !!!")
