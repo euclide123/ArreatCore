@@ -1680,7 +1680,7 @@ Func BuyPotion()
 	Local $ClickPotion = Round($NbPotionBuy / 5) ; nombre de clic
 	
 	If $GameDifficulty = 4 And $NbPotionBuy > 0 Then ; selement si armageddon, NbPotionBuy = 0 on déactive la fonction
-	   If $potinstock <= $PotionStock Then
+	   If $potinstock <= ($PotionStock + 10) Then
 		  
 		  MoveTo($Potion_Vendor) ; on se positionne
 		  
