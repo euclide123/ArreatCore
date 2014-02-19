@@ -1909,6 +1909,7 @@ Func GrabIt($name, $offset)
 				TpRepairAndBack()
 				Buffinit()
 				$Tp_Repair_And_Back = 0
+				$Exit_MoveToPos = 1 ; "correction inventaire plein en mode usepath=false"
 			EndIf
 
 		EndIf

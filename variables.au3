@@ -157,6 +157,7 @@ Global $Ban_ItemACDCheckList    = "a1_|a3_|a2_|a4_|Lore_Book_Flippy|Topaz_|Emera
 Global $Ban_endstrItemList      = "_projectile"
 Global $Ban_startstrItemList    = "barbarian_|Demonhunter_|Monk_|WitchDoctor_|WD_|Enchantress_|Scoundrel_|Templar_|Wizard_|monsterAffix_|Demonic_|Generic_|fallenShaman_fireBall_impact|demonFlyer_B_clickable_corpse_01|grenadier_proj_trail"
 Global $Tp_Repair_And_Back 		= 0 ; correction double tp inventaire plein
+Global $Exit_MoveToPos 			= 0 ; correction inventaire plein en mode usepath=false
 Global $Count_ACD               = 0
 Global $Current_Hero_Z          = 0
 Global $Death                   = 0

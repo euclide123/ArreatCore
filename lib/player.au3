@@ -1423,6 +1423,8 @@ Func MoveToPos($_x, $_y, $_z, $_a, $m_range)
 	Local $TimeOut = TimerInit()
 	$grabtimeout = 0
 	$killtimeout = 0
+	$Exit_MoveToPos = 0
+	
 	If IsPlayerDead() Or $CheckGameLength = True Or $SkippedMove > 6 Then
 		$SkippedMove = 0 ; reset $SkippedMove sinon on ne pourra plus rentré dans la fonction
 		$GameFailed = 1
@@ -1441,7 +1443,7 @@ Func MoveToPos($_x, $_y, $_z, $_a, $m_range)
 	While 1
 
 		CheckGameLength()
-		If $CheckGameLength = True Then
+		If $CheckGameLength = True Or $Exit_MoveToPos = 1 Then
 			ExitLoop
 		EndIf
 
@@ -1531,7 +1533,7 @@ Func MoveToPos($_x, $_y, $_z, $_a, $m_range)
 			If IsDisconnected() Then
 				$GameFailed = 1
 			EndIf
-
+			$GameFailed = 1
 			ExitLoop
 		EndIf
 	WEnd
