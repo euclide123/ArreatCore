@@ -185,6 +185,8 @@ EndFunc   ;==>OpenWp
 Func TakeWP($tarChapter, $tarNum, $curChapter, $curNum)
 	If $GameFailed = 0 Then
 		Local $Waypoint = ""
+		Local $Curentarea = GetLevelAreaId()
+		Local $Newarea = GetLevelAreaId()
 
 
 		Local $hTimer = TimerInit()
@@ -275,7 +277,17 @@ Func TakeWP($tarChapter, $tarNum, $curChapter, $curNum)
 			$coord = UiRatio(145, 100 + ($tarChapter * 12.5) + 23 + 12 + ($tarNum * 32))
 			MouseClick("left", $coord[0], $coord[1], 1, 3) ; Click wp
 		EndIf
-		Sleep(1500)
+		
+		If $wptry < 7 Then
+			Local $areatry = 0
+			While $Newarea = $Curentarea And $areatry < 13 ; on attend d'avoir une nouvelle Area
+				$Newarea = GetLevelAreaId()
+				Sleep(500)
+				$areatry += 1
+			WEnd 
+		
+			Sleep(500)
+		EndIf
 
 		Local $hTimer = TimerInit()
 		While Not OffsetList() And TimerDiff($hTimer) < 30000 ; 30secondes
