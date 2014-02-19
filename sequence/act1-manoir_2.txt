@@ -2,7 +2,6 @@ MonsterList=WitherMoth|WoodWraith|Beast_B|Goatman_M|Goatman_R|WitherMoth|Beast_A
 autobuff=True
 attackrange=40
 TakeWP=4, 3, 0, 0
-Sleep=2000
 InteractByActorName=Highlands_Manor_Cain_Door
 Sleep=500
 369.194946289063, 351.767211914063, 12.6371154785156,1,25

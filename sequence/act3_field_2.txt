@@ -2,7 +2,6 @@ MonsterList=a3dun_battlefield_Demon_GroundTrap_GasChamber|Beast_B|Goblin|Goatman
 AutoBuff=True
 attackrange=45
 TakeWP=2, 0, 4, 0
-sleep=500
 reverse=true
 3436.30493164063, 618.961486816406, 0.307040572166443,1,25
 3411.5078125, 621.566833496094, 0.306501507759094,1,25

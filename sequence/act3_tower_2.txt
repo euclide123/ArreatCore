@@ -2,7 +2,6 @@ MonsterList=Ghoul_|Beast_B|Goatman_M|Goatman_R|WitherMoth|Beast_A|Goblin|Scaveng
 AutoBuff=True
 attackrange=40
 TakeWP=3, 1, 4, 0
-sleep=500
 reverse=true
 usepath=false
 1041.06628417969, 969.095458984375, -9.89999961853027,1,25
