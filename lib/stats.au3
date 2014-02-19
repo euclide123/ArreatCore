@@ -49,7 +49,7 @@ Func StatsDisplay()
         $GOLDInthepocket = $GOLD - $GOLDINI
         $GOLDMOY = $GOLDInthepocket / ($Totalruns - 1)
         $GoldBySaleRatio = ($GoldBySale / $GOLDInthepocket * 100);ratio des ventes
-        $GoldByColectRatio = (($GOLDInthepocket - $GoldBySale - $GoldByRepaire) / $GOLDInthepocket * 100);ratio de l'or collecté
+        $GoldByColectRatio = (($GOLDInthepocket - $GoldBySale + $GoldByRepaire) / $GOLDInthepocket * 100);ratio de l'or collecté
         $GoldByRepaireRatio = ($GoldByRepaire / $GOLDInthepocket * 100);ratio du coût des réparation
         $dif_timer_stat = TimerDiff($begin_timer_stat);temps total
         $dif_timer_stat_pause = ($tempsPauseGame + $tempsPauserepas);calcule du temps de pause (game + repas)=total pause
@@ -284,8 +284,8 @@ Func StatsDisplay()
 	;$DebugMessage = $DebugMessage & "Gold Moyen/Heure Jeu : " & formatNumber(Ceiling($GOLDMOYbyHgame)) & @CRLF ;====> gold de temps de jeu
 	$DebugMessage = $DebugMessage & "Perte Moyenne/Heure : " & FormatNumber(Ceiling($GOLDMOYbyH - $GOLDMOYbyHgame)) & "   (" & Round($LossGoldMoyH) & "%)" & @CRLF
 	$DebugMessage = $DebugMessage & "Nombre d'Objets Vendus :  " & $ItemToSell & "  /  " & FormatNumber(Ceiling($GoldBySale)) & "   (" & Round($GoldBySaleRatio) & "%)" & @CRLF
-	$DebugMessage = $DebugMessage & "Gold Obtenu par Collecte  :    " & FormatNumber(Ceiling($GOLDInthepocket - $GoldBySale - $GoldByRepaire)) & "   (" & Round($GoldByColectRatio) & "%)" & @CRLF
-	$DebugMessage = $DebugMessage & "Nombre de Réparations : " & $RepairORsell & " / " & FormatNumber(Ceiling($GoldByRepaire)) & "   (" & Round($GoldByRepaireRatio) & "%)" & @CRLF
+	$DebugMessage = $DebugMessage & "Gold Obtenu par Collecte  :    " & FormatNumber(Ceiling($GOLDInthepocket - $GoldBySale + $GoldByRepaire)) & "   (" & Round($GoldByColectRatio) & "%)" & @CRLF
+	$DebugMessage = $DebugMessage & "Nombre de Réparations : " & $RepairORsell & " / - " & FormatNumber(Ceiling($GoldByRepaire)) & "   (- " & Round($GoldByRepaireRatio) & "%)" & @CRLF
 	$DebugMessage = $DebugMessage & "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" & @CRLF
 	$DebugMessage = $DebugMessage & "                                 INFOS TEMPS " & @CRLF
 	;$DebugMessage = $DebugMessage & "Débuté à  :  " & @HOUR & ":" & @MIN & @CRLF

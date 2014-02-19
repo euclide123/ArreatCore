@@ -1214,7 +1214,7 @@ Func StashAndRepair()
 
 	;on mesure l'or après
 	Local $GoldAfterRepaire = GetGold()
-	$GoldByRepaire += $GoldAfterRepaire - $GoldBeforeRepaire;on compte le cout de la réparation
+	$GoldByRepaire += $GoldBeforeRepaire - $GoldAfterRepaire;on compte le cout de la r�paration
 
 	;Trash
 	$ToTrash = _ArrayFindAll($items, "Trash", 0, 0, 0, 1, 2)
