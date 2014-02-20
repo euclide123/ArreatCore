@@ -247,14 +247,14 @@ Func TakeWP($tarChapter, $tarNum, $curChapter, $curNum)
 			Sleep(350)
 			Local $wptry = 0
 			While IsWaypointSelectionOpened() = False And IsPlayerDead() = False
-				If $wptry <= 6 Then
+				If $wptry <= 12 Then
 					_Log('Fail to open wp')
 					$wptry = $wptry + 1
 					OpenWp($item)
 				EndIf
-				If $wptry > 6 Then
+				If $wptry > 12 Then
 					$GameFailed = 1
-					_Log('Failed to open wp after 6 try')
+					_Log('Failed to open wp after 12 try')
 					ExitLoop
 				EndIf
 			WEnd
