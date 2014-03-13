@@ -67,11 +67,11 @@ Func OffsetList()
 	_Log("OffsetList")
 	;//FILE DEFS
 	Global $ofs_MonsterDef = 0x18EC4C0 ; 0x18CBE70 ;1.0.6 0x15DBE00 ;0x015DCE00 ;0x15DBE00
-	Global $ofs_StringListDef = 0x18DD188;0x18DC188;0x18A2558 ; 0x0158C240 ;0x015E8808 ;0x015E9808
+	Global $ofs_StringListDef = 0x17E4EE8 ;ou alors 0x17f8568;0x18DD188;0x18DC188;0x18A2558 ; 0x0158C240 ;0x015E8808 ;0x015E9808
 	Global $ofs_ActorDef = 0x18E73F0 ; 0x18C6AD8 ;1.0.6 0x15EC108 ;0x015ED108 ;0x15EC108
 	Global $_defptr = 0x10
-	Global $_defcount = 0x108
-	Global $_deflink = 0x148
+	Global $_defcount = 0x10C
+	Global $_deflink = 0x11C
 	Global $_ofs_FileMonster_StrucSize = 0x50
 	Global $_ofs_FileActor_LinkToMonster = 0x6C
 	Global $_ofs_FileMonster_MonsterType = 0x18
@@ -100,23 +100,23 @@ Func OffsetList()
 	Global $ofs_LocalActor_ofs2 = 0x148
 	Global $ofs_LocalActor_Count = 0x108
 	Global $ofs_LocalActor_atribGUID = 0x120
-	Global $ofs_LocalActor_StrucSize = 0x2D0 ; 0x0 0x0
+	Global $ofs_LocalActor_StrucSize = 0x2F8 ;0x2D0 ; 0x0 0x0
 
 
 	;//OBJECT MANAGER
-	Global $ofs_objectmanager = 0x18CE394;0x018CD394 ;0x18939C4 ;0x1873414 ;0x0186FA3C ;0x1543B9C ;0x15A0BEC ;0x015A1BEC;0x15A0BEC
-	Global $ofs__ObjmanagerActorOffsetA = 0x900 ;0x8C8 ;0x8b0
+	Global $ofs_objectmanager = 0x1CD841C;0x1CD63EC ;0x1cd7a04;0x18CE394;0x018CD394 ;0x18939C4 ;0x1873414 ;0x0186FA3C ;0x1543B9C ;0x15A0BEC ;0x015A1BEC;0x15A0BEC
+	Global $ofs__ObjmanagerActorOffsetA = 0x920 ;0x900 ;0x8C8 ;0x8b0
 	Global $ofs__ObjmanagerActorCount = 0x108
-	Global $ofs__ObjmanagerActorOffsetB = 0x148 ;0x148
-	Global $ofs__ObjmanagerActorLinkToCTM = 0x384
-	Global $_ObjmanagerStrucSize = 0x42C ;0x42C ;0x428
+	Global $ofs__ObjmanagerActorOffsetB = 0x120 ;0x148 ;0x148
+	Global $ofs__ObjmanagerActorLinkToCTM = 0x1A8 ;0x384
+	Global $_ObjmanagerStrucSize = 0x44c ;0x42C ;0x42C ;0x428
 
 
 	;//CameraDef
 	Global $VIewStatic = 0x015A0BEC
 	Global $DebugFlags = $VIewStatic + 0x20
-	Global $vftableSubA = _MemoryRead($VIewStatic, $d3, 'ptr')
-	$vftableSubA = _MemoryRead($vftableSubA + 0x928, $d3, 'ptr')
+	Global $vftableSubB = _MemoryRead($VIewStatic, $d3, 'ptr')
+	$vftableSubA = _MemoryRead($vftableSubB + 0x928, $d3, 'ptr')
 	Global $ViewOffset = $vftableSubA
 	Global $Ofs_CameraRotationA = $ViewOffset + 0x4
 	Global $Ofs_CameraRotationB = $ViewOffset + 0x8
@@ -216,7 +216,7 @@ Func Terminate()
 EndFunc   ;==>Terminate
 
 Func StashAndRepairTerminate()
-    
+
 	GoToTown()
 	StashAndRepair()
 	LeaveGame()
@@ -587,16 +587,16 @@ Func LevelAreaConstants()
 EndFunc   ;==>LevelAreaConstants
 
 ;;--------------------------------------------------------------------------------
-;;	Getting Backpack Item Info
+;;	Getting Backpack Item Info (ok with d3 2.0.3)
 ;;--------------------------------------------------------------------------------
 Func IterateBackpack($bag = 0, $rlvl = 0)
 	;$bag = 0 for backpack and 15 for stash
 	;$rlvl = 1 for actual level requirement of item and 0 for base required level
 	$ptr1 = _memoryread($ofs_objectmanager, $d3, "ptr")
-	$ptr2 = _memoryread($ptr1 + 0x8a0, $d3, "ptr")
+	$ptr2 = _memoryread($ptr1 + 0x8b8, $d3, "ptr")
 	$ptr3 = _memoryread($ptr2 + 0x0, $d3, "ptr")
 	$_Count = _memoryread($ptr3 + 0x108, $d3, "int")
-	$CurrentOffset = _memoryread(_memoryread($ptr3 + 0x148, $d3, "ptr") + 0x0, $d3, "ptr");$_LocalActor_3
+	$CurrentOffset = _memoryread(_memoryread($ptr3 + 0x120, $d3, "ptr") + 0x0, $d3, "ptr");$_LocalActor_3
 	Local $__ACDACTOR[$_Count + 1][9]
 	;_Log(" IterateBackpack 1 ")
 	For $i = 0 To $_Count
@@ -631,13 +631,13 @@ Func IterateBackpack($bag = 0, $rlvl = 0)
 
 EndFunc   ;==>IterateBackpack
 
-Func IterateStuff()
+Func IterateStuff() ;k for d3 2.0.3
 	$ptr1 = _memoryread($ofs_objectmanager, $d3, "ptr")
-	$ptr2 = _memoryread($ptr1 + 0x8a0, $d3, "ptr")
+	$ptr2 = _memoryread($ptr1 + 0x8b8, $d3, "ptr")
 	$ptr3 = _memoryread($ptr2 + 0x0, $d3, "ptr")
 	$_Count = _memoryread($ptr3 + 0x108, $d3, "int")
 	$count = 0
-	$CurrentOffset = _memoryread(_memoryread($ptr3 + 0x148, $d3, "ptr") + 0x0, $d3, "ptr");$_LocalActor_3
+	$CurrentOffset = _memoryread(_memoryread($ptr3 + 0x120, $d3, "ptr") + 0x0, $d3, "ptr");$_LocalActor_3
 	Local $__ACDACTOR[1][9]
 	;_Log(" IterateBackpack 1 ")
 	For $i = 0 To $_Count
@@ -1149,9 +1149,9 @@ Func LocateMyToon()
 			If $idarea <> -1 Then
 				If $_debug Then _Log("Looking for local player")
 				$_Myoffset = "0x" & Hex(GetPlayerOffset(), 8) ; pour convertir valeur
-				$_MyGuid = _MemoryRead($_Myoffset + 0x4, $d3, 'ptr')
-				$_NAME = _MemoryRead($_Myoffset + 0x8, $d3, 'char[64]')
-				$_SNO = _MemoryRead($_Myoffset + 0x88, $d3, 'ptr')
+				$_MyGuid = _MemoryRead($_Myoffset + 0x88, $d3, 'ptr')
+				$_NAME = _MemoryRead($_Myoffset + 0x4, $d3, 'char[64]')
+				$_SNO = _MemoryRead($_Myoffset + 0x8c, $d3, 'ptr')
 
                 Local $splitName = StringSplit($_NAME, "_")
                 $nameCharacter = $splitName[1]
@@ -1211,7 +1211,7 @@ EndFunc   ;==>LocateMyToon
 ;==================================================================================
 Func IterateLocalActor()
 	$ptr1 = _memoryread($ofs_objectmanager, $d3, "ptr")
-	$ptr2 = _memoryread($ptr1 + 0x8a0, $d3, "ptr")
+	$ptr2 = _memoryread($ptr1 + 0x8b8, $d3, "ptr")
 	$ptr3 = _memoryread($ptr2 + 0x0, $d3, "ptr")
 	$_Count = _memoryread($ptr3 + 0x108, $d3, "int")
 	$CurrentOffset = _memoryread(_memoryread($ptr3 + 0x148, $d3, "ptr") + 0x0, $d3, "ptr");$_LocalActor_3
@@ -1227,7 +1227,7 @@ EndFunc   ;==>IterateLocalActor
 
 Func StartIterateLocalActor(ByRef $index, ByRef $offset, ByRef $count)
 	$ptr1 = _memoryread($ofs_objectmanager, $d3, "ptr")
-	$ptr2 = _memoryread($ptr1 + 0x8a0, $d3, "ptr")
+	$ptr2 = _memoryread($ptr1 + 0x8b8, $d3, "ptr")
 	$ptr3 = _memoryread($ptr2 + 0x0, $d3, "ptr")
 	$count = _memoryread($ptr3 + 0x108, $d3, "int")
 	$index = 0
@@ -1307,7 +1307,7 @@ Func IndexSNO($_offset, $_displayInfo = 0)
 
 	$_SnoIndex = _MemoryRead($_Pointer + $_deflink, $d3, 'ptr') ;//Moving from the static into the index
 	$_SNOName = _MemoryRead($_Pointer, $d3, 'char[64]') ;//Usually something like "Something" + Def
-	$TempWindex = $_SnoIndex + 0xC ;//The header is 0xC in size
+	$TempWindex = $_SnoIndex + 0x10 ;//The header is 0xC in size
 	If $_displayInfo = 1 Then _Log("-----* Indexing " & $_SNOName & " *-----" & @CRLF)
 	Dim $_OutPut[$_SnoCount + 1][2] ;//Setting the size of the output array
 
@@ -1319,7 +1319,7 @@ Func IndexSNO($_offset, $_displayInfo = 0)
 		$_OutPut[$i][0] = $_CurSnoOffset ;//Poping the data into the output array
 		$_OutPut[$i][1] = $_CurSnoID
 		If $_displayInfo = 1 Then _Log($i & " Offset: " & $_CurSnoOffset & " SNOid: " & $_CurSnoID & @CRLF)
-		$TempWindex = $TempWindex + 0x10 ;//Next item is located 0x10 later
+		$TempWindex = $TempWindex + 0x14 ;//Next item is located 0x10 later
 	Next
 
 	If $ignoreSNOcount = 1 Then ReDim $_OutPut[$CurIndex][2] ;//Here we do the resizing of the array, to minimize memory footprint!?.
