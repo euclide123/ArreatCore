@@ -318,7 +318,7 @@ Func FastCheckUiValue($valuetocheckfor, $visibility, $bucket)
 EndFunc   ;==>FastCheckUiValue
 
 Func GetLevelAreaId()
-	Return _MemoryRead(_MemoryRead(0x183E9E4, $d3, "int") + 0x44, $d3, "int")
+	Return _MemoryRead(_MemoryRead($OfsLevelAreaId, $d3, "int") + 0x44, $d3, "int")
 EndFunc   ;==>GetLevelAreaId
 
 ;~ unused
